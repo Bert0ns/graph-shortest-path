@@ -51,7 +51,7 @@ export function Controls({ algorithm, onAlgorithmChange, isPlaying, onPlay, onPa
 
       <div className="flex items-center gap-2 min-w-64">
         <Label htmlFor="speed" className="text-sm w-12">Speed</Label>
-        <Slider id="speed" min={0.25} max={2} step={0.25} value={[speed]} onValueChange={(vals) => onSpeedChange?.(vals[0] ?? speed)} className="w-40" />
+        <Slider id="speed" min={0.25} max={4} step={0.25} value={[speed]} onValueChange={(vals) => onSpeedChange?.(vals[0] ?? speed)} className="w-40" />
         <span className="text-xs text-slate-600 tabular-nums">{speed.toFixed(2)}x</span>
       </div>
     </div>
