@@ -21,7 +21,8 @@
     { "from": "D", "to": "E", "weight": 2 },
     { "from": "E", "to": "F", "weight": 2 },
     { "from": "C", "to": "F", "weight": 6 },
-    { "from": "E", "to": "C", "weight": 3 }
+    { "from": "E", "to": "C", "weight": 3 },
+    { "from": "B", "to": "E", "weight": 3 }
   ]
 }
 

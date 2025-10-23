@@ -1,8 +1,58 @@
 import type { GraphFile, Graph, GraphEdge } from "./types";
 
-// TODO: implement real validation per REQUIREMENTS.md
-export function validateGraphFileV1(_file: GraphFile): { ok: true } | { ok: false; errors: string[] } {
-  return { ok: true };
+
+export function validateGraphFile(file: unknown): { ok: boolean, errors: string[] } {
+  const errors: string[] = []
+  if (!file || typeof file !== 'object') {
+    errors.push('File is not an object')
+    return { ok: false, errors }
+  }
+
+  const f = file as Record<string, unknown>
+
+  // metadata
+  if (!('metadata' in f) || !f.metadata || typeof f.metadata !== 'object') {
+    errors.push('Missing metadata')
+  } else {
+    const meta = f.metadata as Record<string, unknown>
+    if (typeof meta.directed !== 'boolean') errors.push('metadata.directed must be boolean')
+    if (typeof meta.weighted !== 'boolean') errors.push('metadata.weighted must be boolean')
+  }
+
+  // nodes
+  if (!Array.isArray(f.nodes) || f.nodes.length === 0) errors.push('nodes must be a non-empty array')
+
+  const ids = new Set<string>()
+  for (const n of (f.nodes ?? []) as unknown[]) {
+    if (!n || typeof n !== 'object') {
+      errors.push('node must be an object')
+      continue
+    }
+    const node = n as Record<string, unknown>
+    const id = typeof node.id === 'string' ? node.id : ''
+    if (!id.trim()) errors.push('node.id must be a non-empty string')
+    if (id && ids.has(id)) errors.push(`duplicate node id: ${id}`)
+    if (id) ids.add(id)
+    const in01 = (v: unknown) => typeof v === 'number' && v >= 0 && v <= 1
+    if (!in01(node.x) || !in01(node.y)) errors.push(`node ${id || '<unknown>'} coordinates must be in [0,1]`)
+  }
+
+  // edges
+  if (!Array.isArray(f.edges)) errors.push('edges must be an array')
+  for (const e of (f.edges ?? []) as unknown[]) {
+    if (!e || typeof e !== 'object') {
+      errors.push('edge must be an object')
+      continue
+    }
+    const edge = e as Record<string, unknown>
+    const from = typeof edge.from === 'string' ? edge.from : ''
+    const to = typeof edge.to === 'string' ? edge.to : ''
+    if (!ids.has(from)) errors.push(`edge.from references unknown node: ${from}`)
+    if (!ids.has(to)) errors.push(`edge.to references unknown node: ${to}`)
+    if (typeof edge.weight !== 'number' || !isFinite(edge.weight as number)) errors.push(`edge weight must be a finite number for ${from}->${to}`)
+  }
+
+  return { ok: errors.length === 0, errors }
 }
 
 // Resolve file format into runtime Graph structure
@@ -27,6 +77,9 @@ export async function loadGraphFromUrl(url: string): Promise<Graph> {
   const res = await fetch(url);
   if (!res.ok) throw new Error(`Failed to load graph: ${res.status}`);
   const json = (await res.json()) as GraphFile;
-  // In future: run validateGraphFileV1(json) and surface user-friendly errors
+  const validation = validateGraphFile(json)
+  if (!validation.ok) {
+    throw new Error(`Invalid graph file:\n- ${validation.errors.join('\n- ')}`)
+  }
   return resolveGraph(json);
 }
