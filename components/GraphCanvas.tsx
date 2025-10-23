@@ -2,6 +2,7 @@
 
 import React from 'react'
 import type {Graph, GraphEdge} from '@/lib/graph/types'
+import {GeometryLine, shortenLine, transformLineParallel} from "@/lib/geometry";
 
 export interface GraphCanvasProps {
   graph: Graph | null
@@ -14,50 +15,6 @@ export interface GraphCanvasProps {
 const VB_W = 100
 const VB_H = 60
 const MARGIN = 6 // logical units padding around the edges
-
-function shortenLine(
-  x1: number,
-  y1: number,
-  x2: number,
-  y2: number,
-  startOffset: number,
-  endOffset: number
-) {
-  const dx = x2 - x1
-  const dy = y2 - y1
-  const len = Math.hypot(dx, dy) || 1
-  const ux = dx / len
-  const uy = dy / len
-  return {
-    x1: x1 + ux * startOffset,
-    y1: y1 + uy * startOffset,
-    x2: x2 - ux * endOffset,
-    y2: y2 - uy * endOffset,
-  }
-}
-
-function transformLineParallel(
-    x1: number,
-    y1: number,
-    x2: number,
-    y2: number,
-    offset: number
-) {
-    const dx = x2 - x1
-    const dy = y2 - y1
-    const len = Math.hypot(dx, dy) || 1
-    const ux = dx / len
-    const uy = dy / len
-    // Perpendicular unit vector
-    const px = -uy
-    const py = ux
-    return {
-        x1: x1 + px * offset,
-        y1: y1 + py * offset,
-        x2: x2 + px * offset,
-        y2: y2 + py * offset,
-    }
-}
 
 function edgePairs(edges: GraphEdge[]): Set<{p1: GraphEdge, p2: GraphEdge}> {
     const foundPairs = new Set<{p1: GraphEdge, p2: GraphEdge}>()
@@ -120,9 +77,10 @@ export function GraphCanvas({ graph, width = '100%', height = 480, onNodeClick }
             if (!from || !to) return null
             const p1 = pos(from.x, from.y)
             const p2 = pos(to.x, to.y)
+            let arcLine: GeometryLine = {x1: p1.x, y1: p1.y, x2: p2.x, y2: p2.y}
             // Pull back both ends so lines do not intersect node circles
             const endGap = isDirected ? radius + arrowPullback : radius + 0.6
-            let { x1, y1, x2, y2 } = shortenLine(p1.x, p1.y, p2.x, p2.y, radius + 0.6, endGap)
+            arcLine = shortenLine(arcLine, radius + 0.6, endGap)
 
             // Adjust for bidirectional edges
             const offset = 1.3
@@ -130,12 +88,12 @@ export function GraphCanvas({ graph, width = '100%', height = 480, onNodeClick }
                 const pair1 = Array.from(bidirectionalEdges).find(p => (p.p1 === e))
                 const pair2 = Array.from(bidirectionalEdges).find(p => (p.p2 === e))
                 if (!!pair1) {
-                    ({ x1, y1, x2, y2 } = transformLineParallel(x1, y1, x2, y2, offset))
+                    arcLine = transformLineParallel(arcLine, offset)
                 } else if (!!pair2) {
-                    ({ x1, y1, x2, y2 } = transformLineParallel(x1, y1, x2, y2, -offset))
+                    arcLine = transformLineParallel(arcLine, -offset)
                 }
             }
-
+            const { x1, y1, x2, y2 } = arcLine
             const mid = { x: (x1 + x2) / 2, y: (y1 + y2) / 2 }
 
             return (
@@ -154,7 +112,7 @@ export function GraphCanvas({ graph, width = '100%', height = 480, onNodeClick }
                     <rect
                       x={-(1.5 + String(e.weight ?? '').length * 1.8) / 2}
                       y={-1.5}
-                      width={ 1.5 + String(e.weight ?? '').length * 1.8}
+                      width={1.5 + String(e.weight ?? '').length * 1.8}
                       height={3}
                       rx={1.5}
                       ry={1.5}
