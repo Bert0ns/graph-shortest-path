@@ -1,0 +1,165 @@
+# Shortest Path Simulator — Requirements
+
+## 1) Goal and Vision
+Build a visual simulator for shortest-path algorithms. Start with Dijkstra and a clean, minimal UI that animates each algorithm step.
+
+The system must be easy to extend with new algorithms and features while keeping dependencies minimal.
+
+## 2) Scope (MVP)
+- One algorithm implemented: Dijkstra (non-negative edge weights only).
+- A static graph is loaded from a simple text-structured file (JSON) and rendered visually.
+- Users can choose start and end nodes and run an animation that shows Dijkstra’s steps.
+- Basic controls: play/pause, step, reset, and speed control.
+- Visual states: unvisited, in frontier, current node, relaxed edges, finalized nodes, final shortest path.
+- UI components use shadcn library only.
+
+## 3) Non-Goals (for now)
+- No negative weights or algorithms requiring them (e.g., Bellman–Ford) in MVP.
+- No large-scale performance optimization beyond the stated limits.
+- No multi-graph workspace management; load a single graph at a time.
+- No persistent storage or server-side editing of graphs.
+
+## 4) Tech Stack and Constraints
+- Framework: Next.js (App Router), React, TypeScript, Tailwind CSS.
+- UI library: shadcn components only. Install components with commands like:
+  - `pnpm dlx shadcn@latest add button`
+  - `pnpm dlx shadcn@latest add select`
+  - `pnpm dlx shadcn@latest add slider`
+- Rendering choice: SVG for MVP (vector graphics).
+  - Rationale: intuitive DOM interactivity, easy styling with Tailwind, straightforward highlighting/animation, good for up to a few hundred elements.
+  - Canvas considered for future when graphs are very large or need low-level performance rendering.
+- Dependencies: keep to a strict minimum; avoid heavy graph libraries.
+- TypeScript: strict mode preferred.
+
+## 5) Graph Data Format (File-Based Builder)
+- File format: JSON stored under public/graphs (e.g., public/graphs/sample.json).
+- Loaded client-side via fetch at runtime.
+- Schema (Version 1):
+  - metadata: { directed: boolean, weighted: boolean, name?: string, description?: string }
+  - nodes: Array<{ id: string; x: number; y: number; label?: string }>
+  - edges: Array<{ from: string; to: string; weight: number; directed?: boolean; label?: string }>
+- Rules:
+  - Node ids are unique (string).
+  - Coordinates (x, y) are normalized to the viewport (0..1) or pixels; MVP uses 0..1 normalized, scaled by viewBox.
+  - If metadata.directed is false, treat edges as undirected unless an edge has directed: true explicitly.
+  - Dijkstra requires all weights >= 0; validate and show a non-blocking error if violated.
+
+Example JSON (normalized coordinates):
+```json
+{
+  "metadata": { "directed": false, "weighted": true, "name": "Sample" },
+  "nodes": [
+    { "id": "A", "x": 0.1, "y": 0.2, "label": "Start" },
+    { "id": "B", "x": 0.7, "y": 0.4 },
+    { "id": "C", "x": 0.4, "y": 0.8, "label": "End" }
+  ],
+  "edges": [
+    { "from": "A", "to": "B", "weight": 2 },
+    { "from": "A", "to": "C", "weight": 5 },
+    { "from": "C", "to": "B", "weight": 1 }
+  ]
+}
+```
+
+## 6) Core Features
+- Graph loading
+  - Load a selected JSON file from public/graphs.
+  - Validate basic schema and weight constraints; display user-friendly errors.
+- Graph rendering (SVG)
+  - Nodes as circles with labels.
+  - Edges as lines/arrows with optional weight labels.
+  - Auto-fit to container with viewBox; maintain aspect ratio.
+- Algorithm selection
+  - A select input listing available algorithms; MVP shows Dijkstra (others disabled or listed as “coming soon”).
+- Start/End selection
+  - Click on nodes to set start and end; show selected states; provide a quick reset.
+- Animation controls
+  - Play/Pause, Step (advance a single algorithm iteration), Reset (clear to initial), Speed control (e.g., 0.25x–2x).
+- Dijkstra visualization
+  - Show current node being extracted from the priority queue.
+  - Highlight frontier nodes and relaxed edges.
+  - Display tentative distances next to nodes.
+  - When target is finalized, draw the final shortest path with strong emphasis.
+- Optional overlays (MVP-light)
+  - Sidebar or popover showing queue contents and distances.
+
+## 7) UI/UX Guidelines
+- Style: clean, minimalistic, pastel color palette.
+  - Suggested palette (tailwind custom or CSS variables):
+    - Background: #FAFAF9
+    - Node default: #A7F3D0 (mint) / stroke #34D399
+    - Frontier: #BFDBFE (azure) / stroke #60A5FA
+    - Current: #FDE68A (sand) / stroke #F59E0B
+    - Finalized: #FCA5A5 (salmon) / stroke #F87171
+    - Path highlight: #C4B5FD (lavender) / stroke #8B5CF6
+    - Edge default: #CBD5E1
+    - Text: #0F172A
+- Layout
+  - Header toolbar: algorithm select, start/end indicators, controls, speed slider.
+  - Main canvas: responsive SVG area.
+  - Optional right/left drawer for queue/distances panel.
+- Interactions
+  - Hover tooltips for node id and distance.
+  - Keyboard shortcuts (MVP): Space (play/pause), N (step), R (reset).
+- Accessibility
+  - Focusable controls; aria labels; sufficient contrast.
+
+## 8) Algorithm Requirements (Dijkstra)
+- Inputs
+  - Graph (nodes, edges), start id, optional end id.
+- Constraints
+  - Non-negative weights; undirected edges represented as two directions logically if needed.
+- Outputs
+  - Distances map, predecessor map, visited/finalized set, final path to end if end specified.
+- Stepper API (for animation)
+  - Initialize: returns initial state.
+  - Next step: yields a diff/state snapshot including: current node, relaxations, frontier, distances.
+  - Done state: indicates completion and includes final path reconstruction.
+
+## 9) Architecture and Structure (MVP)
+- app/
+  - page.tsx: main UI scaffold.
+- components/: reusable UI pieces (GraphCanvas, Controls, Legend, QueuePanel).
+- lib/
+  - graph/types.ts: TypeScript types for schema.
+  - graph/loader.ts: validation and loading helpers.
+  - algorithms/dijkstra.ts: pure algorithm + stepper interface.
+  - utils.ts: small helpers (color mapping, formatting).
+- public/graphs/
+  - sample.json and future examples.
+
+## 10) Performance Targets
+- Designed for graphs up to ~200 nodes and ~400 edges in MVP without noticeable lag at 60 FPS on a typical laptop.
+- Animation step duration adjustable; avoid re-render storms (memoize where needed).
+
+## 11) Error Handling
+- Invalid schema or weights: show inline non-blocking error with guidance.
+- Missing start/end: disable run until both are set.
+- Disconnected graph: show message when target unreachable and show visited set.
+
+## 12) Testing (Minimum)
+- Unit tests for Dijkstra core (distances, predecessors) on small graphs.
+- Type-level tests via TypeScript for schema validation helpers.
+- Visual/manual checklist for animation states.
+
+## 13) Extensibility (Post-MVP)
+- New algorithms: BFS (unweighted), A*, Bellman–Ford, Floyd–Warshall.
+- Heuristics and grid graphs (for A*), obstacles and random graph generators.
+- Canvas/WebGL renderer option for large graphs with togglable backends.
+- Import/export formats: CSV, DOT/Graphviz, GraphML.
+- Interactive graph editor (drag nodes, add/remove edges) with persistence.
+
+## 14) Acceptance Criteria
+- User can load the default sample graph and see it rendered with nodes, edges, and weight labels.
+- User can select start and end nodes by clicking.
+- With Dijkstra selected, clicking Play animates the algorithm step-by-step; Step advances exactly one iteration.
+- Distances and frontier/current/finalized states are visually distinct per the palette.
+- When the end node is finalized, the shortest path is highlighted and the total distance is visible.
+- UI uses only shadcn components; no additional UI frameworks.
+
+## 15) Out of Scope (MVP)
+- Real-time multi-user collaboration.
+- Mobile-first optimizations beyond responsive layout basics.
+- Persisted user settings.
+- No server interactions; all client-side.
+
