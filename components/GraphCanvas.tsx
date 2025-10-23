@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import type { Graph } from '@/lib/graph/types'
+import type {Graph, GraphEdge} from '@/lib/graph/types'
 
 export interface GraphCanvasProps {
   graph: Graph | null
@@ -36,6 +36,40 @@ function shortenLine(
   }
 }
 
+function transformLineParallel(
+    x1: number,
+    y1: number,
+    x2: number,
+    y2: number,
+    offset: number
+) {
+    const dx = x2 - x1
+    const dy = y2 - y1
+    const len = Math.hypot(dx, dy) || 1
+    const ux = dx / len
+    const uy = dy / len
+    // Perpendicular unit vector
+    const px = -uy
+    const py = ux
+    return {
+        x1: x1 + px * offset,
+        y1: y1 + py * offset,
+        x2: x2 + px * offset,
+        y2: y2 + py * offset,
+    }
+}
+
+function edgePairs(edges: GraphEdge[]): Set<{p1: GraphEdge, p2: GraphEdge}> {
+    const foundPairs = new Set<{p1: GraphEdge, p2: GraphEdge}>()
+    edges.forEach(edge => {
+        const reverseEdge = edges.find(e => e.from === edge.to && e.to === edge.from)
+        if (reverseEdge && !foundPairs.has({p1: reverseEdge, p2: edge}) && !foundPairs.has({p1: edge, p2: reverseEdge})) {
+            foundPairs.add({p1: edge, p2: reverseEdge})
+        }
+    })
+    return foundPairs
+}
+
 export function GraphCanvas({ graph, width = '100%', height = 480, onNodeClick }: GraphCanvasProps) {
   // Early empty state
   if (!graph) {
@@ -53,7 +87,7 @@ export function GraphCanvas({ graph, width = '100%', height = 480, onNodeClick }
   })
 
   const radius = 3.2 // node circle radius in logical units
-  const arrowPullback = 2.0 // extra gap to keep arrowheads out of node
+  const arrowPullback = 1.0 // extra gap to keep arrowheads out of node
   const strokeEdge = '#94a3b8' // slate-400
   const strokeEdgeActive = '#64748b' // slate-500
   const nodeFill = '#e0f2fe' // sky-100
@@ -66,6 +100,8 @@ export function GraphCanvas({ graph, width = '100%', height = 480, onNodeClick }
 
   const isDirected = !!graph.metadata?.directed
   const isWeighted = !!graph.metadata?.weighted
+
+  const bidirectionalEdges = edgePairs(graph.edges)
 
   return (
     <div style={{ width, height }} className="w-full h-full">
@@ -86,7 +122,20 @@ export function GraphCanvas({ graph, width = '100%', height = 480, onNodeClick }
             const p2 = pos(to.x, to.y)
             // Pull back both ends so lines do not intersect node circles
             const endGap = isDirected ? radius + arrowPullback : radius + 0.6
-            const { x1, y1, x2, y2 } = shortenLine(p1.x, p1.y, p2.x, p2.y, radius + 0.6, endGap)
+            let { x1, y1, x2, y2 } = shortenLine(p1.x, p1.y, p2.x, p2.y, radius + 0.6, endGap)
+
+            // Adjust for bidirectional edges
+            const offset = 1.3
+            if (isDirected) {
+                const pair1 = Array.from(bidirectionalEdges).find(p => (p.p1 === e))
+                const pair2 = Array.from(bidirectionalEdges).find(p => (p.p2 === e))
+                if (!!pair1) {
+                    ({ x1, y1, x2, y2 } = transformLineParallel(x1, y1, x2, y2, offset))
+                } else if (!!pair2) {
+                    ({ x1, y1, x2, y2 } = transformLineParallel(x1, y1, x2, y2, -offset))
+                }
+            }
+
             const mid = { x: (x1 + x2) / 2, y: (y1 + y2) / 2 }
 
             return (
@@ -103,12 +152,12 @@ export function GraphCanvas({ graph, width = '100%', height = 480, onNodeClick }
                 {isWeighted && (
                   <g transform={`translate(${mid.x}, ${mid.y})`} style={{ pointerEvents: 'none' }}>
                     <rect
-                      x={-(2 + String(e.weight ?? '').length * 1.8) / 2}
-                      y={-2}
-                      width={2 + String(e.weight ?? '').length * 1.8}
-                      height={4}
-                      rx={1}
-                      ry={1}
+                      x={-(1.5 + String(e.weight ?? '').length * 1.8) / 2}
+                      y={-1.5}
+                      width={ 1.5 + String(e.weight ?? '').length * 1.8}
+                      height={3}
+                      rx={1.5}
+                      ry={1.5}
                       fill="#ffffff"
                       opacity={0.8}
                     />
