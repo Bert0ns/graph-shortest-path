@@ -85,8 +85,9 @@ export function GraphCanvas({ graph, width = '100%', height = 480, onNodeClick }
             // Adjust for bidirectional edges
             const offset = 1.3
             if (isDirected) {
-                const pair1 = Array.from(bidirectionalEdges).find(p => (p.p1 === e))
-                const pair2 = Array.from(bidirectionalEdges).find(p => (p.p2 === e))
+                const _ = Array.from(bidirectionalEdges)
+                const pair1 = _.find(p => (p.p1 === e))
+                const pair2 = _.find(p => (p.p2 === e))
                 if (!!pair1) {
                     arcLine = transformLineParallel(arcLine, offset)
                 } else if (!!pair2) {
