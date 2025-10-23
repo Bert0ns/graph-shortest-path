@@ -1,8 +1,5 @@
+import GraphSimulator from '@/components/GraphSimulator'
 
 export default function Home() {
-  return (
-    <div>
-      hello world
-    </div>
-  );
+  return <GraphSimulator />
 }

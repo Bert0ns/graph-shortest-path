@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "directed": false,
+    "directed": true,
     "weighted": true,
     "name": "Sample — Dijkstra"
   },

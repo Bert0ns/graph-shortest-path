@@ -1,6 +1,16 @@
 'use client'
 
 import React from 'react'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Slider } from '@/components/ui/slider'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 export type AlgorithmKey = 'dijkstra'
 
@@ -18,19 +28,34 @@ export interface ControlsProps {
 
 export function Controls({ algorithm, onAlgorithmChange, isPlaying, onPlay, onPause, onStep, onReset, speed = 1, onSpeedChange }: ControlsProps) {
   return (
-    <div className="flex items-center gap-2 p-2">
-      <label className="text-sm">Algorithm</label>
-      <select value={algorithm} onChange={(e) => onAlgorithmChange?.(e.target.value as AlgorithmKey)} className="border rounded px-2 py-1 text-sm">
-        <option value="dijkstra">Dijkstra</option>
-      </select>
-      <button className="border rounded px-2 py-1 text-sm" onClick={isPlaying ? onPause : onPlay}>{isPlaying ? 'Pause' : 'Play'}</button>
-      <button className="border rounded px-2 py-1 text-sm" onClick={onStep}>Step</button>
-      <button className="border rounded px-2 py-1 text-sm" onClick={onReset}>Reset</button>
-      <label className="text-sm ml-2">Speed</label>
-      <input type="range" min={0.25} max={2} step={0.25} value={speed} onChange={(e) => onSpeedChange?.(Number(e.target.value))} />
+    <div className="flex flex-wrap items-center gap-3 p-3 border rounded-md bg-white/60">
+      <div className="flex items-center gap-2">
+        <Label htmlFor="algo" className="text-sm">Algorithm</Label>
+        <Select value={algorithm} onValueChange={(v) => onAlgorithmChange?.(v as AlgorithmKey)}>
+          <SelectTrigger id="algo" className="min-w-40">
+            <SelectValue placeholder="Select algorithm" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="dijkstra">Dijkstra</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="flex items-center gap-2">
+        <Button variant="default" onClick={isPlaying ? onPause : onPlay}>
+          {isPlaying ? 'Pause' : 'Play'}
+        </Button>
+        <Button variant="secondary" onClick={onStep}>Step</Button>
+        <Button variant="outline" onClick={onReset}>Reset</Button>
+      </div>
+
+      <div className="flex items-center gap-2 min-w-64">
+        <Label htmlFor="speed" className="text-sm w-12">Speed</Label>
+        <Slider id="speed" min={0.25} max={2} step={0.25} value={[speed]} onValueChange={(vals) => onSpeedChange?.(vals[0] ?? speed)} className="w-40" />
+        <span className="text-xs text-slate-600 tabular-nums">{speed.toFixed(2)}x</span>
+      </div>
     </div>
   )
 }
 
 export default Controls
-
