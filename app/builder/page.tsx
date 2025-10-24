@@ -4,7 +4,8 @@ import React from 'react'
 import {GraphCanvas} from '@/components/GraphCanvas'
 import type {Graph, GraphEdge, GraphNode} from '@/lib/graph/types'
 import {BuilderSidebar} from '@/components/builder/BuilderSidebar'
-import {isEdgeDuplicate, isNodeDuplicate} from "@/lib/graph/graph_functions";
+import {isEdgeAutoLoop, isEdgeDuplicate, isNodeDuplicate} from "@/lib/graph/graph_functions";
+import BuilderTopbar from "@/components/builder/BuilderTopBar";
 
 
 export default function GraphBuilderPage() {
@@ -21,7 +22,7 @@ export default function GraphBuilderPage() {
     }, [graph])
 
     const handleCreateEdge = React.useCallback((edge: GraphEdge) => {
-        if (!isEdgeDuplicate(graph, edge)) {
+        if (!isEdgeDuplicate(graph, edge) && !isEdgeAutoLoop(edge)) {
             setGraph((g) => ({...g, edges: [...g.edges, edge]}))
         }
     }, [graph])
@@ -52,6 +53,15 @@ export default function GraphBuilderPage() {
                 <div className="text-sm text-slate-600">MVP skeleton</div>
             </header>
 
+            <div>
+                <BuilderTopbar
+                    graph={graph}
+                    onCreateNode={handleCreateNode}
+                    onCreateEdge={handleCreateEdge}
+                    onUpdateMetadata={handleUpdateMetadata}
+                />
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <section className="md:col-span-3 bg-white/70 border rounded-md p-2">
                     <GraphCanvas graph={graph} height={560}/>
@@ -60,9 +70,6 @@ export default function GraphBuilderPage() {
                 <aside className="md:col-span-1">
                     <BuilderSidebar
                         graph={graph}
-                        onCreateNode={handleCreateNode}
-                        onCreateEdge={handleCreateEdge}
-                        onUpdateMetadata={handleUpdateMetadata}
                         onDeleteNode={handleDeleteNode}
                         onDeleteEdge={handleDeleteEdge}
                     />

@@ -31,3 +31,7 @@ export function isNodeDuplicate(graph: Graph, node: GraphNode): boolean {
     const dup = graph.nodes.find((n: GraphNode) => n.id === node.id)
     return !!dup
 }
+
+export function isEdgeAutoLoop(edge: GraphEdge): boolean {
+    return edge.from === edge.to
+}
