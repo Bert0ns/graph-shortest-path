@@ -4,6 +4,7 @@ import React from 'react'
 import type { GraphEdge, Graph } from '@/lib/graph/types'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
+import {toast} from "sonner";
 
 export interface AddEdgeSectionProps {
   nodes: Graph['nodes']
@@ -42,11 +43,11 @@ export function AddEdgeSection({ nodes, onCreateEdge }: AddEdgeSectionProps) {
         <div className="col-span-2 flex justify-end">
           <Button onClick={() => {
               if (edgeForm.from.trim() === '' && edgeForm.to.trim() === '') {
-                alert('Please select both From and To nodes.')
+                toast('Please select both From and To nodes.')
                 return
               }
               if(edgeForm.from === edgeForm.to) {
-                alert('From and To nodes cannot be the same.')
+                toast('From and To nodes cannot be the same.')
                 return
               }
               onCreateEdge({ from: edgeForm.from, to: edgeForm.to, weight: edgeForm.weight, label: edgeForm.label || undefined });

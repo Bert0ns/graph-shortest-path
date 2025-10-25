@@ -8,6 +8,7 @@ import {isEdgeAutoLoop, isEdgeDuplicate, isNodeDuplicate} from "@/lib/graph/grap
 import BuilderTopbar from "@/components/builder/BuilderTopBar";
 import {Button} from '@/components/ui/button'
 import {downloadGraphAsJSON, importGraphFromFile} from '@/lib/graph/loader'
+import {toast} from "sonner";
 
 
 export default function GraphBuilderPage() {
@@ -52,7 +53,7 @@ export default function GraphBuilderPage() {
     const handleExport = React.useCallback(() => {
         const {success, errors} = downloadGraphAsJSON(graph)
         if (!success) {
-            alert(`Export failed:\n- ${errors.join('\n- ')}`)
+            toast(`Export failed:\n- ${errors.join('\n- ')}`)
         }
     }, [graph])
 
@@ -64,7 +65,7 @@ export default function GraphBuilderPage() {
         const {graph, errors} = await importGraphFromFile(e.target.files?.[0])
         if (e.target) e.target.value = ''
         if (errors.length > 0) {
-            alert(`Import failed:\n- ${errors.join('\n- ')}`)
+            toast(`Import failed:\n- ${errors.join('\n- ')}`)
             return
         }
         setGraph(graph)

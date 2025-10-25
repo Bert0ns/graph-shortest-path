@@ -4,6 +4,7 @@ import React from 'react'
 import type {GraphNode} from '@/lib/graph/types'
 import {Label} from '@/components/ui/label'
 import {Button} from '@/components/ui/button'
+import {toast} from "sonner";
 
 export interface AddNodeSectionProps {
     onCreateNode: (node: GraphNode) => void
@@ -39,7 +40,7 @@ export function AddNodeSection({onCreateNode}: AddNodeSectionProps) {
                 <div className="col-span-2 flex justify-end">
                     <Button onClick={() => {
                         if (nodeForm.id.trim() === '') {
-                            alert('Node ID cannot be empty');
+                            toast('Node ID cannot be empty');
                             return;
                         }
                         onCreateNode({
