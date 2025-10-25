@@ -40,7 +40,18 @@ export function AddEdgeSection({ nodes, onCreateEdge }: AddEdgeSectionProps) {
           <input id="elabel" className="w-full border rounded px-2 py-1" value={edgeForm.label} onChange={(e) => setEdgeForm({ ...edgeForm, label: e.target.value })} />
         </div>
         <div className="col-span-2 flex justify-end">
-          <Button onClick={() => { onCreateEdge({ from: edgeForm.from, to: edgeForm.to, weight: edgeForm.weight, label: edgeForm.label || undefined }); setEdgeForm({ from: '', to: '', weight: 1, label: '' }) }}>Add Edge</Button>
+          <Button onClick={() => {
+              if (edgeForm.from.trim() === '' && edgeForm.to.trim() === '') {
+                alert('Please select both From and To nodes.')
+                return
+              }
+              if(edgeForm.from === edgeForm.to) {
+                alert('From and To nodes cannot be the same.')
+                return
+              }
+              onCreateEdge({ from: edgeForm.from, to: edgeForm.to, weight: edgeForm.weight, label: edgeForm.label || undefined });
+              setEdgeForm({ from: '', to: '', weight: 1, label: '' })
+          }}>Add Edge</Button>
         </div>
       </div>
     </section>

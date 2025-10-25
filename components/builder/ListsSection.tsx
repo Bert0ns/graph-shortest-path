@@ -32,7 +32,7 @@ export function ListsSection({ nodes, edges, onDeleteNode, onDeleteEdge }: Lists
           <ul className="text-sm divide-y">
             {edges.map((e, idx) => (
               <li key={`${e.from}->${e.to}-${idx}`} className="flex items-center justify-between py-1">
-                <span className="truncate">{e.from} → {e.to} ({e.weight})</span>
+                <span className="truncate">{e.from} → {e.to}, w:{e.weight}</span>
                 <Button variant="outline" size="sm" onClick={() => onDeleteEdge({ from: e.from, to: e.to, weight: e.weight })}>Delete</Button>
               </li>
             ))}
