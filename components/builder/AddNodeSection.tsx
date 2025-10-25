@@ -5,13 +5,14 @@ import type {GraphNode} from '@/lib/graph/types'
 import {Label} from '@/components/ui/label'
 import {Button} from '@/components/ui/button'
 import {toast} from "sonner";
+import { DEFAULT_NODE_X, DEFAULT_NODE_Y } from '@/lib/graph/graph_constants'
 
 export interface AddNodeSectionProps {
     onCreateNode: (node: GraphNode) => void
 }
 
 export function AddNodeSection({onCreateNode}: AddNodeSectionProps) {
-    const [nodeForm, setNodeForm] = React.useState({id: '', x: 0.2, y: 0.2, label: ''})
+    const [nodeForm, setNodeForm] = React.useState({id: '', x: DEFAULT_NODE_X, y: DEFAULT_NODE_Y, label: ''})
 
     return (
         <section className="bg-white/70 border rounded-md p-3 space-y-2">
@@ -49,7 +50,7 @@ export function AddNodeSection({onCreateNode}: AddNodeSectionProps) {
                             y: nodeForm.y,
                             label: nodeForm.label || undefined
                         });
-                        setNodeForm({id: '', x: 0.2, y: 0.2, label: ''})
+                        setNodeForm({id: '', x: DEFAULT_NODE_X, y: DEFAULT_NODE_Y, label: ''})
                     }}>Add Node</Button>
                 </div>
             </div>
@@ -58,4 +59,3 @@ export function AddNodeSection({onCreateNode}: AddNodeSectionProps) {
 }
 
 export default AddNodeSection
-

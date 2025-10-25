@@ -12,7 +12,7 @@ Status checklist (Builder implementation)
 - [ ] Drag-and-drop nodes on canvas with normalized coordinate updates
 - [ ] Live inline validation on forms for all constraints (some checks present, complete coverage pending)
 - [ ] Edit existing node/edge via selection (beyond delete)
-- [ ] Prevent magic numbers by moving remaining sizes to `lib/graph/graph_constants.ts`
+- [x] Prevent magic numbers by moving remaining sizes to `lib/graph/graph_constants.ts`
 - [ ] Accessibility/keyboard affordances for builder interactions
 - [ ] Optional: panning/zoom (deferred), grid/snap (deferred)
 

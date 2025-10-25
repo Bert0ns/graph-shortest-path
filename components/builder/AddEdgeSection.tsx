@@ -5,6 +5,7 @@ import type { GraphEdge, Graph } from '@/lib/graph/types'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import {toast} from "sonner";
+import { DEFAULT_EDGE_WEIGHT } from '@/lib/graph/graph_constants'
 
 export interface AddEdgeSectionProps {
   nodes: Graph['nodes']
@@ -12,7 +13,7 @@ export interface AddEdgeSectionProps {
 }
 
 export function AddEdgeSection({ nodes, onCreateEdge }: AddEdgeSectionProps) {
-  const [edgeForm, setEdgeForm] = React.useState({ from: '', to: '', weight: 1, label: '' })
+  const [edgeForm, setEdgeForm] = React.useState({ from: '', to: '', weight: DEFAULT_EDGE_WEIGHT, label: '' })
 
   return (
     <section className="bg-white/70 border rounded-md p-3 space-y-2">
@@ -51,7 +52,7 @@ export function AddEdgeSection({ nodes, onCreateEdge }: AddEdgeSectionProps) {
                 return
               }
               onCreateEdge({ from: edgeForm.from, to: edgeForm.to, weight: edgeForm.weight, label: edgeForm.label || undefined });
-              setEdgeForm({ from: '', to: '', weight: 1, label: '' })
+              setEdgeForm({ from: '', to: '', weight: DEFAULT_EDGE_WEIGHT, label: '' })
           }}>Add Edge</Button>
         </div>
       </div>
@@ -60,4 +61,3 @@ export function AddEdgeSection({ nodes, onCreateEdge }: AddEdgeSectionProps) {
 }
 
 export default AddEdgeSection
-

@@ -5,6 +5,38 @@ import type {Graph} from '@/lib/graph/types'
 import {GeometryLine, shortenLine, transformLineParallel} from "@/lib/geometry";
 import type { RelaxedEdge, DistanceMap } from '@/lib/algorithms/dijkstra'
 import {findBidirectionalEdges} from "@/lib/graph/graph_functions";
+import {
+  VIEWBOX_W as VB_W,
+  VIEWBOX_H as VB_H,
+  VIEWBOX_MARGIN as MARGIN,
+  NODE_RADIUS as RADIUS,
+  NODE_STROKE_WIDTH,
+  NODE_ID_FONT_SIZE,
+  LABEL_FONT_SIZE,
+  LABEL_OFFSET,
+  DISTANCE_FONT_SIZE,
+  DISTANCE_OFFSET,
+  EDGE_STROKE_WIDTH,
+  PATH_EDGE_STROKE_WIDTH,
+  RELAXED_EDGE_STROKE_WIDTH,
+  EDGE_NODE_GAP,
+  EDGE_PARALLEL_OFFSET,
+  ARROW_SIZE,
+  ARROW_SIZE_PATH,
+  ARROW_PULLBACK,
+  ARROW_REF_X,
+  START_RING_DELTA,
+  START_RING_STROKE_WIDTH,
+  END_RING_DELTA,
+  END_RING_STROKE_WIDTH,
+  END_RING_DASH,
+  WEIGHT_LABEL_FONT_SIZE,
+  WEIGHT_LABEL_HEIGHT,
+  WEIGHT_LABEL_PADDING,
+  WEIGHT_LABEL_CHAR_WIDTH,
+  ARROW_REF_Y,
+  WEIGHT_LABEL_BASELINE_TWEAK,
+} from '@/lib/graph/graph_constants'
 
 export interface GraphCanvasProps {
   graph: Graph | null
@@ -21,11 +53,6 @@ export interface GraphCanvasProps {
   startId?: string
   endId?: string
 }
-
-// ViewBox dimensions (logical units)
-const VB_W = 100
-const VB_H = 60
-const MARGIN = 6 // logical units padding around the edges
 
 export const convertToCanvasCoordinates = (x: number, y: number) => ({
     x: MARGIN + x * (VB_W - 2 * MARGIN),
@@ -55,9 +82,9 @@ export function GraphCanvas({
     )
   }
 
-  const radius = 3.2 // node circle radius in logical units
-  const arrowPullback = 1.0 // extra gap to keep arrowheads out of node
-  const arcStrokeWidth = 0.4
+  const radius = RADIUS
+  const arrowPullback = ARROW_PULLBACK
+  const arcStrokeWidth = EDGE_STROKE_WIDTH
 
   // Base palette
   const colors = {
@@ -84,7 +111,7 @@ export function GraphCanvas({
   const bidirectionalEdges = findBidirectionalEdges(graph.edges)
 
   // Prepare highlight sets (plain constants to avoid conditional hooks)
-  const visitedSet: Set<string> = ((): Set<string> => {
+  const visitedSet: Set<string> = (() => {
     if (!highlightVisited) return new Set()
     return highlightVisited instanceof Set ? new Set(highlightVisited) : new Set(highlightVisited)
   })()
@@ -92,7 +119,7 @@ export function GraphCanvas({
   const pathSet: Set<string> = new Set(highlightPath ?? [])
 
   // Precompute set of path edges for styling
-  const pathEdgeSet: Set<string> = ((): Set<string> => {
+  const pathEdgeSet: Set<string> = (() => {
     const s = new Set<string>()
     if (!highlightPath || highlightPath.length < 2) return s
     for (let i = 0; i < highlightPath.length - 1; i++) {
@@ -103,7 +130,7 @@ export function GraphCanvas({
     return s
   })()
 
-  const relaxedEdgeSet: Set<string> = ((): Set<string> => {
+  const relaxedEdgeSet: Set<string> = (() => {
     const s = new Set<string>()
     for (const re of highlightRelaxedEdges ?? []) s.add(`${re.from}->${re.to}`)
     return s
@@ -114,15 +141,15 @@ export function GraphCanvas({
       <svg viewBox={`0 0 ${VB_W} ${VB_H}`} className="w-full h-full bg-white/50 border border-slate-200 rounded">
         <defs>
           {/* default arrowhead */}
-          <marker id="arrow-default" viewBox="0 0 10 10" refX="8" refY="5" markerWidth={4} markerHeight={4} orient="auto-start-reverse">
+          <marker id="arrow-default" viewBox="0 0 10 10" refX={ARROW_REF_X} refY={ARROW_REF_Y} markerWidth={ARROW_SIZE} markerHeight={ARROW_SIZE} orient="auto-start-reverse">
             <path d="M 0 0 L 10 5 L 0 10 z" fill={colors.edgeActive} />
           </marker>
           {/* relaxed arrowhead */}
-          <marker id="arrow-relaxed" viewBox="0 0 10 10" refX="8" refY="5" markerWidth={4} markerHeight={4} orient="auto-start-reverse">
+          <marker id="arrow-relaxed" viewBox="0 0 10 10" refX={ARROW_REF_X} refY={ARROW_REF_Y} markerWidth={ARROW_SIZE} markerHeight={ARROW_SIZE} orient="auto-start-reverse">
             <path d="M 0 0 L 10 5 L 0 10 z" fill={colors.relaxedStroke} />
           </marker>
           {/* path arrowhead */}
-          <marker id="arrow-path" viewBox="0 0 10 10" refX="8" refY="5" markerWidth={4.5} markerHeight={4.5} orient="auto-start-reverse">
+          <marker id="arrow-path" viewBox="0 0 10 10" refX={ARROW_REF_X} refY={ARROW_REF_Y} markerWidth={ARROW_SIZE_PATH} markerHeight={ARROW_SIZE_PATH} orient="auto-start-reverse">
             <path d="M 0 0 L 10 5 L 0 10 z" fill={colors.pathStroke} />
           </marker>
         </defs>
@@ -137,11 +164,11 @@ export function GraphCanvas({
             const p2 = convertToCanvasCoordinates(to.x, to.y)
             let arcLine: GeometryLine = {x1: p1.x, y1: p1.y, x2: p2.x, y2: p2.y}
             // Pull back both ends so lines do not intersect node circles
-            const endGap = isDirected ? radius + arrowPullback : radius + 0.6
-            arcLine = shortenLine(arcLine, radius + 0.6, endGap)
+            const endGap = isDirected ? radius + arrowPullback : radius + EDGE_NODE_GAP
+            arcLine = shortenLine(arcLine, radius + EDGE_NODE_GAP, endGap)
 
             // Adjust for bidirectional edges
-            const offset = 1.3
+            const offset = EDGE_PARALLEL_OFFSET
             if (isDirected) {
                 const _ = Array.from(bidirectionalEdges)
                 const pair1 = _.find(p => (p.p1 === e))
@@ -160,8 +187,12 @@ export function GraphCanvas({
             const isPathEdge = pathEdgeSet.has(key)
             const isRelaxed = relaxedEdgeSet.has(key)
             const stroke = isPathEdge ? colors.pathStroke : isRelaxed ? colors.relaxedStroke : colors.edge
-            const width = isPathEdge ? 0.8 : isRelaxed ? 0.6 : arcStrokeWidth
+            const width = isPathEdge ? PATH_EDGE_STROKE_WIDTH : isRelaxed ? RELAXED_EDGE_STROKE_WIDTH : arcStrokeWidth
             const markerId = isDirected ? (isPathEdge ? 'url(#arrow-path)' : isRelaxed ? 'url(#arrow-relaxed)' : 'url(#arrow-default)') : undefined
+
+            // Weight label sizing
+            const weightText = String(e.weight ?? '')
+            const bubbleWidth = WEIGHT_LABEL_PADDING + weightText.length * WEIGHT_LABEL_CHAR_WIDTH
 
             return (
               <g key={`edge-${i}`}>
@@ -177,16 +208,16 @@ export function GraphCanvas({
                 {isWeighted && (
                   <g transform={`translate(${mid.x}, ${mid.y})`} style={{ pointerEvents: 'none' }}>
                     <rect
-                      x={-(1.5 + String(e.weight ?? '').length * 1.8) / 2}
-                      y={-1.5}
-                      width={1.5 + String(e.weight ?? '').length * 1.8}
-                      height={3}
-                      rx={1.5}
-                      ry={1.5}
+                      x={-bubbleWidth / 2}
+                      y={-WEIGHT_LABEL_HEIGHT / 2}
+                      width={bubbleWidth}
+                      height={WEIGHT_LABEL_HEIGHT}
+                      rx={WEIGHT_LABEL_HEIGHT / 2}
+                      ry={WEIGHT_LABEL_HEIGHT / 2}
                       fill="#ffffff"
                       opacity={0.8}
                     />
-                    <text x={0} y={1} textAnchor="middle" fontSize={3} fill={colors.text} style={{ fontWeight: 500 }}>
+                    <text x={0} y={WEIGHT_LABEL_FONT_SIZE / 2 - WEIGHT_LABEL_BASELINE_TWEAK} textAnchor="middle" fontSize={WEIGHT_LABEL_FONT_SIZE} fill={colors.text} style={{ fontWeight: 500 }}>
                       {e.weight}
                     </text>
                   </g>
@@ -221,28 +252,28 @@ export function GraphCanvas({
               <g key={n.id} className="cursor-pointer" onClick={() => onNodeClick?.(n.id)}>
                 {/* Start/End outer rings */}
                 {startId === n.id && (
-                  <circle cx={p.x} cy={p.y} r={radius + 1.2} fill="none" stroke={colors.startRing} strokeWidth={0.7} />
+                  <circle cx={p.x} cy={p.y} r={radius + START_RING_DELTA} fill="none" stroke={colors.startRing} strokeWidth={START_RING_STROKE_WIDTH} />
                 )}
                 {endId === n.id && (
-                  <circle cx={p.x} cy={p.y} r={radius + 2.1} fill="none" stroke={colors.endRing} strokeWidth={0.7} strokeDasharray="2 1" />
+                  <circle cx={p.x} cy={p.y} r={radius + END_RING_DELTA} fill="none" stroke={colors.endRing} strokeWidth={END_RING_STROKE_WIDTH} strokeDasharray={END_RING_DASH} />
                 )}
 
                 {/* Core circle */}
-                <circle cx={p.x} cy={p.y} r={radius} fill={fill} stroke={stroke} strokeWidth={0.9} />
+                <circle cx={p.x} cy={p.y} r={radius} fill={fill} stroke={stroke} strokeWidth={NODE_STROKE_WIDTH} />
 
                 {/* Node ID inside the circle */}
-                <text x={p.x} y={p.y} textAnchor="middle" dominantBaseline="middle" fontSize={2.8} fill={colors.text} style={{ fontWeight: 600 }}>
+                <text x={p.x} y={p.y} textAnchor="middle" dominantBaseline="middle" fontSize={NODE_ID_FONT_SIZE} fill={colors.text} style={{ fontWeight: 600 }}>
                   {n.id}
                 </text>
                 {/* External label above the node (if distinct) */}
                 {label !== n.id && (
-                  <text x={p.x} y={p.y - radius - 1.2} textAnchor="middle" fontSize={2.4} fill={colors.text}>
+                  <text x={p.x} y={p.y - radius - LABEL_OFFSET} textAnchor="middle" fontSize={LABEL_FONT_SIZE} fill={colors.text}>
                     {label}
                   </text>
                 )}
                 {/* Tentative distance below the node (if provided) */}
                 {hasDist && (
-                  <text x={p.x} y={p.y + radius + 2.2} textAnchor="middle" fontSize={2.2} fill={colors.distanceText}>
+                  <text x={p.x} y={p.y + radius + DISTANCE_OFFSET} textAnchor="middle" fontSize={DISTANCE_FONT_SIZE} fill={colors.distanceText}>
                     {dVal}
                   </text>
                 )}
