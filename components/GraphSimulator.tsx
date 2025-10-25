@@ -8,7 +8,7 @@ import {GraphCanvas} from '@/components/GraphCanvas'
 import {GRAPH_SAMPLE_PATH, loadGraphFromUrl} from '@/lib/graph/loader'
 import type {Graph, NodeId} from '@/lib/graph/types'
 import {type DijkstraState, DijkstraStepper} from '@/lib/algorithms/dijkstra'
-import {getCachedGraph} from "@/lib/graph/cache";
+import {getCachedGraph, setCachedGraph} from "@/lib/graph/cache";
 
 interface GraphSimulatorProps {
     // If provided, the simulator renders this graph instead of loading the sample.
@@ -58,9 +58,12 @@ export default function GraphSimulator({importedGraph = null}: GraphSimulatorPro
         loadGraphFromUrl(GRAPH_SAMPLE_PATH)
             .then((g) => {
                 initializeFromGraph(g)
+                setCachedGraph(g)
             })
             .catch((e: unknown) => setError(String(e)))
-            .finally(() => setLoading(false))
+            .finally(() => {
+                setLoading(false)
+            })
     }, [importedGraph, initializeFromGraph])
 
     // If the parent provides/replaces an imported graph later, re-init from it

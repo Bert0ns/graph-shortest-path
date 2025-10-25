@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { importGraphFromFile } from '@/lib/graph/loader'
 import type { Graph } from '@/lib/graph/types'
 import { toast } from 'sonner'
-import { getCachedGraph, setCachedGraph, clearCachedGraph } from '@/lib/graph/cache'
+import { getCachedGraph, setCachedGraph } from '@/lib/graph/cache'
 
 export default function Home() {
   const [importedGraph, setImportedGraph] = React.useState<Graph | null>(null)
@@ -40,12 +40,6 @@ export default function Home() {
     e.target.value = ''
   }, [])
 
-  const onClearGraph = React.useCallback(() => {
-    clearCachedGraph()
-    setImportedGraph(null)
-    toast.info('Cleared cached graph', { description: 'Reverting to sample graph' })
-  }, [])
-
   return (
     <main className="container mx-auto p-4 space-y-4">
       <div className="flex items-center justify-between gap-3">
@@ -60,7 +54,6 @@ export default function Home() {
           />
           <Button variant="default" onClick={onClickImport}>Import graph</Button>
           <Link href="/builder"><Button variant="outline">Open Graph Builder</Button></Link>
-          <Button variant="ghost" onClick={onClearGraph}>Clear graph</Button>
         </div>
       </div>
       <GraphSimulator importedGraph={importedGraph} />
