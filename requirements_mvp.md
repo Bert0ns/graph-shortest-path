@@ -15,6 +15,7 @@ Status checklist (MVP implementation)
 - [x] Minimal pastel UI via shadcn components
 - [x] Cross-page graph cache (Builder ↔ Simulator) via localStorage with validation
 - [x] Clear graph action in Builder; fallback to sample on simulator
+- [x] Contextual tooltips for key actions (Visualizer: click nodes to set start/end; Builder: drag nodes to reposition)
 - [ ] Keyboard shortcuts (Space, N, R)
 - [ ] Unit tests for Dijkstra and validators
 - [ ] Accessibility pass (focus states, aria labels, contrast review)
@@ -125,7 +126,9 @@ Example JSON (normalized coordinates):
   - Main canvas: responsive SVG area.
   - Optional right/left drawer for queue/distances panel.
 - Interactions
-  - Hover tooltips for node id and distance.
+  - Hover tooltips for key actions and controls:
+    - Visualizer: on nodes, “Click to set start/end”. On controls, “Play/Pause animation”, “Step forward once”, “Reset to initial state”, “Change speed”.
+    - Builder: on nodes, “Drag to reposition node” (edges update automatically). On toolbar/buttons, “Import/Export/Clear graph”.
   - Keyboard shortcuts (MVP): Space (play/pause), N (step), R (reset).
 - Accessibility
   - Focusable controls; aria labels; sufficient contrast.

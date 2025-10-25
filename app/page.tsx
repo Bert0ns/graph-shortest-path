@@ -52,8 +52,8 @@ export default function Home() {
             className="hidden"
             onChange={onFileChange}
           />
-          <Button variant="default" onClick={onClickImport}>Import graph</Button>
-          <Link href="/builder"><Button variant="outline">Open Graph Builder</Button></Link>
+          <Button variant="default" onClick={onClickImport} title="Import a graph JSON file to visualize">Import graph</Button>
+          <Link href="/builder" title="Open the graph builder to edit or create a graph"><Button variant="outline">Open Graph Builder</Button></Link>
         </div>
       </div>
       <GraphSimulator importedGraph={importedGraph} />

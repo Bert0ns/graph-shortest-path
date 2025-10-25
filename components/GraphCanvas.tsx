@@ -252,74 +252,64 @@ export function GraphCanvas({
                     // Node style precedence: current > visited > frontier > path > base
                     let fill = colors.nodeFill
                     let stroke = colors.nodeStroke
-                    if (inPath) {
-                        fill = colors.pathFill;
-                        stroke = colors.pathStroke
-                    }
-                    if (inFrontier) {
-                        fill = colors.frontierFill;
-                        stroke = colors.frontierStroke
-                    }
-                    if (isVisited) {
-                        fill = colors.visitedFill;
-                        stroke = colors.visitedStroke
-                    }
-                    if (isCurrent) {
-                        fill = colors.currentFill;
-                        stroke = colors.currentStroke
-                    }
+                    if (inPath) { fill = colors.pathFill; stroke = colors.pathStroke }
+                    if (inFrontier) { fill = colors.frontierFill; stroke = colors.frontierStroke }
+                    if (isVisited) { fill = colors.visitedFill; stroke = colors.visitedStroke }
+                    if (isCurrent) { fill = colors.currentFill; stroke = colors.currentStroke }
 
                     const dVal = distances?.[n.id]
                     const hasDist = typeof dVal === 'number' && isFinite(dVal)
 
                     const draggable = draggableNodes && !!onNodePositionChange
                     const cursor = draggable ? 'grab' : 'pointer'
+                    const nodeHint = draggable ? `Drag to reposition node ${n.id}` : `Click to select ${n.id} as start/end`
 
                     return (
                         <g key={n.id}
                            className="select-none"
-                           style={{cursor}}
+                           style={{ cursor }}
                            onClick={() => onNodeClick?.(n.id)}
                            onMouseDown={(e) => {
-                               if (!draggable) return
-                               e.preventDefault()
-                               beginDragging(n.id)
+                             if (!draggable) return
+                             e.preventDefault()
+                             beginDragging(n.id)
                            }}
                         >
-                            {/* Start/End outer rings */}
-                            {startId === n.id && (
-                                <circle cx={p.x} cy={p.y} r={radius + START_RING_DELTA} fill="none"
-                                        stroke={colors.startRing} strokeWidth={START_RING_STROKE_WIDTH}/>
-                            )}
-                            {endId === n.id && (
-                                <circle cx={p.x} cy={p.y} r={radius + END_RING_DELTA} fill="none"
-                                        stroke={colors.endRing} strokeWidth={END_RING_STROKE_WIDTH}
-                                        strokeDasharray={END_RING_DASH}/>
-                            )}
+                          <title>{nodeHint}</title>
+                          {/* Start/End outer rings */}
+                          {startId === n.id && (
+                              <circle cx={p.x} cy={p.y} r={radius + START_RING_DELTA} fill="none"
+                                      stroke={colors.startRing} strokeWidth={START_RING_STROKE_WIDTH}/>
+                          )}
+                          {endId === n.id && (
+                              <circle cx={p.x} cy={p.y} r={radius + END_RING_DELTA} fill="none"
+                                      stroke={colors.endRing} strokeWidth={END_RING_STROKE_WIDTH}
+                                      strokeDasharray={END_RING_DASH}/>
+                          )}
 
-                            {/* Core circle */}
-                            <circle cx={p.x} cy={p.y} r={radius} fill={fill} stroke={stroke}
-                                    strokeWidth={NODE_STROKE_WIDTH}/>
+                          {/* Core circle */}
+                          <circle cx={p.x} cy={p.y} r={radius} fill={fill} stroke={stroke}
+                                  strokeWidth={NODE_STROKE_WIDTH}/>
 
-                            {/* Node ID inside the circle */}
-                            <text x={p.x} y={p.y} textAnchor="middle" dominantBaseline="middle"
-                                  fontSize={NODE_ID_FONT_SIZE} fill={colors.text} style={{fontWeight: 600}}>
-                                {n.id}
-                            </text>
-                            {/* External label above the node (if distinct) */}
-                            {label !== n.id && (
-                                <text x={p.x} y={p.y - radius - LABEL_OFFSET} textAnchor="middle"
-                                      fontSize={LABEL_FONT_SIZE} fill={colors.text}>
-                                    {label}
-                                </text>
-                            )}
-                            {/* Tentative distance below the node (if provided) */}
-                            {hasDist && (
-                                <text x={p.x} y={p.y + radius + DISTANCE_OFFSET} textAnchor="middle"
-                                      fontSize={DISTANCE_FONT_SIZE} fill={colors.distanceText}>
-                                    {dVal}
-                                </text>
-                            )}
+                          {/* Node ID inside the circle */}
+                          <text x={p.x} y={p.y} textAnchor="middle" dominantBaseline="middle"
+                                fontSize={NODE_ID_FONT_SIZE} fill={colors.text} style={{fontWeight: 600}}>
+                            {n.id}
+                          </text>
+                          {/* External label above the node (if distinct) */}
+                          {label !== n.id && (
+                              <text x={p.x} y={p.y - radius - LABEL_OFFSET} textAnchor="middle"
+                                    fontSize={LABEL_FONT_SIZE} fill={colors.text}>
+                                {label}
+                              </text>
+                          )}
+                          {/* Tentative distance below the node (if provided) */}
+                          {hasDist && (
+                              <text x={p.x} y={p.y + radius + DISTANCE_OFFSET} textAnchor="middle"
+                                    fontSize={DISTANCE_FONT_SIZE} fill={colors.distanceText}>
+                                {dVal}
+                              </text>
+                          )}
                         </g>
                     )
                 })}

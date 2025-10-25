@@ -103,8 +103,8 @@ export default function GraphBuilderPage() {
         <main className="container mx-auto p-4 space-y-4">
             <header className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                    <Link href="/"><Button variant="outline">Back to Home</Button></Link>
-                    <h1 className="text-xl font-semibold text-slate-800">Graph Builder</h1>
+                    <Link href="/"><Button variant="outline" title="Back to the main visualizer">Back to Home</Button></Link>
+                    <h1 className="text-xl font-semibold text-slate-800" title="Graph Builder — create nodes and edges, drag nodes to reposition">Graph Builder</h1>
                 </div>
                 <div className="flex items-center gap-2">
                     <input
@@ -114,9 +114,9 @@ export default function GraphBuilderPage() {
                         className="hidden"
                         onChange={handleImportFile}
                     />
-                    <Button variant="ghost" onClick={handleClear}>Clear graph</Button>
-                    <Button variant="outline" onClick={handleImportClick}>Import JSON</Button>
-                    <Button onClick={handleExport}>Export JSON</Button>
+                    <Button variant="ghost" onClick={handleClear} title="Clear the current graph and cache">Clear graph</Button>
+                    <Button variant="outline" onClick={handleImportClick} title="Import a graph JSON file to edit">Import JSON</Button>
+                    <Button onClick={handleExport} title="Export the current graph as JSON">Export JSON</Button>
                 </div>
             </header>
 
@@ -130,7 +130,7 @@ export default function GraphBuilderPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <section className="md:col-span-3 bg-white/70 border rounded-md p-2">
+                <section className="md:col-span-3 bg-white/70 border rounded-md p-2" title="Canvas — drag nodes to reposition; edges update automatically">
                     <GraphCanvas
                         graph={graph}
                         height={560}
