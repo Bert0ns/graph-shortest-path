@@ -131,7 +131,18 @@ export default function GraphBuilderPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <section className="md:col-span-3 bg-white/70 border rounded-md p-2">
-                    <GraphCanvas graph={graph} height={560} showGrid />
+                    <GraphCanvas
+                        graph={graph}
+                        height={560}
+                        showGrid
+                        draggableNodes
+                        onNodePositionChange={(id, x, y) => {
+                            setGraph((g) => ({
+                                ...g,
+                                nodes: g.nodes.map((n) => n.id === id ? { ...n, x, y } : n),
+                            }))
+                        }}
+                    />
                 </section>
 
                 <aside className="md:col-span-1">

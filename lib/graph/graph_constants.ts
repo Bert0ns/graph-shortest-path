@@ -1,5 +1,23 @@
 // Centralized constants for graph rendering/building (no magic numbers)
 
+// Base palette
+export const colors = {
+    edge: '#94a3b8', // slate-400
+    edgeActive: '#64748b', // slate-500
+    nodeFill: '#A7F3D0', // emerald-200 (legend Node)
+    nodeStroke: '#34D399', // emerald-400
+    text: '#334155', // slate-700
+    // Highlights
+    frontierFill: '#BFDBFE', frontierStroke: '#60A5FA', // blue-200/blue-400
+    currentFill: '#FDE68A', currentStroke: '#F59E0B', // amber-200/amber-500
+    visitedFill: '#FCA5A5', visitedStroke: '#F87171', // red-300/red-400
+    pathFill: '#C4B5FD', pathStroke: '#8B5CF6', // violet-300/violet-600
+    relaxedStroke: '#F59E0B', // amber-500 for relaxed edges
+    startRing: '#10B981', // emerald-500
+    endRing: '#6366F1', // indigo-500
+    distanceText: '#cc0800', // slate-600 for distances
+}
+
 // SVG viewBox dimensions and margins (logical units)
 export const VIEWBOX_W = 100
 export const VIEWBOX_H = 60

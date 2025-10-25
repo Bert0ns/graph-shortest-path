@@ -9,8 +9,8 @@ Status checklist (Builder implementation)
 - [x] Import JSON (file picker) with validation and toasts (Sonner)
 - [x] Export JSON (validates and downloads)
 - [x] Local cache sync with Simulator via localStorage (auto-load/save, clear action)
-- [ ] Background grid in canvas with coordinate ticks (builder-only, subtle and elegant)
-- [ ] Drag-and-drop nodes on canvas with normalized coordinate updates
+- [x] Background grid in canvas with coordinate ticks (builder-only, subtle and elegant)
+- [x] Drag-and-drop nodes on canvas with normalized coordinate updates
 - [ ] Live inline validation on forms for all constraints (some checks present, complete coverage pending)
 - [ ] Edit existing node/edge via selection (beyond delete)
 - [x] Prevent magic numbers by moving remaining sizes to `lib/graph/graph_constants.ts`
