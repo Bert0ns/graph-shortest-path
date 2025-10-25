@@ -88,15 +88,13 @@ export function GraphCanvas({
 
     const bidirectionalEdges = React.useMemo(() => findBidirectionalEdges(graph?.edges ?? []), [graph])
 
-    // Prepare highlight sets
+    // Prepare sets
     const visitedSet: Set<string> = React.useMemo(() => {
         if (!highlightVisited) return new Set()
         return highlightVisited instanceof Set ? new Set(highlightVisited) : new Set(highlightVisited)
     }, [highlightVisited])
     const frontierSet: Set<string> = React.useMemo(() => new Set(highlightFrontier ?? []), [highlightFrontier])
     const pathSet: Set<string> = React.useMemo(() => new Set(highlightPath ?? []), [highlightPath])
-
-    // Precompute set of path edges for styling
     const pathEdgeSet: Set<string> = React.useMemo(() => {
         const s = new Set<string>()
         if (!highlightPath || highlightPath.length < 2) return s
@@ -107,7 +105,6 @@ export function GraphCanvas({
         }
         return s
     }, [highlightPath])
-
     const relaxedEdgeSet: Set<string> = React.useMemo(() => {
         const s = new Set<string>()
         for (const re of highlightRelaxedEdges ?? []) s.add(`${re.from}->${re.to}`)
@@ -116,6 +113,7 @@ export function GraphCanvas({
 
     const clientToNormalized = React.useCallback((clientX: number, clientY: number) => clientToNormalizedFromSvg(svgRef.current, clientX, clientY, VIEWBOX_W, VIEWBOX_H, VIEWBOX_MARGIN), [svgRef])
 
+    //Mouse dragging handlers
     const handleGlobalMouseMove = React.useCallback((e: MouseEvent) => {
         if (!draggableNodes) return
         const id = draggingIdRef.current
@@ -123,22 +121,17 @@ export function GraphCanvas({
         const {x, y} = clientToNormalized(e.clientX, e.clientY)
         onNodePositionChange?.(id, x, y)
     }, [clientToNormalized, draggableNodes, onNodePositionChange])
-
     const endDragging = React.useCallback(function onMouseUp() {
         draggingIdRef.current = null
         window.removeEventListener('mousemove', handleGlobalMouseMove)
         window.removeEventListener('mouseup', onMouseUp)
     }, [handleGlobalMouseMove])
-
     const beginDragging = React.useCallback((id: NodeId) => {
         if (!draggableNodes) return
         draggingIdRef.current = id
         window.addEventListener('mousemove', handleGlobalMouseMove)
         window.addEventListener('mouseup', endDragging)
     }, [draggableNodes, handleGlobalMouseMove, endDragging])
-
-    // Render grid if enabled
-    const grid = showGrid ? <GraphGrid/> : null
 
     const content = graph ? (
         <>
@@ -336,7 +329,7 @@ export function GraphCanvas({
                 </defs>
 
                 {/* Grid */}
-                {grid}
+                {showGrid ? <GraphGrid/> : null}
 
                 {content}
             </svg>
