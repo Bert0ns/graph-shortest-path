@@ -9,6 +9,7 @@ Status checklist (Builder implementation)
 - [x] Import JSON (file picker) with validation and toasts (Sonner)
 - [x] Export JSON (validates and downloads)
 - [x] Local cache sync with Simulator via localStorage (auto-load/save, clear action)
+- [ ] Background grid in canvas with coordinate ticks (builder-only, subtle and elegant)
 - [ ] Drag-and-drop nodes on canvas with normalized coordinate updates
 - [ ] Live inline validation on forms for all constraints (some checks present, complete coverage pending)
 - [ ] Edit existing node/edge via selection (beyond delete)
@@ -28,6 +29,7 @@ Goal: Provide an interactive page to construct graph JSON files that are compati
   - Drag-and-drop nodes to adjust their positions; edges update dynamically.
   - Create edges (arcs) via a form (from, to, weight); edge is not draggable.
   - Edit graph metadata (directed, weighted, name, description).
+  - Background grid in the builder canvas with coordinate ticks for reference (subtle, low-contrast).
   - Live validation and helpful error messages.
   - Export the built graph as a JSON file conforming to the app schema.
   - Import an existing JSON to continue editing (optional if time permits, but recommended).
@@ -104,6 +106,14 @@ Use as reference the already created component GraphCanvas.tsx. Extract common r
   - Straight line or slight curve (if needed later). For MVP, straight line.
   - Arrowheads for directed graphs; arrowheads must remain visible (clip/offset lines to end at the circle boundary, not center).
   - Weight label positioned at the midpoint of the edge, offset to avoid overlap.
+- Background Grid (Builder):
+  - Render a background SVG grid below edges and nodes; it must be subtle, elegant, and non-intrusive.
+  - Coordinates are normalized to [0,1] in both axes; grid lines align to normalized ticks.
+  - Minor lines every `GRID_MINOR_STEP` (e.g., 0.05 or 0.1), major lines every `GRID_MAJOR_STEP` (e.g., 0.25).
+  - Draw axis labels for major ticks near the top/left edges using a small font; avoid overlap with nodes/edges.
+  - Colors/opacity must be low-contrast pastel (e.g., minor: slate-200 @ 30% opacity, major: slate-400 @ 40–50%).
+  - Grid must scale with the SVG viewBox and remain crisp on resize.
+  - All sizes and steps come from constants; no magic numbers.
 - Styling:
   - Pastel palette; selected/hover states distinct and accessible.
   - Tailwind utility classes and CSS variables; no hard-coded literal numbers without named constants.
@@ -149,7 +159,9 @@ Use as reference the already created component GraphCanvas.tsx. Extract common r
 
 ## Constants (No Magic Numbers)
 - All sizes and timings must be defined via constants or CSS variables:
-  - NODE_RADIUS, NODE_STROKE_WIDTH, EDGE_STROKE_WIDTH, ARROW_SIZE, LABEL_OFFSET, HITBOX_PADDING, GRID_SIZE (if snapping), ZOOM_MIN/MAX, PAN_SPEED.
+  - NODE_RADIUS, NODE_STROKE_WIDTH, EDGE_STROKE_WIDTH, ARROW_SIZE, LABEL_OFFSET, HITBOX_PADDING,
+  - GRID_MINOR_STEP, GRID_MAJOR_STEP, GRID_LABEL_FONT_SIZE, GRID_LABEL_OFFSET,
+  - GRID_COLOR_MINOR, GRID_COLOR_MAJOR, GRID_OPACITY_MINOR, GRID_OPACITY_MAJOR.
 - Keep them in a single config module (e.g., `lib/graph/graph_constants.ts`) and reference consistently.
 
 ## Testing & Acceptance Criteria (MVP)
@@ -157,6 +169,7 @@ Use as reference the already created component GraphCanvas.tsx. Extract common r
 - Exported JSON passes `validateGraphFile` and can be opened by the existing viewer.
 - Directed toggle shows/hides arrowheads without clipping.
 - Node id text is inside the circle; labels are outside and readable.
+- Builder canvas shows a subtle grid with coordinate labels; grid scales correctly with the viewBox.
 - Form validation prevents bad inputs (e.g., x = 1.5; duplicate id; unknown node in edge).
 
 ## Future Enhancements (Non-MVP)

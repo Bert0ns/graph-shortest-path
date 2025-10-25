@@ -5,6 +5,7 @@ import type {Graph} from '@/lib/graph/types'
 import {GeometryLine, shortenLine, transformLineParallel} from "@/lib/geometry";
 import type { RelaxedEdge, DistanceMap } from '@/lib/algorithms/dijkstra'
 import {findBidirectionalEdges} from "@/lib/graph/graph_functions";
+import GraphGrid from '@/components/GraphGrid'
 import {
   VIEWBOX_W as VB_W,
   VIEWBOX_H as VB_H,
@@ -52,6 +53,8 @@ export interface GraphCanvasProps {
   distances?: DistanceMap
   startId?: string
   endId?: string
+  // Rendering options
+  showGrid?: boolean
 }
 
 export const convertToCanvasCoordinates = (x: number, y: number) => ({
@@ -72,6 +75,7 @@ export function GraphCanvas({
   distances,
   startId,
   endId,
+  showGrid = false,
 }: GraphCanvasProps) {
   // Early empty state
   if (!graph) {
@@ -153,6 +157,9 @@ export function GraphCanvas({
             <path d="M 0 0 L 10 5 L 0 10 z" fill={colors.pathStroke} />
           </marker>
         </defs>
+
+        {/* Grid */}
+        {showGrid ? <GraphGrid /> : null}
 
         {/* Edges */}
         <g>

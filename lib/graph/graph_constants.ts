@@ -49,3 +49,14 @@ export const HITBOX_PADDING = 0.8
 export const DEFAULT_NODE_X = 0.2
 export const DEFAULT_NODE_Y = 0.2
 export const DEFAULT_EDGE_WEIGHT = 1
+
+// Grid (builder canvas)
+export const GRID_MINOR_STEP = 0.05 // normalized units
+export const GRID_MAJOR_STEP = 0.25 // normalized units
+export const GRID_LABEL_FONT_SIZE = 1.8
+export const GRID_LABEL_OFFSET = 0.9 // offset from inner bounds
+export const GRID_COLOR_MINOR = '#d5dfeb' // slate-300
+export const GRID_COLOR_MAJOR = '#9eaec3' // slate-400
+export const GRID_OPACITY_MINOR = 0.3
+export const GRID_OPACITY_MAJOR = 0.45
+export const GRID_LABEL_COLOR = '#9eaec3' // slate-400
