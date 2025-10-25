@@ -24,21 +24,22 @@ import {
     LABEL_FONT_SIZE,
     LABEL_OFFSET,
     NODE_ID_FONT_SIZE,
-    NODE_RADIUS as RADIUS,
+    NODE_RADIUS,
     NODE_STROKE_WIDTH,
     PATH_EDGE_STROKE_WIDTH,
     RELAXED_EDGE_STROKE_WIDTH,
     START_RING_DELTA,
     START_RING_STROKE_WIDTH,
-    VIEWBOX_H as VB_H,
-    VIEWBOX_MARGIN as MARGIN,
-    VIEWBOX_W as VB_W,
+    VIEWBOX_H,
+    VIEWBOX_MARGIN,
+    VIEWBOX_W,
     WEIGHT_LABEL_BASELINE_TWEAK,
     WEIGHT_LABEL_CHAR_WIDTH,
     WEIGHT_LABEL_FONT_SIZE,
     WEIGHT_LABEL_HEIGHT,
     WEIGHT_LABEL_PADDING,
 } from '@/lib/graph/graph_constants'
+import {clientToNormalizedFromSvg, convertToCanvasCoordinates} from "@/lib/graph/canvas_utils";
 
 export interface GraphCanvasProps {
     graph: Graph | null
@@ -61,11 +62,6 @@ export interface GraphCanvasProps {
     onNodePositionChange?: (id: NodeId, x: number, y: number) => void
 }
 
-export const convertToCanvasCoordinates = (x: number, y: number) => ({
-    x: MARGIN + x * (VB_W - 2 * MARGIN),
-    y: MARGIN + y * (VB_H - 2 * MARGIN),
-})
-
 export function GraphCanvas({
                                 graph,
                                 width = '100%',
@@ -85,10 +81,6 @@ export function GraphCanvas({
                             }: GraphCanvasProps) {
     const svgRef = React.useRef<SVGSVGElement | null>(null)
     const draggingIdRef = React.useRef<string | null>(null)
-
-    const radius = RADIUS
-    const arrowPullback = ARROW_PULLBACK
-    const arcStrokeWidth = EDGE_STROKE_WIDTH
 
     const nodeIndex = React.useMemo((): Map<NodeId, GraphNode> => new Map((graph?.nodes ?? []).map(n => [n.id, n])), [graph])
     const isDirected = !!graph?.metadata?.directed
@@ -122,21 +114,7 @@ export function GraphCanvas({
         return s
     }, [highlightRelaxedEdges])
 
-    // Drag handlers (builder only)
-    const clientToNormalized = React.useCallback((clientX: number, clientY: number) => {
-        const svg = svgRef.current
-        if (!svg) return {x: 0, y: 0}
-        const rect = svg.getBoundingClientRect()
-        const px = (clientX - rect.left) / (rect.width || 1)
-        const py = (clientY - rect.top) / (rect.height || 1)
-        const vbX = px * VB_W
-        const vbY = py * VB_H
-        let nx = (vbX - MARGIN) / (VB_W - 2 * MARGIN)
-        let ny = (vbY - MARGIN) / (VB_H - 2 * MARGIN)
-        nx = Math.max(0, Math.min(1, nx))
-        ny = Math.max(0, Math.min(1, ny))
-        return {x: nx, y: ny}
-    }, [])
+    const clientToNormalized = React.useCallback((clientX: number, clientY: number) => clientToNormalizedFromSvg(svgRef.current, clientX, clientY, VIEWBOX_W, VIEWBOX_H, VIEWBOX_MARGIN), [svgRef])
 
     const handleGlobalMouseMove = React.useCallback((e: MouseEvent) => {
         if (!draggableNodes) return
@@ -174,8 +152,8 @@ export function GraphCanvas({
                     const p2 = convertToCanvasCoordinates(to.x, to.y)
                     let arcLine: GeometryLine = {x1: p1.x, y1: p1.y, x2: p2.x, y2: p2.y}
                     // Pull back both ends so lines do not intersect node circles
-                    const endGap = isDirected ? radius + arrowPullback : radius + EDGE_NODE_GAP
-                    arcLine = shortenLine(arcLine, radius + EDGE_NODE_GAP, endGap)
+                    const endGap = isDirected ? NODE_RADIUS + ARROW_PULLBACK : NODE_RADIUS + EDGE_NODE_GAP
+                    arcLine = shortenLine(arcLine, NODE_RADIUS + EDGE_NODE_GAP, endGap)
 
                     // Adjust for bidirectional edges
                     const offset = EDGE_PARALLEL_OFFSET
@@ -197,7 +175,7 @@ export function GraphCanvas({
                     const isPathEdge = pathEdgeSet.has(key)
                     const isRelaxed = relaxedEdgeSet.has(key)
                     const stroke = isPathEdge ? colors.pathStroke : isRelaxed ? colors.relaxedStroke : colors.edge
-                    const width = isPathEdge ? PATH_EDGE_STROKE_WIDTH : isRelaxed ? RELAXED_EDGE_STROKE_WIDTH : arcStrokeWidth
+                    const width = isPathEdge ? PATH_EDGE_STROKE_WIDTH : isRelaxed ? RELAXED_EDGE_STROKE_WIDTH : EDGE_STROKE_WIDTH
                     const markerId = isDirected ? (isPathEdge ? 'url(#arrow-path)' : isRelaxed ? 'url(#arrow-relaxed)' : 'url(#arrow-default)') : undefined
 
                     // Weight label sizing
@@ -252,10 +230,22 @@ export function GraphCanvas({
                     // Node style precedence: current > visited > frontier > path > base
                     let fill = colors.nodeFill
                     let stroke = colors.nodeStroke
-                    if (inPath) { fill = colors.pathFill; stroke = colors.pathStroke }
-                    if (inFrontier) { fill = colors.frontierFill; stroke = colors.frontierStroke }
-                    if (isVisited) { fill = colors.visitedFill; stroke = colors.visitedStroke }
-                    if (isCurrent) { fill = colors.currentFill; stroke = colors.currentStroke }
+                    if (inPath) {
+                        fill = colors.pathFill;
+                        stroke = colors.pathStroke
+                    }
+                    if (inFrontier) {
+                        fill = colors.frontierFill;
+                        stroke = colors.frontierStroke
+                    }
+                    if (isVisited) {
+                        fill = colors.visitedFill;
+                        stroke = colors.visitedStroke
+                    }
+                    if (isCurrent) {
+                        fill = colors.currentFill;
+                        stroke = colors.currentStroke
+                    }
 
                     const dVal = distances?.[n.id]
                     const hasDist = typeof dVal === 'number' && isFinite(dVal)
@@ -267,49 +257,49 @@ export function GraphCanvas({
                     return (
                         <g key={n.id}
                            className="select-none"
-                           style={{ cursor }}
+                           style={{cursor}}
                            onClick={() => onNodeClick?.(n.id)}
                            onMouseDown={(e) => {
-                             if (!draggable) return
-                             e.preventDefault()
-                             beginDragging(n.id)
+                               if (!draggable) return
+                               e.preventDefault()
+                               beginDragging(n.id)
                            }}
                         >
-                          <title>{nodeHint}</title>
-                          {/* Start/End outer rings */}
-                          {startId === n.id && (
-                              <circle cx={p.x} cy={p.y} r={radius + START_RING_DELTA} fill="none"
-                                      stroke={colors.startRing} strokeWidth={START_RING_STROKE_WIDTH}/>
-                          )}
-                          {endId === n.id && (
-                              <circle cx={p.x} cy={p.y} r={radius + END_RING_DELTA} fill="none"
-                                      stroke={colors.endRing} strokeWidth={END_RING_STROKE_WIDTH}
-                                      strokeDasharray={END_RING_DASH}/>
-                          )}
+                            <title>{nodeHint}</title>
+                            {/* Start/End outer rings */}
+                            {startId === n.id && (
+                                <circle cx={p.x} cy={p.y} r={NODE_RADIUS + START_RING_DELTA} fill="none"
+                                        stroke={colors.startRing} strokeWidth={START_RING_STROKE_WIDTH}/>
+                            )}
+                            {endId === n.id && (
+                                <circle cx={p.x} cy={p.y} r={NODE_RADIUS + END_RING_DELTA} fill="none"
+                                        stroke={colors.endRing} strokeWidth={END_RING_STROKE_WIDTH}
+                                        strokeDasharray={END_RING_DASH}/>
+                            )}
 
-                          {/* Core circle */}
-                          <circle cx={p.x} cy={p.y} r={radius} fill={fill} stroke={stroke}
-                                  strokeWidth={NODE_STROKE_WIDTH}/>
+                            {/* Core circle */}
+                            <circle cx={p.x} cy={p.y} r={NODE_RADIUS} fill={fill} stroke={stroke}
+                                    strokeWidth={NODE_STROKE_WIDTH}/>
 
-                          {/* Node ID inside the circle */}
-                          <text x={p.x} y={p.y} textAnchor="middle" dominantBaseline="middle"
-                                fontSize={NODE_ID_FONT_SIZE} fill={colors.text} style={{fontWeight: 600}}>
-                            {n.id}
-                          </text>
-                          {/* External label above the node (if distinct) */}
-                          {label !== n.id && (
-                              <text x={p.x} y={p.y - radius - LABEL_OFFSET} textAnchor="middle"
-                                    fontSize={LABEL_FONT_SIZE} fill={colors.text}>
-                                {label}
-                              </text>
-                          )}
-                          {/* Tentative distance below the node (if provided) */}
-                          {hasDist && (
-                              <text x={p.x} y={p.y + radius + DISTANCE_OFFSET} textAnchor="middle"
-                                    fontSize={DISTANCE_FONT_SIZE} fill={colors.distanceText}>
-                                {dVal}
-                              </text>
-                          )}
+                            {/* Node ID inside the circle */}
+                            <text x={p.x} y={p.y} textAnchor="middle" dominantBaseline="middle"
+                                  fontSize={NODE_ID_FONT_SIZE} fill={colors.text} style={{fontWeight: 600}}>
+                                {n.id}
+                            </text>
+                            {/* External label above the node (if distinct) */}
+                            {label !== n.id && (
+                                <text x={p.x} y={p.y - NODE_RADIUS - LABEL_OFFSET} textAnchor="middle"
+                                      fontSize={LABEL_FONT_SIZE} fill={colors.text}>
+                                    {label}
+                                </text>
+                            )}
+                            {/* Tentative distance below the node (if provided) */}
+                            {hasDist && (
+                                <text x={p.x} y={p.y + NODE_RADIUS + DISTANCE_OFFSET} textAnchor="middle"
+                                      fontSize={DISTANCE_FONT_SIZE} fill={colors.distanceText}>
+                                    {dVal}
+                                </text>
+                            )}
                         </g>
                     )
                 })}
@@ -317,13 +307,15 @@ export function GraphCanvas({
         </>
     ) : (
         <g>
-            <text x={VB_W / 2} y={VB_H / 2} textAnchor="middle" dominantBaseline="middle" fill="#64748b">Loading…</text>
+            <text x={VIEWBOX_W / 2} y={VIEWBOX_H / 2} textAnchor="middle" dominantBaseline="middle"
+                  fill="#64748b">Loading…
+            </text>
         </g>
     )
 
     return (
         <div style={{width, height}} className="w-full h-full">
-            <svg ref={svgRef} viewBox={`0 0 ${VB_W} ${VB_H}`}
+            <svg ref={svgRef} viewBox={`0 0 ${VIEWBOX_W} ${VIEWBOX_H}`}
                  className="w-full h-full bg-white/50 border border-slate-200 rounded">
                 <defs>
                     {/* default arrowhead */}
