@@ -10,6 +10,7 @@ import {Button} from '@/components/ui/button'
 import {downloadGraphAsJSON, importGraphFromFile} from '@/lib/graph/loader'
 import { toast } from 'sonner'
 import Link from 'next/link'
+import { clearCachedGraph, getCachedGraph, setCachedGraph } from '@/lib/graph/cache'
 
 export default function GraphBuilderPage() {
     const [graph, setGraph] = React.useState<Graph>({
@@ -18,6 +19,23 @@ export default function GraphBuilderPage() {
         edges: [],
     })
     const fileInputRef = React.useRef<HTMLInputElement | null>(null)
+
+    // Load from cache on mount
+    React.useEffect(() => {
+        const g = getCachedGraph()
+        if (g) {
+            setGraph(g)
+            toast.info('Loaded graph from cache', { description: g.metadata.name || 'Current graph' })
+        }
+    }, [])
+
+    // Debounce save to cache on graph changes
+    React.useEffect(() => {
+        const id = window.setTimeout(() => {
+            setCachedGraph(graph)
+        }, 300)
+        return () => window.clearTimeout(id)
+    }, [graph])
 
     const handleCreateNode = React.useCallback((node: GraphNode) => {
         if (!isNodeDuplicate(graph, node)) {
@@ -54,6 +72,8 @@ export default function GraphBuilderPage() {
         const {success, errors} = downloadGraphAsJSON(graph)
         if (!success) {
             toast(`Export failed:\n- ${errors.join('\n- ')}`)
+        } else {
+            toast.success('Exported graph')
         }
     }, [graph])
 
@@ -69,6 +89,14 @@ export default function GraphBuilderPage() {
             return
         }
         setGraph(graph)
+        setCachedGraph(graph)
+        toast.success('Imported graph', { description: graph.metadata.name })
+    }, [])
+
+    const handleClear = React.useCallback(() => {
+        clearCachedGraph()
+        setGraph({ metadata: { directed: true, weighted: true, name: 'Untitled', description: '' }, nodes: [], edges: [] })
+        toast.info('Cleared cached graph', { description: 'Start from scratch' })
     }, [])
 
     return (
@@ -86,6 +114,7 @@ export default function GraphBuilderPage() {
                         className="hidden"
                         onChange={handleImportFile}
                     />
+                    <Button variant="ghost" onClick={handleClear}>Clear graph</Button>
                     <Button variant="outline" onClick={handleImportClick}>Import JSON</Button>
                     <Button onClick={handleExport}>Export JSON</Button>
                 </div>

@@ -163,3 +163,41 @@ Example JSON (normalized coordinates):
 - Persisted user settings.
 - No server interactions; all client-side.
 
+## 16) Cross-Page Graph Sync (Builder ↔ Simulator)
+Goal: Seamlessly carry the same graph data between the Builder page and the Simulator (home) page without manual re-imports.
+
+- General
+  - Maintain a single, shared “current graph” cache available to both pages; no server required.
+  - The cache must be client-side only (e.g., `localStorage`) with a stable, namespaced key and a schema version (e.g., `graph.current.v1`).
+  - Store: { schemaVersion: 1, updatedAt: ISO string, graph: Graph }.
+  - Validation: every load must pass through the existing graph validator; invalid or incompatible data is ignored and cleared.
+
+- Simulator → Builder
+  - From the simulator (home) page, when the user navigates to the Builder, the current in-memory graph is written to the cache immediately (debounced) so the Builder opens with the same graph auto-loaded.
+  - If no current graph is present, the Builder starts from an empty template or the sample graph (configurable), but must not crash.
+
+- Builder → Simulator
+  - On save/confirm in the Builder (or after validated edits), write the edited graph into the cache.
+  - Navigating back to the simulator auto-loads the cached graph and renders it without requiring manual import.
+
+- UX and Feedback
+  - Use Sonner to provide lightweight feedback: “Loaded graph from cache”, “Saved edited graph”, or validation errors.
+  - Provide a Clear Graph action in both pages to remove the cached graph and fall back to the sample.
+
+- Behavior and Edge Cases
+  - Fallback: if the cache is empty or invalid, fall back to `public/graphs/sample.json`.
+  - Versioning: if `schemaVersion` doesn’t match the runtime schema, ignore and clear the cache with an info toast.
+  - Quota/Exceptions: handle storage exceptions gracefully and inform the user.
+  - Cross-tab: listen to the `storage` event to reflect updates if both pages are open in different tabs (optional nice-to-have).
+
+- API Contract (internal helper)
+  - `getCachedGraph(): Graph | null` — reads, validates, returns graph or null.
+  - `setCachedGraph(graph: Graph): void` — writes with version/timestamp; debounced where appropriate.
+  - `clearCachedGraph(): void` — removes the cache entry.
+  - Constants for the cache key and schema version live in a single module; no magic strings.
+
+- Acceptance (sync-specific)
+  - Opening Builder from Simulator loads the same graph without manual export/import.
+  - Returning to Simulator from Builder renders the edited graph automatically.
+  - Clearing the cache reverts both pages to the sample graph.
+  - All operations show appropriate toasts and never break the main animation flow.

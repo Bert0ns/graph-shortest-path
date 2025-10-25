@@ -7,10 +7,20 @@ import { Button } from '@/components/ui/button'
 import { importGraphFromFile } from '@/lib/graph/loader'
 import type { Graph } from '@/lib/graph/types'
 import { toast } from 'sonner'
+import { getCachedGraph, setCachedGraph, clearCachedGraph } from '@/lib/graph/cache'
 
 export default function Home() {
   const [importedGraph, setImportedGraph] = React.useState<Graph | null>(null)
   const fileInputRef = React.useRef<HTMLInputElement | null>(null)
+
+  // Attempt to restore a cached graph on mount
+  React.useEffect(() => {
+    const g = getCachedGraph()
+    if (g) {
+      setImportedGraph(g)
+      toast.info('Loaded graph from cache', { description: g.metadata.name || 'Current graph' })
+    }
+  }, [])
 
   const onClickImport = React.useCallback(() => {
     fileInputRef.current?.click()
@@ -25,9 +35,15 @@ export default function Home() {
       return
     }
     setImportedGraph(graph)
+    setCachedGraph(graph)
     toast.success('Graph imported', { description: graph.metadata.name || file.name })
-    // Reset the input to allow re-importing the same file if desired
     e.target.value = ''
+  }, [])
+
+  const onClearGraph = React.useCallback(() => {
+    clearCachedGraph()
+    setImportedGraph(null)
+    toast.info('Cleared cached graph', { description: 'Reverting to sample graph' })
   }, [])
 
   return (
@@ -44,6 +60,7 @@ export default function Home() {
           />
           <Button variant="default" onClick={onClickImport}>Import graph</Button>
           <Link href="/builder"><Button variant="outline">Open Graph Builder</Button></Link>
+          <Button variant="ghost" onClick={onClearGraph}>Clear graph</Button>
         </div>
       </div>
       <GraphSimulator importedGraph={importedGraph} />
