@@ -1,5 +1,23 @@
 # Graph Builder Page Requirements
 
+Status checklist (Builder implementation)
+- [x] Page scaffold at `/builder` with header and navigation back to Home
+- [x] Metadata form (directed, weighted, name, description)
+- [x] Add Node form (id, x, y, optional label)
+- [x] Add Edge form (from, to, weight, optional label)
+- [x] Lists section for nodes and edges with delete actions
+- [x] Import JSON (file picker) with validation and toasts (Sonner)
+- [x] Export JSON (validates and downloads)
+- [x] Local cache sync with Simulator via localStorage (auto-load/save, clear action)
+- [ ] Drag-and-drop nodes on canvas with normalized coordinate updates
+- [ ] Live inline validation on forms for all constraints (some checks present, complete coverage pending)
+- [ ] Edit existing node/edge via selection (beyond delete)
+- [ ] Prevent magic numbers by moving remaining sizes to `lib/graph/graph_constants.ts`
+- [ ] Accessibility/keyboard affordances for builder interactions
+- [ ] Optional: panning/zoom (deferred), grid/snap (deferred)
+
+---
+
 Status: Draft v1 (keeps general app requirements in `requirements_mvp.md` valid)
 
 Goal: Provide an interactive page to construct graph JSON files that are compatible with the app’s existing schema and visualizer, with a clean minimal UI (shadcn + Tailwind), minimal dependencies, and no magic numbers.
@@ -149,4 +167,3 @@ Use as reference the already created component GraphCanvas.tsx. Extract common r
 - LocalStorage autosave sessions and versioning.
 - Bulk import/edit via table.
 - Theming controls for palette.
-

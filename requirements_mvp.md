@@ -1,5 +1,31 @@
 # Shortest Path Simulator — Requirements
 
+Status checklist (MVP implementation)
+- [x] Tech stack set: Next.js (App Router), React, TypeScript, Tailwind, shadcn
+- [x] Rendering backend: SVG chosen and implemented
+- [x] Graph schema v1 implemented (graph-level directed/weighted; no per-edge directed override)
+- [x] Load sample graph from public/graphs/sample.json
+- [x] Import graph (JSON) on the simulator page with validation and toasts (Sonner)
+- [x] Dijkstra algorithm implemented with stepper state machine
+- [x] Animation controls: Play/Pause, Step, Reset, Speed
+- [x] Visual states: current, frontier, visited/finalized, relaxed edges, final path
+- [x] Distances shown near nodes
+- [x] Start/End selection by clicking nodes (with rings)
+- [x] Queue/frontier panel shown
+- [x] Minimal pastel UI via shadcn components
+- [x] Cross-page graph cache (Builder ↔ Simulator) via localStorage with validation
+- [x] Clear graph action in Builder; fallback to sample on simulator
+- [ ] Keyboard shortcuts (Space, N, R)
+- [ ] Unit tests for Dijkstra and validators
+- [ ] Accessibility pass (focus states, aria labels, contrast review)
+- [ ] Performance validation at stated scale (200/400 elements)
+- [ ] Optional overlays beyond frontier list (e.g., distances table)
+
+Notes on scope deviations
+- The per-edge "directed" flag mentioned in earlier drafts is not implemented. Current schema treats directed as a graph-level setting. Edges do not carry a directed boolean. This remains a deferred enhancement.
+
+---
+
 ## 1) Goal and Vision
 Build a visual simulator for shortest-path algorithms. Start with Dijkstra and a clean, minimal UI that animates each algorithm step.
 
@@ -37,11 +63,11 @@ The system must be easy to extend with new algorithms and features while keeping
 - Schema (Version 1):
   - metadata: { directed: boolean, weighted: boolean, name?: string, description?: string }
   - nodes: Array<{ id: string; x: number; y: number; label?: string }>
-  - edges: Array<{ from: string; to: string; weight: number; directed?: boolean; label?: string }>
+  - edges: Array<{ from: string; to: string; weight: number; label?: string }>
 - Rules:
   - Node ids are unique (string).
   - Coordinates (x, y) are normalized to the viewport (0..1) or pixels; MVP uses 0..1 normalized, scaled by viewBox.
-  - If metadata.directed is false, treat edges as undirected unless an edge has directed: true explicitly.
+  - If metadata.directed is false, treat edges as undirected (no arrows) in rendering.
   - Dijkstra requires all weights >= 0; validate and show a non-blocking error if violated.
 
 Example JSON (normalized coordinates):
