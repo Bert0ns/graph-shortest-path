@@ -9,7 +9,12 @@ import { GRAPH_SAMPLE_PATH, loadGraphFromUrl } from '@/lib/graph/loader'
 import type {Graph, NodeId} from '@/lib/graph/types'
 import { DijkstraStepper, type DijkstraState } from '@/lib/algorithms/dijkstra'
 
-export default function GraphSimulator() {
+interface GraphSimulatorProps {
+  // If provided, the simulator renders this graph instead of loading the sample.
+  importedGraph?: Graph | null
+}
+
+export default function GraphSimulator({ importedGraph = null }: GraphSimulatorProps) {
   const [graph, setGraph] = React.useState<Graph | null>(null)
   const [loading, setLoading] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
@@ -25,23 +30,43 @@ export default function GraphSimulator() {
   const [state, setState] = React.useState<DijkstraState | null>(null)
   const timerRef = React.useRef<number | null>(null)
 
+  const initializeFromGraph = React.useCallback((g: Graph) => {
+    setGraph(g)
+    const s = g.nodes[0]?.id
+    const e = g.nodes[g.nodes.length - 1]?.id
+    setStartId(s)
+    setEndId(e)
+    const stepper = new DijkstraStepper(g, s, e)
+    stepperRef.current = stepper
+    setState(stepper.getState())
+  }, [])
+
+  // Initial load: if no importedGraph, load the sample
   React.useEffect(() => {
+    if (importedGraph) {
+      initializeFromGraph(importedGraph)
+      return
+    }
     setLoading(true)
     loadGraphFromUrl(GRAPH_SAMPLE_PATH)
       .then((g) => {
-        setGraph(g)
-        // default start/end: first and last nodes (if exist)
-        const s = g.nodes[0]?.id
-        const e = g.nodes[g.nodes.length - 1]?.id
-        setStartId(s)
-        setEndId(e)
-        const stepper = new DijkstraStepper(g, s, e)
-        stepperRef.current = stepper
-        setState(stepper.getState())
+        initializeFromGraph(g)
       })
       .catch((e: unknown) => setError(String(e)))
       .finally(() => setLoading(false))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  // If the parent provides/replaces an imported graph later, re-init from it
+  React.useEffect(() => {
+    if (!importedGraph) return
+    initializeFromGraph(importedGraph)
+    setIsPlaying(false)
+    if (timerRef.current) {
+      window.clearInterval(timerRef.current)
+      timerRef.current = null
+    }
+  }, [importedGraph, initializeFromGraph])
 
   // Recreate stepper when start/end change or graph changes
   React.useEffect(() => {
