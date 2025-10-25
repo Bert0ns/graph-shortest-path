@@ -6,6 +6,8 @@ import type {Graph, GraphEdge, GraphNode} from '@/lib/graph/types'
 import {BuilderSidebar} from '@/components/builder/BuilderSidebar'
 import {isEdgeAutoLoop, isEdgeDuplicate, isNodeDuplicate} from "@/lib/graph/graph_functions";
 import BuilderTopbar from "@/components/builder/BuilderTopBar";
+import {Button} from '@/components/ui/button'
+import {downloadGraphAsJSON, importGraphFromFile} from '@/lib/graph/loader'
 
 
 export default function GraphBuilderPage() {
@@ -14,9 +16,10 @@ export default function GraphBuilderPage() {
         nodes: [],
         edges: [],
     })
+    const fileInputRef = React.useRef<HTMLInputElement | null>(null)
 
     const handleCreateNode = React.useCallback((node: GraphNode) => {
-        if(!isNodeDuplicate(graph, node)) {
+        if (!isNodeDuplicate(graph, node)) {
             setGraph((g) => ({...g, nodes: [...g.nodes, node]}))
         }
     }, [graph])
@@ -46,11 +49,42 @@ export default function GraphBuilderPage() {
         }))
     }, [])
 
+    const handleExport = React.useCallback(() => {
+        const {success, errors} = downloadGraphAsJSON(graph)
+        if (!success) {
+            alert(`Export failed:\n- ${errors.join('\n- ')}`)
+        }
+    }, [graph])
+
+    const handleImportClick = React.useCallback(() => {
+        fileInputRef.current?.click()
+    }, [])
+
+    const handleImportFile: React.ChangeEventHandler<HTMLInputElement> = React.useCallback(async (e) => {
+        const {graph, errors} = await importGraphFromFile(e.target.files?.[0])
+        if (e.target) e.target.value = ''
+        if (errors.length > 0) {
+            alert(`Import failed:\n- ${errors.join('\n- ')}`)
+            return
+        }
+        setGraph(graph)
+    }, [])
+
     return (
         <main className="container mx-auto p-4 space-y-4">
             <header className="flex items-center justify-between">
                 <h1 className="text-xl font-semibold text-slate-800">Graph Builder</h1>
-                <div className="text-sm text-slate-600">MVP skeleton</div>
+                <div className="flex items-center gap-2">
+                    <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="application/json,.json"
+                        className="hidden"
+                        onChange={handleImportFile}
+                    />
+                    <Button variant="outline" onClick={handleImportClick}>Import JSON</Button>
+                    <Button onClick={handleExport}>Export JSON</Button>
+                </div>
             </header>
 
             <div>
