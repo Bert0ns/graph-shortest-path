@@ -8,8 +8,8 @@ import {isEdgeAutoLoop, isEdgeDuplicate, isNodeDuplicate} from "@/lib/graph/grap
 import BuilderTopbar from "@/components/builder/BuilderTopBar";
 import {Button} from '@/components/ui/button'
 import {downloadGraphAsJSON, importGraphFromFile} from '@/lib/graph/loader'
-import {toast} from "sonner";
-
+import { toast } from 'sonner'
+import Link from 'next/link'
 
 export default function GraphBuilderPage() {
     const [graph, setGraph] = React.useState<Graph>({
@@ -74,7 +74,10 @@ export default function GraphBuilderPage() {
     return (
         <main className="container mx-auto p-4 space-y-4">
             <header className="flex items-center justify-between">
-                <h1 className="text-xl font-semibold text-slate-800">Graph Builder</h1>
+                <div className="flex items-center gap-3">
+                    <Link href="/"><Button variant="outline">Back to Home</Button></Link>
+                    <h1 className="text-xl font-semibold text-slate-800">Graph Builder</h1>
+                </div>
                 <div className="flex items-center gap-2">
                     <input
                         ref={fileInputRef}
