@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import {GraphCanvas} from '@/components/GraphCanvas'
+import {GraphCanvas} from '@/components/GraphCanvas/GraphCanvas'
 import type {Graph, GraphEdge, GraphNode} from '@/lib/graph/types'
 import {BuilderSidebar} from '@/components/builder/BuilderSidebar'
 import {isEdgeAutoLoop, isEdgeDuplicate, isNodeDuplicate} from "@/lib/graph/graph_functions";

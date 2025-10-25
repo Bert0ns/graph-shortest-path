@@ -1,9 +1,7 @@
 'use client'
-
 import React from 'react'
-import type {Graph, GraphNode, NodeId} from '@/lib/graph/types'
+import type {GraphNode, NodeId} from '@/lib/graph/types'
 import {GeometryLine, shortenLine, transformLineParallel} from "@/lib/geometry";
-import type {DistanceMap, RelaxedEdge} from '@/lib/algorithms/dijkstra'
 import {findBidirectionalEdges} from "@/lib/graph/graph_functions";
 import GraphGrid from '@/components/GraphGrid'
 import {
@@ -40,27 +38,7 @@ import {
     WEIGHT_LABEL_PADDING,
 } from '@/lib/graph/graph_constants'
 import {clientToNormalizedFromSvg, convertToCanvasCoordinates} from "@/lib/graph/canvas_utils";
-
-export interface GraphCanvasProps {
-    graph: Graph | null
-    width?: number | string
-    height?: number | string
-    onNodeClick?: (id: NodeId) => void
-    // Highlights
-    highlightCurrent?: NodeId
-    highlightVisited?: Set<NodeId> | NodeId[]
-    highlightFrontier?: NodeId[]
-    highlightPath?: NodeId[]
-    highlightRelaxedEdges?: RelaxedEdge[]
-    distances?: DistanceMap
-    startId?: NodeId
-    endId?: NodeId
-    // Rendering options
-    showGrid?: boolean
-    // Builder interactions
-    draggableNodes?: boolean
-    onNodePositionChange?: (id: NodeId, x: number, y: number) => void
-}
+import {GraphCanvasProps} from "@/components/GraphCanvas/GraphCanvasProps";
 
 export function GraphCanvas({
                                 graph,
