@@ -136,6 +136,7 @@ export default function GraphBuilderPage() {
                         height={560}
                         showGrid
                         draggableNodes
+                        visualizationState={null}
                         onNodePositionChange={(id, x, y) => {
                             setGraph((g) => ({
                                 ...g,
