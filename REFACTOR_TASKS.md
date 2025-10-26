@@ -2,6 +2,8 @@
 
 This document breaks down the refactoring effort outlined in `REFACTOR_REQUIREMENTS.md` into smaller, sequential, and actionable tasks. Each task should be completed and verified before moving to the next.
 
+Follorw the development guidelines in `.gemini/developer.md` while working on these tasks.
+
 ---
 
 ### Task 1: Define Core Types and Interfaces
