@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import {Controls} from '@/components/Controls'
+import {Controls, AlgorithmKey} from '@/components/Controls'
 import {Legend} from '@/components/Legend'
 import {QueuePanel} from '@/components/QueuePanel'
 import {GraphCanvas} from '@/components/GraphCanvas/GraphCanvas'
@@ -11,6 +11,11 @@ import {getCachedGraph, setCachedGraph} from "@/lib/graph/cache";
 import {dijkstra} from "@/lib/algorithms/core/dijkstra";
 import {traceAlgorithm} from "@/lib/algorithms/visualization/tracer";
 import {TraceStepper, VisualizationState} from "@/lib/algorithms/visualization/TraceStepper";
+import {PathfindingAlgorithm} from "@/lib/algorithms/types";
+
+const ALGORITHMS: Record<AlgorithmKey, PathfindingAlgorithm> = {
+    dijkstra,
+};
 
 interface GraphSimulatorProps {
     // If provided, the simulator renders this graph instead of loading the sample.
@@ -22,7 +27,7 @@ export default function GraphSimulator({importedGraph = null}: GraphSimulatorPro
     const [loading, setLoading] = React.useState(false)
     const [error, setError] = React.useState<string | null>(null)
 
-    const [algorithm, setAlgorithm] = React.useState<'dijkstra'>('dijkstra')
+    const [algorithm, setAlgorithm] = React.useState<AlgorithmKey>('dijkstra')
     const [isPlaying, setIsPlaying] = React.useState(false)
     const [speed, setSpeed] = React.useState(1)
 
@@ -42,11 +47,14 @@ export default function GraphSimulator({importedGraph = null}: GraphSimulatorPro
 
         if (!s || !e) return;
 
-        const traceLog = traceAlgorithm(dijkstra, g, s, e)
+        const algo = ALGORITHMS[algorithm];
+        if (!algo) return;
+
+        const traceLog = traceAlgorithm(algo, g, s, e)
         const stepper = new TraceStepper(traceLog)
         stepperRef.current = stepper
         setState(stepper.state)
-    }, [])
+    }, [algorithm])
 
     // Initial load: if no importedGraph, load the sample
     React.useEffect(() => {
@@ -87,7 +95,10 @@ export default function GraphSimulator({importedGraph = null}: GraphSimulatorPro
     React.useEffect(() => {
         if (!graph || !startId || !endId) return
 
-        const traceLog = traceAlgorithm(dijkstra, graph, startId, endId)
+        const algo = ALGORITHMS[algorithm];
+        if (!algo) return;
+
+        const traceLog = traceAlgorithm(algo, graph, startId, endId)
         const stepper = new TraceStepper(traceLog)
         stepperRef.current = stepper
         setState(stepper.state)
@@ -97,7 +108,7 @@ export default function GraphSimulator({importedGraph = null}: GraphSimulatorPro
             window.clearInterval(timerRef.current)
             timerRef.current = null
         }
-    }, [graph, startId, endId])
+    }, [graph, startId, endId, algorithm])
 
     const doStep = React.useCallback(() => {
         if (!stepperRef.current) return;
