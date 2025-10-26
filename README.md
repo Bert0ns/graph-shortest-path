@@ -57,6 +57,22 @@ To add a new pathfinding algorithm (e.g., A*), follow these steps:
       return { path: [], distances: {} };
     };
     ```
-3.  **Add to the UI:** In `components/GraphSimulator.tsx`, import your new algorithm and add it to the list of available algorithms. You will need to update the UI to allow the user to select the new algorithm.
+3.  **Register the Algorithm:** In `components/GraphSimulator.tsx`, import your new algorithm and add it to the `ALGORITHMS` and `ALGORITHM_NAMES` maps.
 
-This decoupled approach ensures that your new algorithm will work with the existing visualization system without any further changes.
+    ```typescript
+    // 1. Import the algorithm
+    import { astar } from '@/lib/algorithms/core/astar';
+
+    // 2. Add it to the maps
+    const ALGORITHMS: Record<string, PathfindingAlgorithm> = {
+        dijkstra,
+        astar, // Add your new algorithm here
+    };
+
+    const ALGORITHM_NAMES: Record<AlgorithmKey, string> = {
+        dijkstra: 'Dijkstra',
+        astar: 'A* Search', // And add its display name here
+    };
+    ```
+
+The UI will update automatically to include the new algorithm in the selection dropdown. This decoupled approach ensures that your new algorithm will work with the existing visualization system without any further changes.

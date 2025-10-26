@@ -17,6 +17,7 @@ export type AlgorithmKey = "dijkstra"
 export interface ControlsProps {
   algorithm: AlgorithmKey
   onAlgorithmChange?: (algo: AlgorithmKey) => void
+  availableAlgorithms: Record<AlgorithmKey, string>;
   isPlaying?: boolean
   onPlay?: () => void
   onPause?: () => void
@@ -29,6 +30,7 @@ export interface ControlsProps {
 export function Controls({
   algorithm,
   onAlgorithmChange,
+  availableAlgorithms,
   isPlaying,
   onPlay,
   onPause,
@@ -54,7 +56,9 @@ export function Controls({
             <SelectValue placeholder="Select algorithm" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="dijkstra">Dijkstra</SelectItem>
+            {Object.entries(availableAlgorithms).map(([key, name]) => (
+              <SelectItem key={key} value={key}>{name}</SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>

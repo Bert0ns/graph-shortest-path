@@ -13,8 +13,12 @@ import {traceAlgorithm} from "@/lib/algorithms/visualization/tracer";
 import {TraceStepper, VisualizationState} from "@/lib/algorithms/visualization/TraceStepper";
 import {PathfindingAlgorithm} from "@/lib/algorithms/types";
 
-const ALGORITHMS: Record<AlgorithmKey, PathfindingAlgorithm> = {
+const ALGORITHMS: Record<string, PathfindingAlgorithm> = {
     dijkstra,
+};
+
+const ALGORITHM_NAMES: Record<AlgorithmKey, string> = {
+    dijkstra: 'Dijkstra',
 };
 
 interface GraphSimulatorProps {
@@ -183,6 +187,7 @@ export default function GraphSimulator({importedGraph = null}: GraphSimulatorPro
             <Controls
                 algorithm={algorithm}
                 onAlgorithmChange={(a) => setAlgorithm(a)}
+                availableAlgorithms={ALGORITHM_NAMES}
                 isPlaying={isPlaying}
                 onPlay={onPlay}
                 onPause={onPause}
