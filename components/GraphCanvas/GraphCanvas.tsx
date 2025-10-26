@@ -23,12 +23,7 @@ export function GraphCanvas({
                                 width = '100%',
                                 height = 480,
                                 onNodeClick,
-                                highlightCurrent,
-                                highlightVisited,
-                                highlightFrontier,
-                                highlightPath,
-                                highlightRelaxedEdges,
-                                distances,
+                                visualizationState,
                                 startId,
                                 endId,
                                 showGrid = false,
@@ -43,29 +38,6 @@ export function GraphCanvas({
     const isWeighted = !!graph?.metadata?.weighted
 
     const bidirectionalEdges = React.useMemo(() => findBidirectionalEdges(graph?.edges ?? []), [graph])
-
-    // Prepare sets
-    const visitedSet: Set<string> = React.useMemo(() => {
-        if (!highlightVisited) return new Set()
-        return highlightVisited instanceof Set ? new Set(highlightVisited) : new Set(highlightVisited)
-    }, [highlightVisited])
-    const frontierSet: Set<string> = React.useMemo(() => new Set(highlightFrontier ?? []), [highlightFrontier])
-    const pathSet: Set<string> = React.useMemo(() => new Set(highlightPath ?? []), [highlightPath])
-    const pathEdgeSet: Set<string> = React.useMemo(() => {
-        const s = new Set<string>()
-        if (!highlightPath || highlightPath.length < 2) return s
-        for (let i = 0; i < highlightPath.length - 1; i++) {
-            const a = highlightPath[i]!
-            const b = highlightPath[i + 1]!
-            s.add(`${a}->${b}`)
-        }
-        return s
-    }, [highlightPath])
-    const relaxedEdgeSet: Set<string> = React.useMemo(() => {
-        const s = new Set<string>()
-        for (const re of highlightRelaxedEdges ?? []) s.add(`${re.from}->${re.to}`)
-        return s
-    }, [highlightRelaxedEdges])
 
     const clientToNormalized = React.useCallback((clientX: number, clientY: number) => clientToNormalizedFromSvg(svgRef.current, clientX, clientY, VIEWBOX_W, VIEWBOX_H, VIEWBOX_MARGIN), [svgRef])
 
@@ -100,8 +72,8 @@ export function GraphCanvas({
                         nodeIndex={nodeIndex}
                         isDirected={isDirected}
                         isWeighted={isWeighted}
-                        pathEdgeSet={pathEdgeSet}
-                        relaxedEdgeSet={relaxedEdgeSet}
+                        isPath={visualizationState?.edges[`${e.from}-${e.to}`]?.isPath ?? false}
+                        isRelaxed={visualizationState?.relaxedEdgeId === `${e.from}-${e.to}`}
                         bidirectionalEdges={bidirectionalEdges}
                     />
                 ))}
@@ -109,25 +81,28 @@ export function GraphCanvas({
 
             {/* Nodes */}
             <g>
-                {(graph.nodes ?? []).map((n) => (
-                    <GraphNodeItem
-                        key={n.id}
-                        id={n.id}
-                        x={n.x}
-                        y={n.y}
-                        label={n.label ?? n.id}
-                        isCurrent={n.id === highlightCurrent}
-                        isVisited={visitedSet.has(n.id)}
-                        inFrontier={frontierSet.has(n.id)}
-                        inPath={pathSet.has(n.id)}
-                        startId={startId}
-                        endId={endId}
-                        distance={distances?.[n.id]}
-                        draggable={draggableNodes && !!onNodePositionChange}
-                        onClick={() => onNodeClick?.(n.id)}
-                        onDragStart={() => beginDragging(n.id)}
-                    />
-                ))}
+                {(graph.nodes ?? []).map((n) => {
+                    const nodeState = visualizationState?.nodes[n.id]
+                    return (
+                        <GraphNodeItem
+                            key={n.id}
+                            id={n.id}
+                            x={n.x}
+                            y={n.y}
+                            label={n.label ?? n.id}
+                            isCurrent={visualizationState?.currentNodeId === n.id}
+                            isVisited={nodeState?.isVisited ?? false}
+                            inFrontier={visualizationState?.frontier.includes(n.id) ?? false}
+                            inPath={nodeState?.isPath ?? false}
+                            startId={startId}
+                            endId={endId}
+                            distance={nodeState?.distance}
+                            draggable={draggableNodes && !!onNodePositionChange}
+                            onClick={() => onNodeClick?.(n.id)}
+                            onDragStart={() => beginDragging(n.id)}
+                        />
+                    )
+                })}
             </g>
         </>
     ) : (
