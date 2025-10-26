@@ -7,8 +7,10 @@ import {QueuePanel} from '@/components/QueuePanel'
 import {GraphCanvas} from '@/components/GraphCanvas/GraphCanvas'
 import {GRAPH_SAMPLE_PATH, loadGraphFromUrl} from '@/lib/graph/loader'
 import type {Graph, NodeId} from '@/lib/graph/types'
-import {type DijkstraState, DijkstraStepper} from '@/lib/algorithms/dijkstra'
 import {getCachedGraph, setCachedGraph} from "@/lib/graph/cache";
+import {dijkstra} from "@/lib/algorithms/core/dijkstra";
+import {traceAlgorithm} from "@/lib/algorithms/visualization/tracer";
+import {TraceStepper, VisualizationState} from "@/lib/algorithms/visualization/TraceStepper";
 
 interface GraphSimulatorProps {
     // If provided, the simulator renders this graph instead of loading the sample.
@@ -27,8 +29,8 @@ export default function GraphSimulator({importedGraph = null}: GraphSimulatorPro
     const [startId, setStartId] = React.useState<NodeId | undefined>(undefined)
     const [endId, setEndId] = React.useState<NodeId | undefined>(undefined)
 
-    const stepperRef = React.useRef<DijkstraStepper | null>(null)
-    const [state, setState] = React.useState<DijkstraState | null>(null)
+    const stepperRef = React.useRef<TraceStepper | null>(null)
+    const [state, setState] = React.useState<VisualizationState | null>(null)
     const timerRef = React.useRef<number | null>(null)
 
     const initializeFromGraph = React.useCallback((g: Graph) => {
@@ -37,9 +39,13 @@ export default function GraphSimulator({importedGraph = null}: GraphSimulatorPro
         const e = g.nodes[g.nodes.length - 1]?.id
         setStartId(s)
         setEndId(e)
-        const stepper = new DijkstraStepper(g, s, e)
+
+        if (!s || !e) return;
+
+        const traceLog = traceAlgorithm(dijkstra, g, s, e)
+        const stepper = new TraceStepper(traceLog)
         stepperRef.current = stepper
-        setState(stepper.getState())
+        setState(stepper.state)
     }, [])
 
     // Initial load: if no importedGraph, load the sample
@@ -79,10 +85,12 @@ export default function GraphSimulator({importedGraph = null}: GraphSimulatorPro
 
     // Recreate stepper when start/end change or graph changes
     React.useEffect(() => {
-        if (!graph || !startId) return
-        const stepper = new DijkstraStepper(graph, startId, endId)
+        if (!graph || !startId || !endId) return
+
+        const traceLog = traceAlgorithm(dijkstra, graph, startId, endId)
+        const stepper = new TraceStepper(traceLog)
         stepperRef.current = stepper
-        setState(stepper.getState())
+        setState(stepper.state)
         setIsPlaying(false)
         // clear any running timer
         if (timerRef.current) {
@@ -92,10 +100,10 @@ export default function GraphSimulator({importedGraph = null}: GraphSimulatorPro
     }, [graph, startId, endId])
 
     const doStep = React.useCallback(() => {
-        if (!stepperRef.current) return
-        const next = stepperRef.current.next()
-        setState(next)
-        if (next.done) {
+        if (!stepperRef.current) return;
+        stepperRef.current.next()
+        setState({ ...stepperRef.current.state })
+        if (stepperRef.current.state.done) {
             setIsPlaying(false)
         }
     }, [])
@@ -138,12 +146,11 @@ export default function GraphSimulator({importedGraph = null}: GraphSimulatorPro
     }, [])
 
     const onReset = React.useCallback(() => {
-        if (!graph || !startId) return
-        const stepper = new DijkstraStepper(graph, startId, endId)
-        stepperRef.current = stepper
-        setState(stepper.getState())
+        if (!stepperRef.current) return;
+        stepperRef.current.reset()
+        setState({ ...stepperRef.current.state })
         setIsPlaying(false)
-    }, [graph, startId, endId])
+    }, [])
 
     const handleNodeClick = React.useCallback((id: string) => {
         // Selection logic: pick start then end; clicking a third time resets start
@@ -184,13 +191,7 @@ export default function GraphSimulator({importedGraph = null}: GraphSimulatorPro
                                 graph={graph}
                                 height={520}
                                 onNodeClick={handleNodeClick}
-                                // highlight props
-                                highlightCurrent={state?.current}
-                                highlightVisited={state?.visited}
-                                highlightFrontier={state?.frontier}
-                                highlightPath={state?.path}
-                                highlightRelaxedEdges={state?.relaxedEdges}
-                                distances={state?.distances}
+                                visualizationState={state}
                                 startId={startId}
                                 endId={endId}
                             />

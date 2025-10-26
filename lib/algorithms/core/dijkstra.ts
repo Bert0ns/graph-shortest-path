@@ -9,7 +9,8 @@ export const dijkstra: PathfindingAlgorithm = (graph, startId, endId, trace) => 
   const previous: Record<string, string | null> = {};
   const pq: Set<string> = new Set();
 
-  for (const nodeId in graph.nodes) {
+  for (const node of graph.nodes) {
+    const nodeId = node.id;
     distances[nodeId] = Infinity;
     previous[nodeId] = null;
     pq.add(nodeId);

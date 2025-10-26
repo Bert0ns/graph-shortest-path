@@ -25,9 +25,9 @@ export interface GraphEdgeItemProps {
   nodeIndex: Map<NodeId, GraphNode>
   isDirected: boolean
   isWeighted: boolean
-  pathEdgeSet: Set<string>
-  relaxedEdgeSet: Set<string>
-  bidirectionalEdges: Set<{ p1: GraphEdge; p2: GraphEdge }>
+  isPath: boolean
+  isRelaxed: boolean
+  bidirectionalEdges: Set<{ p1: GraphEdge, p2: GraphEdge }>
 }
 
 export const GraphEdgeItem: React.FC<GraphEdgeItemProps> = ({
@@ -35,8 +35,8 @@ export const GraphEdgeItem: React.FC<GraphEdgeItemProps> = ({
   nodeIndex,
   isDirected,
   isWeighted,
-  pathEdgeSet,
-  relaxedEdgeSet,
+  isPath,
+  isRelaxed,
   bidirectionalEdges,
 }) => {
   const from = nodeIndex.get(edge.from)
@@ -62,13 +62,10 @@ export const GraphEdgeItem: React.FC<GraphEdgeItemProps> = ({
   const { x1, y1, x2, y2 } = arcLine
   const mid = { x: (x1 + x2) / 2, y: (y1 + y2) / 2 }
 
-  const key = `${edge.from}->${edge.to}`
-  const isPathEdge = pathEdgeSet.has(key)
-  const isRelaxed = relaxedEdgeSet.has(key)
-  const stroke = isPathEdge ? colors.pathStroke : isRelaxed ? colors.relaxedStroke : colors.edge
-  const width = isPathEdge ? PATH_EDGE_STROKE_WIDTH : isRelaxed ? RELAXED_EDGE_STROKE_WIDTH : EDGE_STROKE_WIDTH
+  const stroke = isPath ? colors.pathStroke : isRelaxed ? colors.relaxedStroke : colors.edge
+  const width = isPath ? PATH_EDGE_STROKE_WIDTH : isRelaxed ? RELAXED_EDGE_STROKE_WIDTH : EDGE_STROKE_WIDTH
   const markerId = isDirected
-    ? isPathEdge
+    ? isPath
       ? 'url(#arrow-path)'
       : isRelaxed
         ? 'url(#arrow-relaxed)'
