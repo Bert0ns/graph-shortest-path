@@ -12,7 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-export type AlgorithmKey = "dijkstra"
+export type AlgorithmKey = string;
 
 export interface ControlsProps {
   algorithm: AlgorithmKey

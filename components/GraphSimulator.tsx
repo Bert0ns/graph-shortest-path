@@ -1,17 +1,17 @@
 'use client'
 
 import React from 'react'
-import {Controls, AlgorithmKey} from '@/components/Controls'
-import {Legend} from '@/components/Legend'
-import {QueuePanel} from '@/components/QueuePanel'
-import {GraphCanvas} from '@/components/GraphCanvas/GraphCanvas'
-import {GRAPH_SAMPLE_PATH, loadGraphFromUrl} from '@/lib/graph/loader'
-import type {Graph, NodeId} from '@/lib/graph/types'
-import {getCachedGraph, setCachedGraph} from "@/lib/graph/cache";
-import {dijkstra} from "@/lib/algorithms/core/dijkstra";
-import {traceAlgorithm} from "@/lib/algorithms/visualization/tracer";
-import {TraceStepper, VisualizationState} from "@/lib/algorithms/visualization/TraceStepper";
-import {PathfindingAlgorithm} from "@/lib/algorithms/types";
+import { Controls, AlgorithmKey } from '@/components/Controls'
+import { Legend } from '@/components/Legend'
+import { QueuePanel } from '@/components/QueuePanel'
+import { GraphCanvas } from '@/components/GraphCanvas/GraphCanvas'
+import { GRAPH_SAMPLE_PATH, loadGraphFromUrl } from '@/lib/graph/loader'
+import type { Graph, NodeId } from '@/lib/graph/types'
+import { getCachedGraph, setCachedGraph } from "@/lib/graph/cache";
+import { dijkstra } from "@/lib/algorithms/core/dijkstra";
+import { traceAlgorithm } from "@/lib/algorithms/visualization/tracer";
+import { TraceStepper, VisualizationState } from "@/lib/algorithms/visualization/TraceStepper";
+import { PathfindingAlgorithm } from "@/lib/algorithms/types";
 
 const ALGORITHMS: Record<string, PathfindingAlgorithm> = {
     dijkstra,
@@ -26,7 +26,7 @@ interface GraphSimulatorProps {
     importedGraph?: Graph | null
 }
 
-export default function GraphSimulator({importedGraph = null}: GraphSimulatorProps) {
+export default function GraphSimulator({ importedGraph = null }: GraphSimulatorProps) {
     const [graph, setGraph] = React.useState<Graph | null>(null)
     const [loading, setLoading] = React.useState(false)
     const [error, setError] = React.useState<string | null>(null)
@@ -216,10 +216,10 @@ export default function GraphSimulator({importedGraph = null}: GraphSimulatorPro
                 </div>
                 <div className="space-y-2">
                     <div className="bg-white/70 border rounded-md">
-                        <Legend/>
+                        <Legend />
                     </div>
                     <div className="bg-white/70 border rounded-md">
-                        <QueuePanel items={state?.frontier ?? []}/>
+                        <QueuePanel items={state?.frontier ?? []} />
                     </div>
                 </div>
             </div>
