@@ -12,6 +12,8 @@
 !.yarn/releases
 !.yarn/versions
 
+/pnpm-lock.yaml
+
 # testing
 /coverage
 
@@ -41,3 +43,4 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
