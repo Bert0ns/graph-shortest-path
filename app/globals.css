@@ -122,10 +122,6 @@
 /* Fluid type scaling for headings */
 h1 { font-size: clamp(1.125rem, 1rem + 1vw, 1.5rem); }
 
-/* Better mobile scrolling behavior */
-html, body { height: 100%; }
-body { -webkit-tap-highlight-color: transparent; }
-
 /* Containers that should fill available height without causing double scrollbars */
 .fill-viewport {
   height: 100dvh;

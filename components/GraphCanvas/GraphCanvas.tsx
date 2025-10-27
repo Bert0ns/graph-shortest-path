@@ -39,7 +39,9 @@ export function GraphCanvas({
 
     const bidirectionalEdges = React.useMemo(() => findBidirectionalEdges(graph?.edges ?? []), [graph])
 
-    const clientToNormalized = React.useCallback((clientX: number, clientY: number) => clientToNormalizedFromSvg(svgRef.current, clientX, clientY, VIEWBOX_W, VIEWBOX_H, VIEWBOX_MARGIN), [svgRef])
+    const clientToNormalized = React.useCallback((clientX: number, clientY: number) => {
+        return clientToNormalizedFromSvg(svgRef.current, clientX, clientY, VIEWBOX_W, VIEWBOX_H, VIEWBOX_MARGIN)
+    }, [svgRef])
 
     //Mouse dragging handlers
     const handleGlobalMouseMove = React.useCallback((e: MouseEvent) => {
