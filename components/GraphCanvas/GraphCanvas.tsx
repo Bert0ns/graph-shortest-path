@@ -32,13 +32,6 @@ export function GraphCanvas({
                             }: GraphCanvasProps) {
     const svgRef = React.useRef<SVGSVGElement | null>(null)
     const draggingIdRef = React.useRef<string | null>(null)
-    const draggableNodesRef = React.useRef(draggableNodes)
-    const onNodePositionChangeRef = React.useRef(onNodePositionChange)
-    const rafIdRef = React.useRef<number | null>(null)
-    const isDraggingRef = React.useRef(false)
-
-    React.useEffect(() => { draggableNodesRef.current = draggableNodes }, [draggableNodes])
-    React.useEffect(() => { onNodePositionChangeRef.current = onNodePositionChange }, [onNodePositionChange])
 
     // Derived graph flags and indexes
     const nodeIndex = React.useMemo((): Map<NodeId, GraphNode> => new Map((graph?.nodes ?? []).map(n => [n.id, n])), [graph])
@@ -46,52 +39,28 @@ export function GraphCanvas({
     const isWeighted = !!graph?.metadata?.weighted
     const bidirectionalEdges = React.useMemo(() => findBidirectionalEdges(graph?.edges ?? []), [graph])
 
-    // Stable global mousemove handler (throttled by rAF)
-    const handleGlobalMouseMove = React.useCallback((e: MouseEvent) => {
+    // Stable pointer handlers used directly on the SVG element
+    const onPointerMove = React.useCallback((e: React.PointerEvent<SVGSVGElement>) => {
         const id = draggingIdRef.current
-        if (!id || !draggableNodesRef.current) return
-        if (rafIdRef.current != null) return
-        const { clientX, clientY } = e
-        rafIdRef.current = window.requestAnimationFrame(() => {
-            rafIdRef.current = null
-            const { x, y } = clientToNormalizedFromSvg(svgRef.current, clientX, clientY, VIEWBOX_W, VIEWBOX_H, VIEWBOX_MARGIN)
-            isDraggingRef.current = true
-            onNodePositionChangeRef.current?.(id, x, y)
-        })
+        if (!id) return
+        const { x, y } = clientToNormalizedFromSvg(svgRef.current, e.clientX, e.clientY, VIEWBOX_W, VIEWBOX_H, VIEWBOX_MARGIN)
+        onNodePositionChange?.(id, x, y)
+    }, [onNodePositionChange])
+
+    const onPointerUp = React.useCallback((e: React.PointerEvent<SVGSVGElement>) => {
+        if (svgRef.current) {
+            try { svgRef.current.releasePointerCapture(e.pointerId) } catch {}
+        }
+        draggingIdRef.current = null
     }, [])
 
-    const endDragging = React.useCallback(function onMouseUp() {
-        draggingIdRef.current = null
-        window.removeEventListener('mousemove', handleGlobalMouseMove)
-        window.removeEventListener('mouseup', onMouseUp)
-        if (rafIdRef.current != null) {
-            window.cancelAnimationFrame(rafIdRef.current)
-            rafIdRef.current = null
-        }
-        // Defer reset so a click immediately after drag is ignored once
-        setTimeout(() => { isDraggingRef.current = false }, 0)
-    }, [handleGlobalMouseMove])
-
-    const beginDragging = React.useCallback((id: NodeId) => {
-        if (!draggableNodesRef.current) return
+    const beginDragging = React.useCallback((id: NodeId, e?: React.PointerEvent) => {
+        if (!draggableNodes) return
         draggingIdRef.current = id
-        isDraggingRef.current = false
-        window.addEventListener('mousemove', handleGlobalMouseMove)
-        window.addEventListener('mouseup', endDragging)
-    }, [handleGlobalMouseMove, endDragging])
-
-    React.useEffect(() => {
-        return () => {
-            // Cleanup on unmount in case a drag was in progress
-            window.removeEventListener('mousemove', handleGlobalMouseMove)
-            window.removeEventListener('mouseup', endDragging)
-            if (rafIdRef.current != null) {
-                window.cancelAnimationFrame(rafIdRef.current)
-                rafIdRef.current = null
-            }
-            draggingIdRef.current = null
+        if (svgRef.current && e) {
+            try { svgRef.current.setPointerCapture(e.pointerId) } catch {}
         }
-    }, [handleGlobalMouseMove, endDragging])
+    }, [draggableNodes])
 
     const content = graph ? (
         <>
@@ -130,8 +99,8 @@ export function GraphCanvas({
                             endId={endId}
                             distance={nodeState?.distance}
                             draggable={draggableNodes && !!onNodePositionChange}
-                            onClick={() => { if (!isDraggingRef.current) onNodeClick?.(n.id) }}
-                            onDragStart={() => beginDragging(n.id)}
+                            onClick={() => { onNodeClick?.(n.id) }}
+                            onDragStart={(e) => beginDragging(n.id, e)}
                         />
                     )
                 })}
@@ -152,7 +121,11 @@ export function GraphCanvas({
     return (
         <div style={{width, height}} className="w-full h-full">
             <svg ref={svgRef} viewBox={`0 0 ${VIEWBOX_W} ${VIEWBOX_H}`} preserveAspectRatio="xMidYMid meet"
-                 className="w-full h-full bg-white/50 border border-slate-200 rounded">
+                 className="w-full h-full bg-white/50 border border-slate-200 rounded"
+                 onPointerMove={onPointerMove}
+                 onPointerUp={onPointerUp}
+                 onPointerCancel={onPointerUp}
+            >
                 <defs>
                     {/* default arrowhead */}
                     <marker id="arrow-default" viewBox="0 0 10 10" refX={ARROW_REF_X} refY={ARROW_REF_Y}

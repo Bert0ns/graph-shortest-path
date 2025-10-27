@@ -33,7 +33,7 @@ export interface GraphNodeItemProps {
   distance?: number
   draggable?: boolean
   onClick?: () => void
-  onDragStart?: () => void
+  onDragStart?: (e: React.PointerEvent) => void
 }
 
 export const GraphNodeItem: React.FC<GraphNodeItemProps> = ({
@@ -65,7 +65,12 @@ export const GraphNodeItem: React.FC<GraphNodeItemProps> = ({
   const cursor = draggable ? 'grab' : 'pointer'
 
   return (
-    <g className="select-none" style={{ cursor }} onClick={onClick} onMouseDown={(e) => { if (draggable) { e.preventDefault(); onDragStart?.() } }}>
+    <g
+      className="select-none"
+      style={{ cursor }}
+      onClick={onClick}
+      onPointerDown={(e) => { if (draggable) { e.preventDefault(); onDragStart?.(e) } }}
+    >
       <title>{nodeHint}</title>
       {startId === id && (
         <circle cx={p.x} cy={p.y} r={NODE_RADIUS + START_RING_DELTA} fill="none" stroke={colors.startRing} strokeWidth={START_RING_STROKE_WIDTH} />
