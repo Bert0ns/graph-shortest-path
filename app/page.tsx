@@ -42,9 +42,9 @@ export default function Home() {
 
   return (
     <main className="container mx-auto p-4 space-y-4">
-      <div className="flex items-center justify-between gap-3">
-        <h1 className="text-xl font-semibold text-slate-800">Shortest Path Visualizer</h1>
-        <div className="flex items-center gap-2">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <h1 className="text-lg sm:text-xl font-semibold text-slate-800">Shortest Path Visualizer</h1>
+        <div className="flex flex-wrap items-center gap-2">
           <input
             ref={fileInputRef}
             type="file"

@@ -42,7 +42,7 @@ export function Controls({
   return (
     <div className="flex flex-wrap items-center gap-3 p-3 border rounded-md bg-white/60">
       <div
-        className="flex items-center gap-2"
+        className="flex items-center gap-2 w-full sm:w-auto"
         title="Select the algorithm to visualize"
       >
         <Label htmlFor="algo" className="text-sm">
@@ -52,7 +52,7 @@ export function Controls({
           value={algorithm}
           onValueChange={(v) => onAlgorithmChange?.(v as AlgorithmKey)}
         >
-          <SelectTrigger id="algo" className="min-w-40">
+          <SelectTrigger id="algo" className="w-full sm:min-w-40">
             <SelectValue placeholder="Select algorithm" />
           </SelectTrigger>
           <SelectContent>
@@ -63,7 +63,7 @@ export function Controls({
         </Select>
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 w-full sm:w-auto">
         <Button
           variant="default"
           onClick={isPlaying ? onPause : onPlay}
@@ -88,7 +88,7 @@ export function Controls({
       </div>
 
       <div
-        className="flex items-center gap-2 min-w-64"
+        className="flex items-center gap-2 w-full sm:w-auto"
         title="Change animation speed"
       >
         <Label htmlFor="speed" className="text-sm w-12">
@@ -101,7 +101,7 @@ export function Controls({
           step={0.25}
           value={[speed]}
           onValueChange={(vals) => onSpeedChange?.(vals[0] ?? speed)}
-          className="w-40"
+          className="w-full sm:w-40"
         />
         <span className="text-xs text-slate-600 tabular-nums">
           {speed.toFixed(2)}x

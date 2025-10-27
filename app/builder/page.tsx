@@ -101,12 +101,12 @@ export default function GraphBuilderPage() {
 
     return (
         <main className="container mx-auto p-4 space-y-4">
-            <header className="flex items-center justify-between">
+            <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <div className="flex items-center gap-3">
                     <Link href="/"><Button variant="outline" title="Back to the main visualizer">Back to Home</Button></Link>
-                    <h1 className="text-xl font-semibold text-slate-800" title="Graph Builder — create nodes and edges, drag nodes to reposition">Graph Builder</h1>
+                    <h1 className="text-lg sm:text-xl font-semibold text-slate-800" title="Graph Builder — create nodes and edges, drag nodes to reposition">Graph Builder</h1>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                     <input
                         ref={fileInputRef}
                         type="file"
@@ -129,11 +129,11 @@ export default function GraphBuilderPage() {
                 />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <section className="md:col-span-3 bg-white/70 border rounded-md p-2" title="Canvas — drag nodes to reposition; edges update automatically">
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+                <section className="lg:col-span-3 bg-white/70 border rounded-md p-2" title="Canvas — drag nodes to reposition; edges update automatically">
                     <GraphCanvas
                         graph={graph}
-                        height={560}
+                        height={"clamp(320px, 50vh, 640px)"}
                         showGrid
                         draggableNodes
                         visualizationState={null}
@@ -146,7 +146,7 @@ export default function GraphBuilderPage() {
                     />
                 </section>
 
-                <aside className="md:col-span-1">
+                <aside className="lg:col-span-1">
                     <BuilderSidebar
                         graph={graph}
                         onDeleteNode={handleDeleteNode}

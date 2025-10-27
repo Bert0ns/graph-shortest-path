@@ -182,7 +182,7 @@ export default function GraphSimulator({ importedGraph = null }: GraphSimulatorP
 
     return (
         <main className="container mx-auto p-4 space-y-4">
-            <h1 className="text-xl font-semibold text-slate-800">Shortest Path Visualizer</h1>
+            <h1 className="text-lg sm:text-xl font-semibold text-slate-800">Shortest Path Visualizer</h1>
 
             <Controls
                 algorithm={algorithm}
@@ -197,15 +197,15 @@ export default function GraphSimulator({ importedGraph = null }: GraphSimulatorP
                 onSpeedChange={setSpeed}
             />
 
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="md:col-span-3">
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+                <div className="lg:col-span-3">
                     <div className="bg-white/70 border rounded-md p-2">
                         {loading && <div className="p-6 text-slate-600">Loading graph…</div>}
                         {error && <div className="p-6 text-red-600">{error}</div>}
                         {!loading && !error && (
                             <GraphCanvas
                                 graph={graph}
-                                height={520}
+                                height={"clamp(320px, 50vh, 640px)"}
                                 onNodeClick={handleNodeClick}
                                 visualizationState={state}
                                 startId={startId}

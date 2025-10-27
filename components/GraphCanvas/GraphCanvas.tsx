@@ -49,11 +49,13 @@ export function GraphCanvas({
         const {x, y} = clientToNormalized(e.clientX, e.clientY)
         onNodePositionChange?.(id, x, y)
     }, [clientToNormalized, draggableNodes, onNodePositionChange])
+
     const endDragging = React.useCallback(function onMouseUp() {
         draggingIdRef.current = null
         window.removeEventListener('mousemove', handleGlobalMouseMove)
         window.removeEventListener('mouseup', onMouseUp)
     }, [handleGlobalMouseMove])
+
     const beginDragging = React.useCallback((id: NodeId) => {
         if (!draggableNodes) return
         draggingIdRef.current = id
@@ -107,8 +109,12 @@ export function GraphCanvas({
         </>
     ) : (
         <g>
-            <text x={VIEWBOX_W / 2} y={VIEWBOX_H / 2} textAnchor="middle" dominantBaseline="middle"
-                  fill="#64748b">Loading…
+            <text
+                x={VIEWBOX_W / 2}
+                y={VIEWBOX_H / 2}
+                textAnchor="middle"
+                dominantBaseline="middle"
+                fill="#64748b">Loading…
             </text>
         </g>
     )
