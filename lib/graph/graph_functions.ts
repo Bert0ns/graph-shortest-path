@@ -1,26 +1,15 @@
-import {type Graph, GraphEdge, type GraphNode} from "@/lib/graph/types";
+import { type Graph, GraphEdge, type GraphNode } from "@/lib/graph/types";
 
 
 export function findBidirectionalEdges(edges: GraphEdge[]): Set<{ p1: GraphEdge, p2: GraphEdge }> {
-    const foundPairs = new Set<{ p1: GraphEdge, p2: GraphEdge }>();
-    const processed = new Set<GraphEdge>();
-
-    for (const edge1 of edges) {
-        if (processed.has(edge1)) continue;
-
-        const reverseEdge = edges.find(edge2 =>
-            !processed.has(edge2) &&
-            edge1.from === edge2.to &&
-            edge1.to === edge2.from
-        );
-
+    const foundPairs = new Set<{ p1: GraphEdge, p2: GraphEdge }>()
+    edges.forEach(edge => {
+        const reverseEdge = edges.find(e => e.from === edge.to && e.to === edge.from)
         if (reverseEdge) {
-            foundPairs.add({ p1: edge1, p2: reverseEdge });
-            processed.add(edge1);
-            processed.add(reverseEdge);
+            foundPairs.add({ p1: edge, p2: reverseEdge })
         }
-    }
-    return foundPairs;
+    })
+    return foundPairs
 }
 
 export function isEdgeDuplicate(graph: Graph, edge: GraphEdge): boolean {
