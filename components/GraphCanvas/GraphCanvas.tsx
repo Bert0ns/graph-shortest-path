@@ -33,37 +33,34 @@ export function GraphCanvas({
     const svgRef = React.useRef<SVGSVGElement | null>(null)
     const draggingIdRef = React.useRef<string | null>(null)
 
+    // Derived graph flags and indexes
     const nodeIndex = React.useMemo((): Map<NodeId, GraphNode> => new Map((graph?.nodes ?? []).map(n => [n.id, n])), [graph])
     const isDirected = !!graph?.metadata?.directed
     const isWeighted = !!graph?.metadata?.weighted
-
     const bidirectionalEdges = React.useMemo(() => findBidirectionalEdges(graph?.edges ?? []), [graph])
 
-    const clientToNormalized = React.useCallback((clientX: number, clientY: number) => {
-        return clientToNormalizedFromSvg(svgRef.current, clientX, clientY, VIEWBOX_W, VIEWBOX_H, VIEWBOX_MARGIN)
-    }, [svgRef])
-
-    //Mouse dragging handlers
-    const handleGlobalMouseMove = React.useCallback((e: MouseEvent) => {
-        if (!draggableNodes) return
+    // Stable pointer handlers used directly on the SVG element
+    const onPointerMove = React.useCallback((e: React.PointerEvent<SVGSVGElement>) => {
         const id = draggingIdRef.current
         if (!id) return
-        const {x, y} = clientToNormalized(e.clientX, e.clientY)
+        const { x, y } = clientToNormalizedFromSvg(svgRef.current, e.clientX, e.clientY, VIEWBOX_W, VIEWBOX_H, VIEWBOX_MARGIN)
         onNodePositionChange?.(id, x, y)
-    }, [clientToNormalized, draggableNodes, onNodePositionChange])
+    }, [onNodePositionChange])
 
-    const endDragging = React.useCallback(function onMouseUp() {
+    const onPointerUp = React.useCallback((e: React.PointerEvent<SVGSVGElement>) => {
+        if (svgRef.current) {
+            try { svgRef.current.releasePointerCapture(e.pointerId) } catch {}
+        }
         draggingIdRef.current = null
-        window.removeEventListener('mousemove', handleGlobalMouseMove)
-        window.removeEventListener('mouseup', onMouseUp)
-    }, [handleGlobalMouseMove])
+    }, [])
 
-    const beginDragging = React.useCallback((id: NodeId) => {
+    const beginDragging = React.useCallback((id: NodeId, e?: React.PointerEvent) => {
         if (!draggableNodes) return
         draggingIdRef.current = id
-        window.addEventListener('mousemove', handleGlobalMouseMove)
-        window.addEventListener('mouseup', endDragging)
-    }, [draggableNodes, handleGlobalMouseMove, endDragging])
+        if (svgRef.current && e) {
+            try { svgRef.current.setPointerCapture(e.pointerId) } catch {}
+        }
+    }, [draggableNodes])
 
     const content = graph ? (
         <>
@@ -102,8 +99,8 @@ export function GraphCanvas({
                             endId={endId}
                             distance={nodeState?.distance}
                             draggable={draggableNodes && !!onNodePositionChange}
-                            onClick={() => onNodeClick?.(n.id)}
-                            onDragStart={() => beginDragging(n.id)}
+                            onClick={() => { onNodeClick?.(n.id) }}
+                            onDragStart={(e) => beginDragging(n.id, e)}
                         />
                     )
                 })}
@@ -123,8 +120,12 @@ export function GraphCanvas({
 
     return (
         <div style={{width, height}} className="w-full h-full">
-            <svg ref={svgRef} viewBox={`0 0 ${VIEWBOX_W} ${VIEWBOX_H}`}
-                 className="w-full h-full bg-white/50 border border-slate-200 rounded">
+            <svg ref={svgRef} viewBox={`0 0 ${VIEWBOX_W} ${VIEWBOX_H}`} preserveAspectRatio="xMidYMid meet"
+                 className="w-full h-full bg-white/50 border border-slate-200 rounded"
+                 onPointerMove={onPointerMove}
+                 onPointerUp={onPointerUp}
+                 onPointerCancel={onPointerUp}
+            >
                 <defs>
                     {/* default arrowhead */}
                     <marker id="arrow-default" viewBox="0 0 10 10" refX={ARROW_REF_X} refY={ARROW_REF_Y}
