@@ -66,7 +66,7 @@ export const GraphNodeItem: React.FC<GraphNodeItemProps> = ({
 
   return (
     <g
-      className="select-none"
+      className="select-none touch-none"
       style={{ cursor }}
       onClick={onClick}
       onPointerDown={(e) => { if (draggable) { e.preventDefault(); onDragStart?.(e) } }}
