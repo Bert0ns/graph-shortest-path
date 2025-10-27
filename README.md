@@ -56,9 +56,9 @@ Example:
 
 - metadata: { directed: boolean; weighted: boolean; name?: string; description?: string }​
 
-- nodes: Array<{ id: string; x: number; y: number; label?: string }> with normalized coordinates in.​
+- nodes: Array<{ id: string; x: number; y: number; label?: string }> with normalized coordinates in the [0,1] range
 
-- edges: Array<{ from: string; to: string; weight: number; label?: string }> with non‑negative weights for Dijkstra.​
+- edges: Array<{ from: string; to: string; weight: number; label?: string }>
 
 Example:
 ```typescript
@@ -140,11 +140,7 @@ Queue/frontier panel and distance labels near nodes for clarity.​
 ### Notes and non‑goals
 - Algorithms requiring negative weights (e.g., Bellman–Ford) are out of scope for MVP; consider later additions like BFS, A*, and Floyd–Warshall.​
 
-
 - Advanced layout, panning/zoom, undo/redo, bulk editing, and large‑scale rendering are deferred enhancements.​
 
 ### Toasts and shadcn
 - Use Sonner for non‑blocking toasts with shadcn; see component docs for setup and usage in Next.js.​
-
-### Acknowledgements
-- Dijkstra fundamentals and stepwise visualization patterns are widely documented and adapted for educational UIs.
