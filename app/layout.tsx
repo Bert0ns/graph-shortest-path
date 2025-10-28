@@ -5,6 +5,16 @@ import {Toaster} from "@/components/ui/sonner";
 import ThemeProvider from "@/components/theme-components/themeProvider";
 import WebsiteHeader from "@/components/websiteHeader";
 import {websiteConfigs} from "@/website.configs";
+import {NextFontWithVariable} from "next/dist/compiled/@next/font";
+import {Poppins} from "next/font/google";
+
+
+const poppins: NextFontWithVariable = Poppins({
+    subsets: ['latin'],
+    weight: ['400', '600', '700'],
+    variable: '--font-poppins',
+    display: 'swap',
+})
 
 export const metadata: Metadata = {
   title: websiteConfigs.title,
@@ -18,7 +28,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`antialiased min-h-screen`}>
+      <body className={`${poppins.variable} font-serif antialiased min-h-screen`}>
         <ThemeProvider
             attribute="class"
             defaultTheme="system"
