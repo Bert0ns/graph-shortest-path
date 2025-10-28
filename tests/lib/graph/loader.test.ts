@@ -1,5 +1,5 @@
-import { resolveGraph, validateGraphFile, downloadGraphAsJSON, importGraphFromFile, loadGraphFromUrl } from '../../../lib/graph/loader'
-import type { GraphFile, Graph } from '../../../lib/graph/types'
+import { resolveGraph, validateGraphFile, downloadGraphAsJSON, importGraphFromFile, loadGraphFromUrl } from '@/lib/graph/loader'
+import type { GraphFile, Graph } from '@/lib/graph/types'
 
 describe('graph loader validation', () => {
   it('validates a correct graph file', () => {
