@@ -1,6 +1,6 @@
-import { dijkstra } from './dijkstra'
-import { Graph } from '../../graph/types'
-import { TraceEvent } from '../../algorithms/types'
+import { dijkstra } from '../../../../lib/algorithms/core/dijkstra'
+import { Graph } from '../../../../lib/graph/types'
+import { TraceEvent } from '../../../../lib/algorithms/types'
 
 const makeGraph = (): Graph => ({
   metadata: { directed: true, weighted: true, name: 'T', description: '' },
