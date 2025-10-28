@@ -17,6 +17,7 @@ import {
 } from '@/lib/graph/graph_constants'
 import {clientToNormalizedFromSvg} from "@/lib/graph/canvas_utils";
 import {GraphCanvasProps} from "@/components/GraphCanvas/GraphCanvasProps";
+import LoadingCanvas from "@/components/GraphCanvas/LoadingCanvas";
 
 export function GraphCanvas({
                                 graph,
@@ -107,15 +108,7 @@ export function GraphCanvas({
             </g>
         </>
     ) : (
-        <g>
-            <text
-                x={VIEWBOX_W / 2}
-                y={VIEWBOX_H / 2}
-                textAnchor="middle"
-                dominantBaseline="middle"
-                fill="#64748b">Loading…
-            </text>
-        </g>
+        <LoadingCanvas />
     )
 
     return (
