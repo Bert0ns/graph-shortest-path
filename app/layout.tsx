@@ -26,9 +26,7 @@ export default function RootLayout({
             disableTransitionOnChange
         >
             <WebsiteHeader />
-            <main>
-                {children}
-            </main>
+            {children}
             <Toaster position="bottom-left" />
         </ThemeProvider>
       </body>

@@ -1,7 +1,7 @@
 export const websiteConfigs = {
     logo_img: "/images/logo.png",
     menuItems: [
-        { label: "Graph Animator", link: "/" },
+        { label: "Graph Simulator", link: "/" },
         { label: "Graph Builder", link: "/builder" },
     ],
     title: "Shortest Path Finder",
