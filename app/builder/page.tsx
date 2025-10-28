@@ -103,7 +103,6 @@ export default function GraphBuilderPage() {
         <main className="container mx-auto p-4 space-y-4">
             <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <div className="flex items-center gap-3">
-                    <Link href="/"><Button variant="outline" title="Back to the main visualizer">Back to Home</Button></Link>
                     <h1 className="text-lg sm:text-xl font-semibold text-slate-800" title="Graph Builder — create nodes and edges, drag nodes to reposition">Graph Builder</h1>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
@@ -117,6 +116,7 @@ export default function GraphBuilderPage() {
                     <Button variant="ghost" onClick={handleClear} title="Clear the current graph and cache">Clear graph</Button>
                     <Button variant="outline" onClick={handleImportClick} title="Import a graph JSON file to edit">Import JSON</Button>
                     <Button onClick={handleExport} title="Export the current graph as JSON">Export JSON</Button>
+                    <Link href="/"><Button variant="outline" title="Back to the main visualizer">Back to Home</Button></Link>
                 </div>
             </header>
 
