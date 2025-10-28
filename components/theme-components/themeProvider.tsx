@@ -11,20 +11,22 @@ const LoadingTheme = () => {
 }
 
 export default function ThemeProvider({
-                                  children,
-                                  ...props
-                              }: React.ComponentProps<typeof NextThemesProvider>) {
+                                          children,
+                                          ...props
+                                      }: React.ComponentProps<typeof NextThemesProvider>) {
 
     const [isMounted, setIsMounted] = React.useState(false);
 
     useEffect(() => {
-        if(!isMounted) {
+        // Schedule state update asynchronously to avoid cascading renders warning.
+        const id = window.setTimeout(() => {
             setIsMounted(true);
-        }
-    }, [isMounted])
+        }, 0);
+        return () => window.clearTimeout(id);
+    }, [])
 
-    if(!isMounted) {
-        return <LoadingTheme />;
+    if (!isMounted) {
+        return <LoadingTheme/>;
     }
 
     return (

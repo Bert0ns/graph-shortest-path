@@ -1,5 +1,4 @@
 'use client'
-
 import React from 'react'
 import GraphSimulator from '@/components/GraphSimulator'
 import Link from 'next/link'
@@ -8,7 +7,7 @@ import {importGraphFromFile} from '@/lib/graph/loader'
 import type {Graph} from '@/lib/graph/types'
 import {toast} from 'sonner'
 import {getCachedGraph, setCachedGraph} from '@/lib/graph/cache'
-import ThemeSelectorButton from "@/components/theme-components/themeSelectorButton";
+
 
 export default function Home() {
     const [importedGraph, setImportedGraph] = React.useState<Graph | null>(null)
@@ -44,7 +43,6 @@ export default function Home() {
     return (
         <main className="container mx-auto p-4 space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-
                 <div className="flex flex-wrap items-center gap-2">
                     <input
                         ref={fileInputRef}
