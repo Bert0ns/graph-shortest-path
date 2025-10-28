@@ -3,10 +3,12 @@ import "./globals.css";
 import React from "react";
 import {Toaster} from "@/components/ui/sonner";
 import ThemeProvider from "@/components/theme-components/themeProvider";
+import WebsiteHeader from "@/components/websiteHeader";
+import {websiteConfigs} from "@/website.configs";
 
 export const metadata: Metadata = {
-  title: "Shortest Path Finder",
-  description: "Visualize and find the shortest path in custom graphs using Dijkstra's algorithm.",
+  title: websiteConfigs.title,
+  description: websiteConfigs.description,
 };
 
 export default function RootLayout({
@@ -23,10 +25,11 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
         >
+            <WebsiteHeader />
             <main>
                 {children}
             </main>
-            <Toaster position="top-center" />
+            <Toaster position="bottom-left" />
         </ThemeProvider>
       </body>
     </html>

@@ -4,17 +4,25 @@ import Link from "next/link";
 import Image from "next/image";
 import React from "react";
 import {cn} from "@/lib/utils";
-import {SiteHeaderProps} from "@/components/SiteHeader/index.types";
 import {websiteConfigs} from "@/website.configs";
-import {Route} from "@/components/SiteHeader/index.types";
 import {usePathname} from "next/navigation";
 import {useMobile} from "@/lib/hooks/use-mobile";
-import { Button } from "../ui/button";
+import { Button } from "./ui/button";
 import {Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger} from "@/components/ui/sheet";
-import ThemeSelector from "../ThemeSelector";
+import ThemeSelectorButton from "@/components/theme-components/themeSelectorButton";
 
 
-const DesktopNav: React.FC<SiteHeaderProps> = ({routes}) => {
+export interface WebsiteRoute {
+    href: string
+    label: string
+    active: boolean
+}
+
+export interface WebsiteHeaderProps {
+    routes: WebsiteRoute[];
+}
+
+const DesktopNav: React.FC<WebsiteHeaderProps> = ({routes}) => {
     return (
         <>
             <nav className="flex items-center space-x-6 text-sm font-medium">
@@ -30,7 +38,7 @@ const DesktopNav: React.FC<SiteHeaderProps> = ({routes}) => {
                         {route.label}
                     </Link>
                 ))}
-                <Link href="https://github.com/Bert0ns/montecarlo-simulation"
+                <Link href={websiteConfigs.gitHubRepo}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 text-blue-300 dark:text-blue-400 hover:text-blue-500 transition-colors"
@@ -40,13 +48,13 @@ const DesktopNav: React.FC<SiteHeaderProps> = ({routes}) => {
                 </Link>
             </nav>
             <div className="flex items-center space-x-2">
-                <ThemeSelector/>
+                <ThemeSelectorButton/>
             </div>
         </>
     )
 }
 
-const MobileNav: React.FC<SiteHeaderProps> = ({routes}) => {
+const MobileNav: React.FC<WebsiteHeaderProps> = ({routes}) => {
     const [open, setOpen] = React.useState<boolean>(false);
     return (
         <Sheet open={open} onOpenChange={setOpen}>
@@ -59,7 +67,7 @@ const MobileNav: React.FC<SiteHeaderProps> = ({routes}) => {
             <SheetContent side="right" className="w-[85%] sm:w-[350px] pr-0 dark:bg-gray-800 dark:border-gray-700">
                 <SheetHeader className="pb-4 border-b dark:border-gray-700">
                     <SheetTitle className="dark:text-gray-100">
-                        <Link href="/" className="flex items-center gap-2">
+                        <Link href="/public" className="flex items-center gap-2">
                             <Image
                                 src={websiteConfigs.logo_img}
                                 alt="Logo"
@@ -93,10 +101,10 @@ const MobileNav: React.FC<SiteHeaderProps> = ({routes}) => {
                 </div>
 
                 <div className="mt-auto w-full pl-4 pt-4 pb-4 border-t dark:border-gray-700 flex flex-row gap-8">
-                    <ThemeSelector className="scale-150"/>
+                    <ThemeSelectorButton className="scale-150"/>
 
                     <Link
-                        href="https://github.com/Bert0ns/montecarlo-simulation"
+                        href={websiteConfigs.gitHubRepo}
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={() => setOpen(false)}
@@ -111,11 +119,11 @@ const MobileNav: React.FC<SiteHeaderProps> = ({routes}) => {
     )
 }
 
-export function SiteHeader() {
+export default function WebsiteHeader() {
     const pathname: string = usePathname();
     const isMobile: boolean = useMobile();
 
-    const routes: Route[] = websiteConfigs.menuItems.map((item) => ({
+    const routes: WebsiteRoute[] = websiteConfigs.menuItems.map((item) => ({
         href: item.link,
         label: item.label,
         active: pathname === item.link,
@@ -124,13 +132,13 @@ export function SiteHeader() {
     return (
         <header className="sticky top-0 z-40 w-full border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
             <div className="container mx-auto h-16 px-4 py-6 flex justify-between items-center max-w-4xl">
-                <Link href="/" className="flex items-center space-x-2">
+                <Link href="/public" className="flex items-center space-x-2">
                     <Image
                         src={websiteConfigs.logo_img}
                         alt="Logo"
                         width={100}
                         height={100}
-                        className="w-32 h-auto"
+                        className="w-24 h-auto"
                     />
                 </Link>
                 { isMobile ?
