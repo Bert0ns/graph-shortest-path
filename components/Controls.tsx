@@ -40,7 +40,7 @@ export function Controls({
   onSpeedChange,
 }: ControlsProps) {
   return (
-    <div className="flex flex-wrap items-center gap-3 p-3 border rounded-md bg-white/60">
+    <div className="flex flex-wrap items-center gap-3 p-3 border rounded-md bg-card/60">
       <div
         className="flex items-center gap-2 w-full sm:w-auto"
         title="Select the algorithm to visualize"
@@ -103,7 +103,7 @@ export function Controls({
           onValueChange={(vals) => onSpeedChange?.(vals[0] ?? speed)}
           className="w-full sm:w-40"
         />
-        <span className="text-xs text-slate-600 tabular-nums">
+        <span className="text-xs text-muted-foreground tabular-nums">
           {speed.toFixed(2)}x
         </span>
       </div>

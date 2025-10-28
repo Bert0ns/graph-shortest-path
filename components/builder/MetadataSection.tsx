@@ -11,8 +11,8 @@ export interface MetadataSectionProps {
 
 export function MetadataSection({ metadata, onUpdateMetadata }: MetadataSectionProps) {
   return (
-    <section className="bg-white/70 border rounded-md p-3 space-y-2">
-      <h2 className="text-sm font-semibold text-slate-700">Metadata</h2>
+    <section className="bg-card/70 border rounded-md p-3 space-y-2">
+      <h2 className="text-sm font-semibold text-foreground">Metadata</h2>
       <div className="grid grid-cols-2 gap-2 text-sm">
         <div className="flex items-center gap-2 col-span-2">
           <input id="directed" type="checkbox" checked={metadata.directed} onChange={(e) => onUpdateMetadata({ directed: e.target.checked })} />
@@ -36,4 +36,3 @@ export function MetadataSection({ metadata, onUpdateMetadata }: MetadataSectionP
 }
 
 export default MetadataSection
-

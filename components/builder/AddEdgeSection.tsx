@@ -16,8 +16,8 @@ export function AddEdgeSection({ nodes, onCreateEdge }: AddEdgeSectionProps) {
   const [edgeForm, setEdgeForm] = React.useState({ from: '', to: '', weight: DEFAULT_EDGE_WEIGHT, label: '' })
 
   return (
-    <section className="bg-white/70 border rounded-md p-3 space-y-2">
-      <h2 className="text-sm font-semibold text-slate-700">Add Edge</h2>
+    <section className="bg-card/70 border rounded-md p-3 space-y-2">
+      <h2 className="text-sm font-semibold text-foreground">Add Edge</h2>
       <div className="grid grid-cols-2 gap-2 text-sm">
         <div>
           <Label htmlFor="efrom">From</Label>

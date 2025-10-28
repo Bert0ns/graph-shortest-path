@@ -182,7 +182,7 @@ export default function GraphSimulator({ importedGraph = null }: GraphSimulatorP
 
     return (
         <main className="container mx-auto mt-4 space-y-4">
-            <h1 className="text-lg sm:text-xl font-semibold text-slate-800">Simulator</h1>
+            <h1 className="text-lg sm:text-xl font-semibold text-foreground">Simulator</h1>
 
             <Controls
                 algorithm={algorithm}
@@ -199,9 +199,9 @@ export default function GraphSimulator({ importedGraph = null }: GraphSimulatorP
 
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
                 <div className="lg:col-span-3">
-                    <div className="bg-white/70 border rounded-md p-2">
-                        {loading && <div className="p-6 text-slate-600">Loading graph…</div>}
-                        {error && <div className="p-6 text-red-600">{error}</div>}
+                    <div className="bg-card/70 border rounded-md p-2">
+                        {loading && <div className="p-6 text-muted-foreground">Loading graph…</div>}
+                        {error && <div className="p-6 text-destructive">{error}</div>}
                         {!loading && !error && (
                             <GraphCanvas
                                 graph={graph}
@@ -215,10 +215,10 @@ export default function GraphSimulator({ importedGraph = null }: GraphSimulatorP
                     </div>
                 </div>
                 <div className="space-y-2">
-                    <div className="bg-white/70 border rounded-md">
+                    <div className="bg-card/70 border rounded-md">
                         <Legend />
                     </div>
-                    <div className="bg-white/70 border rounded-md">
+                    <div className="bg-card/70 border rounded-md">
                         <QueuePanel items={state?.frontier ?? []} />
                     </div>
                 </div>

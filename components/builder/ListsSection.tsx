@@ -13,12 +13,12 @@ export interface ListsSectionProps {
 
 export function ListsSection({ nodes, edges, onDeleteNode, onDeleteEdge }: ListsSectionProps) {
   return (
-    <section className="bg-white/70 border rounded-md p-3 space-y-2">
-      <h2 className="text-sm font-semibold text-slate-700">Lists</h2>
+    <section className="bg-card/70 border rounded-md p-3 space-y-2">
+      <h2 className="text-sm font-semibold text-foreground">Lists</h2>
       <div className="space-y-2">
         <div>
-          <h3 className="text-xs font-medium text-slate-600">Nodes</h3>
-          <ul className="text-sm divide-y">
+          <h3 className="text-xs font-medium text-muted-foreground">Nodes</h3>
+          <ul className="text-sm divide-y divide-border">
             {nodes.map((n) => (
               <li key={n.id} className="flex items-center justify-between py-1">
                 <span className="truncate">{n.id}{n.label ? ` · ${n.label}` : ''}</span>
@@ -28,8 +28,8 @@ export function ListsSection({ nodes, edges, onDeleteNode, onDeleteEdge }: Lists
           </ul>
         </div>
         <div>
-          <h3 className="text-xs font-medium text-slate-600">Edges</h3>
-          <ul className="text-sm divide-y">
+          <h3 className="text-xs font-medium text-muted-foreground">Edges</h3>
+          <ul className="text-sm divide-y divide-border">
             {edges.map((e, idx) => (
               <li key={`${e.from}->${e.to}-${idx}`} className="flex items-center justify-between py-1">
                 <span className="truncate">{e.from} → {e.to}, w:{e.weight}</span>
@@ -44,4 +44,3 @@ export function ListsSection({ nodes, edges, onDeleteNode, onDeleteEdge }: Lists
 }
 
 export default ListsSection
-
