@@ -114,7 +114,7 @@ export function GraphCanvas({
     return (
         <div style={{width, height}} className="w-full h-full">
             <svg ref={svgRef} viewBox={`0 0 ${VIEWBOX_W} ${VIEWBOX_H}`} preserveAspectRatio="xMidYMid meet"
-                 className={"w-full h-full bg-white/50 border border-slate-200 rounded" + (draggableNodes ? " touch-none" : "")}
+                 className={"w-full h-full bg-card/50 border border-border rounded" + (draggableNodes ? " touch-none" : "")}
                  onPointerMove={onPointerMove}
                  onPointerUp={onPointerUp}
                  onPointerCancel={onPointerUp}
