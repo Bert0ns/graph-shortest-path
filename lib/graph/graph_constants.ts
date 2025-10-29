@@ -1,21 +1,54 @@
 // Centralized constants for graph rendering/building (no magic numbers)
 
-// Base palette
 export const colors = {
-    edge: '#94a3b8', // slate-400
-    edgeActive: '#64748b', // slate-500
-    nodeFill: '#A7F3D0', // emerald-200 (legend Node)
-    nodeStroke: '#34D399', // emerald-400
-    text: '#334155', // slate-700
-    // Highlights
-    frontierFill: '#BFDBFE', frontierStroke: '#60A5FA', // blue-200/blue-400
-    currentFill: '#FDE68A', currentStroke: '#F59E0B', // amber-200/amber-500
-    visitedFill: '#FCA5A5', visitedStroke: '#F87171', // red-300/red-400
-    pathFill: '#C4B5FD', pathStroke: '#8B5CF6', // violet-300/violet-600
-    relaxedStroke: '#F59E0B', // amber-500 for relaxed edges
-    startRing: '#10B981', // emerald-500
-    endRing: '#6366F1', // indigo-500
-    distanceText: '#cc0800', // slate-600 for distances
+    edge: {
+        text: '#1e1e1e',
+        normal: '#94A3B8',
+        active: '#64748b',
+        path: '#8B5CF6',
+        relaxed: '#FBBF24',
+        weightBackground: '#f3f3f3',
+        arrowHead: {
+            path: '#6140ac',
+            relaxed: '#d6a118',
+            active: '#6581ac',
+        }
+    },
+    node: {
+        normal: {
+            fill: '#A7F3D0',
+            stroke: '#34D399',
+        },
+        current: {
+            fill: '#FDE68A',
+            stroke: '#F59E0B',
+        },
+        frontier: {
+            fill: '#BFDBFE',
+            stroke: '#60A5FA',
+        },
+        visited: {
+            fill: '#FCA5A5',
+            stroke: '#F87171',
+        },
+        path: {
+            fill: '#C4B5FD',
+            stroke: '#8B5CF6',
+        },
+        startRing: '#10B981',
+        endRing: '#6366F1',
+        distanceText: '#cc0800',
+        idText: '#1e1e1e',
+        labelText: '#424242',
+    },
+    grid: {
+        minor: 'var(--border)',
+        major: 'var(--border)',
+        label: 'var(--muted-foreground)',
+    },
+    loadingCanvas: {
+        text: 'var(--foreground)',
+    }
 }
 
 // SVG viewBox dimensions and margins (logical units)
@@ -60,9 +93,6 @@ export const WEIGHT_LABEL_PADDING = 1.5 // horizontal padding baseline
 export const WEIGHT_LABEL_CHAR_WIDTH = 1.8 // approximate char width for sizing
 export const WEIGHT_LABEL_BASELINE_TWEAK = 0.2 // small vertical optical correction for text baseline
 
-// Hit areas
-export const HITBOX_PADDING = 0.8
-
 // Builder-only defaults
 export const DEFAULT_NODE_X = 0.2
 export const DEFAULT_NODE_Y = 0.2
@@ -73,8 +103,5 @@ export const GRID_MINOR_STEP = 0.05 // normalized units
 export const GRID_MAJOR_STEP = 0.25 // normalized units
 export const GRID_LABEL_FONT_SIZE = 1.8
 export const GRID_LABEL_OFFSET = 0.9 // offset from inner bounds
-export const GRID_COLOR_MINOR = '#d5dfeb' // slate-300
-export const GRID_COLOR_MAJOR = '#9eaec3' // slate-400
 export const GRID_OPACITY_MINOR = 0.3
 export const GRID_OPACITY_MAJOR = 0.45
-export const GRID_LABEL_COLOR = '#9eaec3' // slate-400

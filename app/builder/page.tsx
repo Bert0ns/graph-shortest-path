@@ -103,8 +103,7 @@ export default function GraphBuilderPage() {
         <main className="container mx-auto p-4 space-y-4">
             <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <div className="flex items-center gap-3">
-                    <Link href="/"><Button variant="outline" title="Back to the main visualizer">Back to Home</Button></Link>
-                    <h1 className="text-lg sm:text-xl font-semibold text-slate-800" title="Graph Builder — create nodes and edges, drag nodes to reposition">Graph Builder</h1>
+                    <h1 className="text-lg sm:text-xl font-semibold text-foreground" title="Graph Builder — create nodes and edges, drag nodes to reposition">Graph Builder</h1>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
                     <input
@@ -117,6 +116,7 @@ export default function GraphBuilderPage() {
                     <Button variant="ghost" onClick={handleClear} title="Clear the current graph and cache">Clear graph</Button>
                     <Button variant="outline" onClick={handleImportClick} title="Import a graph JSON file to edit">Import JSON</Button>
                     <Button onClick={handleExport} title="Export the current graph as JSON">Export JSON</Button>
+                    <Link href="/"><Button variant="outline" title="Back to the main visualizer">Back to Home</Button></Link>
                 </div>
             </header>
 
@@ -130,7 +130,7 @@ export default function GraphBuilderPage() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-                <section className="lg:col-span-3 bg-white/70 border rounded-md p-2" title="Canvas — drag nodes to reposition; edges update automatically">
+                <section className="lg:col-span-3 bg-card/70 border rounded-md p-2" title="Canvas — drag nodes to reposition; edges update automatically">
                     <GraphCanvas
                         graph={graph}
                         height={"clamp(320px, 50vh, 640px)"}

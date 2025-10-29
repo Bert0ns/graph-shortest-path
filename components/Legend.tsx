@@ -1,19 +1,43 @@
 'use client'
 
 import React from 'react'
+import {colors} from '@/lib/graph/graph_constants'
 
 export function Legend() {
-  return (
-    <div className="text-xs text-slate-700 grid grid-cols-2 gap-2 p-2">
-      {/* Placeholder legend per pastel palette */}
-      <div className="flex items-center gap-2"><span className="inline-block w-3 h-3 rounded" style={{ background: '#A7F3D0', border: '1px solid #34D399' }} /> Node</div>
-      <div className="flex items-center gap-2"><span className="inline-block w-3 h-3 rounded" style={{ background: '#BFDBFE', border: '1px solid #60A5FA' }} /> Frontier</div>
-      <div className="flex items-center gap-2"><span className="inline-block w-3 h-3 rounded" style={{ background: '#FDE68A', border: '1px solid #F59E0B' }} /> Current</div>
-      <div className="flex items-center gap-2"><span className="inline-block w-3 h-3 rounded" style={{ background: '#FCA5A5', border: '1px solid #F87171' }} /> Finalized</div>
-      <div className="flex items-center gap-2"><span className="inline-block w-3 h-3 rounded" style={{ background: '#C4B5FD', border: '1px solid #8B5CF6' }} /> Path</div>
-    </div>
-  )
+    return (
+        <div className="text-xs text-muted-foreground grid grid-cols-2 gap-2 p-2">
+            <div className="flex items-center gap-2">
+                <span className="inline-block w-3 h-3 rounded" style={{
+                    background: colors.node.normal.fill,
+                    border: `1px solid ${colors.node.normal.stroke}`
+                }}/> Unexplored Node
+            </div>
+            <div className="flex items-center gap-2">
+                <span className="inline-block w-3 h-3 rounded" style={{
+                    background: colors.node.frontier.fill,
+                    border: `1px solid ${colors.node.frontier.stroke}`
+                }}/> Node in Frontier
+            </div>
+            <div className="flex items-center gap-2">
+                <span className="inline-block w-3 h-3 rounded" style={{
+                    background: colors.node.current.fill,
+                    border: `1px solid ${colors.node.current.stroke}`
+                }}/> Current Node
+            </div>
+            <div className="flex items-center gap-2">
+                <span className="inline-block w-3 h-3 rounded" style={{
+                    background: colors.node.visited.fill,
+                    border: `1px solid ${colors.node.visited.stroke}`
+                }}/> Node path cost Finalized
+            </div>
+            <div className="flex items-center gap-2">
+                <span className="inline-block w-3 h-3 rounded" style={{
+                    background: colors.node.path.fill,
+                    border: `1px solid ${colors.node.path.stroke}`
+                }}/> Optimal Path
+            </div>
+        </div>
+    )
 }
 
 export default Legend
-

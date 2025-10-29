@@ -15,8 +15,8 @@ export function AddNodeSection({onCreateNode}: AddNodeSectionProps) {
     const [nodeForm, setNodeForm] = React.useState({id: '', x: DEFAULT_NODE_X, y: DEFAULT_NODE_Y, label: ''})
 
     return (
-        <section className="bg-white/70 border rounded-md p-3 space-y-2">
-            <h2 className="text-sm font-semibold text-slate-700">Add Node</h2>
+        <section className="bg-card/70 border rounded-md p-3 space-y-2">
+            <h2 className="text-sm font-semibold text-foreground">Add Node</h2>
             <div className="grid grid-cols-2 gap-2 text-sm">
                 <div className="col-span-2">
                     <Label htmlFor="nid">ID</Label>
