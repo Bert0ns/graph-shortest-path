@@ -87,7 +87,7 @@ export const GraphEdgeItem: React.FC<GraphEdgeItemProps> = ({
             height={WEIGHT_LABEL_HEIGHT}
             rx={WEIGHT_LABEL_HEIGHT / 2}
             ry={WEIGHT_LABEL_HEIGHT / 2}
-            fill="#ffffff"
+            fill={colors.weightBackground}
             opacity={0.8}
           />
           <text
