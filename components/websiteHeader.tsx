@@ -8,7 +8,7 @@ import {websiteConfigs} from "@/website.configs";
 import {usePathname} from "next/navigation";
 import {useMobile} from "@/lib/hooks/use-mobile";
 import { Button } from "./ui/button";
-import {Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger} from "@/components/ui/sheet";
+import {Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger} from "@/components/ui/sheet";
 import ThemeSelectorButton from "@/components/theme-components/themeSelectorButton";
 
 
@@ -41,7 +41,6 @@ const DesktopNav: React.FC<WebsiteHeaderProps> = ({routes}) => {
                 <Link href={websiteConfigs.gitHubRepo}
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label="Apri il repository GitHub"
                     className="inline-flex items-center gap-2 text-foreground/70 hover:text-primary transition-colors"
                 >
                     <Github size={20} aria-hidden="true" focusable="false" />
@@ -65,7 +64,7 @@ const MobileNav: React.FC<WebsiteHeaderProps> = ({routes}) => {
                     <span className="sr-only">Menu</span>
                 </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[85%] sm:w-[350px] pr-0 bg-background" aria-describedby={undefined}>
+            <SheetContent side="right" className="w-[85%] sm:w-[350px] pr-0 bg-background">
                 <SheetHeader className="pb-4 border-b border-border">
                     <SheetTitle className="text-foreground">
                         <Link href="/public" className="flex items-center gap-2">
@@ -79,7 +78,7 @@ const MobileNav: React.FC<WebsiteHeaderProps> = ({routes}) => {
                             {websiteConfigs.title}
                         </Link>
                     </SheetTitle>
-                    <p id="sheet-description" className="sr-only">Mobile navigation menu</p>
+                    <SheetDescription className="sr-only">Mobile navigation menu</SheetDescription>
                 </SheetHeader>
 
                 <div className="my-6 px-1">
@@ -110,7 +109,6 @@ const MobileNav: React.FC<WebsiteHeaderProps> = ({routes}) => {
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={() => setOpen(false)}
-                        aria-label="Apri il repository GitHub"
                         className="flex items-center gap-2 text-foreground/70 hover:text-primary transition-colors p-2"
                     >
                         <Github size={20} aria-hidden="true" focusable="false" />

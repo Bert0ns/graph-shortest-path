@@ -33,7 +33,7 @@ const ThemeSelectorButton: React.FC<ThemeSelectorButtonProps> = ({className}) =>
                 <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="icon" className="w-9 px-0">
                         {renderThemeIcon()}
-                        <span className="sr-only">Cambia tema</span>
+                        <span className="sr-only">Change theme</span>
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
