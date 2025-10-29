@@ -9,7 +9,7 @@ export default function LoadingCanvas() {
                 y={VIEWBOX_H / 2}
                 textAnchor="middle"
                 dominantBaseline="middle"
-                fill={colors.text}
+                fill={colors.loadingCanvas.text}
             >
                 Loading…
             </text>
