@@ -53,12 +53,12 @@ export const GraphNodeItem: React.FC<GraphNodeItemProps> = ({
   onDragStart,
 }) => {
   const p = convertToCanvasCoordinates(x, y)
-  let fill = colors.nodeFill
-  let stroke = colors.nodeStroke
-  if (inPath) { fill = colors.pathFill; stroke = colors.pathStroke }
-  if (inFrontier) { fill = colors.frontierFill; stroke = colors.frontierStroke }
-  if (isVisited) { fill = colors.visitedFill; stroke = colors.visitedStroke }
-  if (isCurrent) { fill = colors.currentFill; stroke = colors.currentStroke }
+  let fill = colors.node.normal.fill
+  let stroke = colors.node.normal.stroke
+  if (inPath) { fill = colors.node.path.fill; stroke = colors.node.path.stroke }
+  if (inFrontier) { fill = colors.node.frontier.fill; stroke = colors.node.frontier.stroke }
+  if (isVisited) { fill = colors.node.visited.fill; stroke = colors.node.visited.stroke }
+  if (isCurrent) { fill = colors.node.current.fill; stroke = colors.node.current.stroke }
 
   const hasDist = typeof distance === 'number' && isFinite(distance)
   const nodeHint = draggable ? `Drag to reposition node ${id}` : `Click to select ${id} as start/end`
@@ -73,24 +73,24 @@ export const GraphNodeItem: React.FC<GraphNodeItemProps> = ({
     >
       <title>{nodeHint}</title>
       {startId === id && (
-        <circle cx={p.x} cy={p.y} r={NODE_RADIUS + START_RING_DELTA} fill="none" stroke={colors.startRing} strokeWidth={START_RING_STROKE_WIDTH} />
+        <circle cx={p.x} cy={p.y} r={NODE_RADIUS + START_RING_DELTA} fill="none" stroke={colors.node.startRing} strokeWidth={START_RING_STROKE_WIDTH} />
       )}
       {endId === id && (
-        <circle cx={p.x} cy={p.y} r={NODE_RADIUS + END_RING_DELTA} fill="none" stroke={colors.endRing} strokeWidth={END_RING_STROKE_WIDTH} strokeDasharray={END_RING_DASH} />
+        <circle cx={p.x} cy={p.y} r={NODE_RADIUS + END_RING_DELTA} fill="none" stroke={colors.node.endRing} strokeWidth={END_RING_STROKE_WIDTH} strokeDasharray={END_RING_DASH} />
       )}
 
       <circle cx={p.x} cy={p.y} r={NODE_RADIUS} fill={fill} stroke={stroke} strokeWidth={NODE_STROKE_WIDTH} />
 
-      <text x={p.x} y={p.y} textAnchor="middle" dominantBaseline="middle" fontSize={NODE_ID_FONT_SIZE} fill={colors.text} style={{ fontWeight: 600 }}>
+      <text x={p.x} y={p.y} textAnchor="middle" dominantBaseline="middle" fontSize={NODE_ID_FONT_SIZE} fill={colors.node.idText} style={{ fontWeight: 600 }}>
         {id}
       </text>
       {label && label !== id && (
-        <text x={p.x} y={p.y - NODE_RADIUS - LABEL_OFFSET} textAnchor="middle" fontSize={LABEL_FONT_SIZE} fill={colors.text}>
+        <text x={p.x} y={p.y - NODE_RADIUS - LABEL_OFFSET} textAnchor="middle" fontSize={LABEL_FONT_SIZE} fill={colors.node.labelText}>
           {label}
         </text>
       )}
       {hasDist && (
-        <text x={p.x} y={p.y + NODE_RADIUS + DISTANCE_OFFSET} textAnchor="middle" fontSize={DISTANCE_FONT_SIZE} fill={colors.distanceText}>
+        <text x={p.x} y={p.y + NODE_RADIUS + DISTANCE_OFFSET} textAnchor="middle" fontSize={DISTANCE_FONT_SIZE} fill={colors.node.distanceText}>
           {distance}
         </text>
       )}
