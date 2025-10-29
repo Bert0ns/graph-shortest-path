@@ -1,7 +1,6 @@
 import '@testing-library/jest-dom'
-import { act } from 'react';
 
-//To solve act() warning in tests (sub dependencies using react-dom/test-utils act not updated)
+// To solve act() warning in tests (sub dependencies using react-dom/test-utils act not updated)
 // Create mock module 'react-dom/test-utils'
 jest.mock('react-dom/test-utils', () => {
     // keep all origina exports
@@ -11,7 +10,8 @@ jest.mock('react-dom/test-utils', () => {
         ...original,
         // overwrite 'act' function
         act: (callback: () => unknown) => {
-            return act(callback);
+            // eslint-disable-next-line @typescript-eslint/no-require-imports
+            return require('react').act(callback);
         },
     };
 });
