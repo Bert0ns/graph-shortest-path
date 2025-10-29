@@ -62,7 +62,7 @@ export const GraphEdgeItem: React.FC<GraphEdgeItemProps> = ({
   const { x1, y1, x2, y2 } = arcLine
   const mid = { x: (x1 + x2) / 2, y: (y1 + y2) / 2 }
 
-  const stroke = isPath ? colors.pathStroke : isRelaxed ? colors.relaxedStroke : colors.edge
+  const stroke = isPath ? colors.edge.path : isRelaxed ? colors.edge.relaxed : colors.edge.normal
   const width = isPath ? PATH_EDGE_STROKE_WIDTH : isRelaxed ? RELAXED_EDGE_STROKE_WIDTH : EDGE_STROKE_WIDTH
   const markerId = isDirected
     ? isPath
@@ -87,7 +87,7 @@ export const GraphEdgeItem: React.FC<GraphEdgeItemProps> = ({
             height={WEIGHT_LABEL_HEIGHT}
             rx={WEIGHT_LABEL_HEIGHT / 2}
             ry={WEIGHT_LABEL_HEIGHT / 2}
-            fill={colors.weightBackground}
+            fill={colors.edge.weightBackground}
             opacity={0.8}
           />
           <text
@@ -95,7 +95,7 @@ export const GraphEdgeItem: React.FC<GraphEdgeItemProps> = ({
             y={WEIGHT_LABEL_FONT_SIZE / 2 - WEIGHT_LABEL_BASELINE_TWEAK}
             textAnchor="middle"
             fontSize={WEIGHT_LABEL_FONT_SIZE}
-            fill={colors.text}
+            fill={colors.edge.text}
             style={{ fontWeight: 500 }}
           >
             {edge.weight}
