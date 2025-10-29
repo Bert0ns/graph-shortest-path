@@ -123,17 +123,17 @@ export function GraphCanvas({
                     {/* default arrowhead */}
                     <marker id="arrow-default" viewBox="0 0 10 10" refX={ARROW_REF_X} refY={ARROW_REF_Y}
                             markerWidth={ARROW_SIZE} markerHeight={ARROW_SIZE} orient="auto-start-reverse">
-                        <path d="M 0 0 L 10 5 L 0 10 z" fill={colors.edgeActive}/>
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill={colors.edge.arrowHead.active}/>
                     </marker>
                     {/* relaxed arrowhead */}
                     <marker id="arrow-relaxed" viewBox="0 0 10 10" refX={ARROW_REF_X} refY={ARROW_REF_Y}
                             markerWidth={ARROW_SIZE} markerHeight={ARROW_SIZE} orient="auto-start-reverse">
-                        <path d="M 0 0 L 10 5 L 0 10 z" fill={colors.relaxedStroke}/>
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill={colors.edge.arrowHead.relaxed}/>
                     </marker>
                     {/* path arrowhead */}
                     <marker id="arrow-path" viewBox="0 0 10 10" refX={ARROW_REF_X} refY={ARROW_REF_Y}
                             markerWidth={ARROW_SIZE_PATH} markerHeight={ARROW_SIZE_PATH} orient="auto-start-reverse">
-                        <path d="M 0 0 L 10 5 L 0 10 z" fill={colors.pathStroke}/>
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill={colors.edge.arrowHead.path}/>
                     </marker>
                 </defs>
 
