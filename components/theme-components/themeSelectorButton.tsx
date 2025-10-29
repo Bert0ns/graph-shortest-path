@@ -21,7 +21,7 @@ const ThemeSelectorButton: React.FC<ThemeSelectorButtonProps> = ({className}) =>
         } else if (theme === "light") {
             return <Sun className="h-[1.2rem] w-[1.2rem]" />
         } else if (theme === "blue") {
-            return <span className="mr-2 inline-block h-4 w-4 rounded-sm bg-blue-600" />
+            return <span className="inline-block h-4 w-4 rounded-sm bg-blue-600" />
         }
         // Default fallback for system or unknown themes
         return <Sun className="h-[1.2rem] w-[1.2rem]" />

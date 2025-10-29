@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import ThemeSelectorButton from '@/components/theme-components/themeSelectorButton';
 import { useTheme } from 'next-themes';
@@ -60,10 +60,11 @@ describe('ThemeSelectorButton', () => {
         const button = container.querySelector('button');
         expect(button).toBeInTheDocument();
         
-        // Blue square span should be present
+        // Blue square span should be present without mr-2 class
         const blueSquare = button?.querySelector('span.bg-blue-600');
         expect(blueSquare).toBeInTheDocument();
         expect(blueSquare).toHaveClass('rounded-sm', 'bg-blue-600');
+        expect(blueSquare).not.toHaveClass('mr-2');
     });
 
     it('renders Sun icon as default for system theme', () => {
