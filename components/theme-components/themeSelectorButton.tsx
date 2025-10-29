@@ -13,17 +13,26 @@ export interface ThemeSelectorButtonProps {
 }
 
 const ThemeSelectorButton: React.FC<ThemeSelectorButtonProps> = ({className}) => {
-    const {setTheme} = useTheme()
+    const {setTheme, theme} = useTheme()
+
+    const renderThemeIcon = () => {
+        if (theme === "dark") {
+            return <Moon className="h-[1.2rem] w-[1.2rem]" />
+        } else if (theme === "light") {
+            return <Sun className="h-[1.2rem] w-[1.2rem]" />
+        } else if (theme === "blue") {
+            return <span className="mr-2 inline-block h-4 w-4 rounded-sm bg-blue-600" />
+        }
+        // Default fallback for system or unknown themes
+        return <Sun className="h-[1.2rem] w-[1.2rem]" />
+    }
 
     return (
         <div className={cn("flex items-center", className)}>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="icon" className="w-9 px-0">
-                        <Sun
-                            className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:rotate-90 dark:scale-0"/>
-                        <Moon
-                            className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100"/>
+                        {renderThemeIcon()}
                         <span className="sr-only">Cambia tema</span>
                     </Button>
                 </DropdownMenuTrigger>
