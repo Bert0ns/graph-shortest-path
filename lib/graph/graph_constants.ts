@@ -2,16 +2,16 @@
 
 export const colors = {
     edge: {
-        text: 'var(--foreground)',
+        text: '#1e1e1e',
         normal: '#94A3B8',
         active: '#64748b',
         path: '#8B5CF6',
         relaxed: '#FBBF24',
-        weightBackground: 'var(--background)',
+        weightBackground: '#f3f3f3',
         arrowHead: {
-            path: '#94A3B8',
-            relaxed: '#FBBF24',
-            active: '#8B5CF6',
+            path: '#6140ac',
+            relaxed: '#d6a118',
+            active: '#6581ac',
         }
     },
     node: {
@@ -31,10 +31,6 @@ export const colors = {
             fill: '#FCA5A5',
             stroke: '#F87171',
         },
-        relaxed: {
-            fill: '#FCD34D',
-            stroke: '#F59E0B',
-        },
         path: {
             fill: '#C4B5FD',
             stroke: '#8B5CF6',
@@ -42,8 +38,8 @@ export const colors = {
         startRing: '#10B981',
         endRing: '#6366F1',
         distanceText: '#cc0800',
-        idText: 'var(--foreground)',
-        labelText: 'var(--muted-foreground)',
+        idText: '#1e1e1e',
+        labelText: '#424242',
     },
     grid: {
         minor: 'var(--border)',
