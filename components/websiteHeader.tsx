@@ -133,7 +133,7 @@ export default function WebsiteHeader() {
     return (
         <header className="sticky top-0 z-40 w-full border-b border-border bg-background">
             <div className="container mx-auto h-16 px-4 py-6 flex justify-between items-center max-w-4xl">
-                <Link href="/public" className="flex items-center space-x-2">
+                <Link href="/" className="flex items-center space-x-2">
                     <Image
                         src={websiteConfigs.logo_img}
                         alt="Logo"
