@@ -1,40 +1,45 @@
 "use client"
 import Link from 'next/link'
 import {websiteConfigs} from '@/website.configs'
-import {setCachedGraph} from "@/lib/graph/cache";
 import {Graph} from "@/lib/graph/types";
 import React, {useEffect} from "react";
 import {loadGraphFromUrl} from "@/lib/graph/loader";
+import ExampleGraphCard from "@/components/exampleGraphCard";
 
 
 export default function HomeLanding() {
     const [exampleGraphs, setExampleGraphs] = React.useState<Graph[]>([])
 
     useEffect(() => {
-        const examples = [
-                '/graphs/triangle-unweighted.json',
-                '/graphs/square-weighted-directed.json',
-                '/graphs/grid-6-nodes.json',
-                '/graphs/tree-7-nodes.json',
-            ];
-
+        // Load all JSON files available in public/graphs/*
         (async () => {
             try {
-                const results = await Promise.allSettled(examples.map(loadGraphFromUrl))
+                const res = await fetch('/api/graphs', { cache: 'no-store' })
+                if (!res.ok) throw new Error(`Failed to list graphs: ${res.status}`)
+                const data = (await res.json()) as { files: string[] }
+                const files = Array.isArray(data.files) ? data.files : []
+
+                if (files.length === 0) {
+                    console.warn('No example graphs found in /public/graphs')
+                    setExampleGraphs([])
+                    return
+                }
+
+                const results = await Promise.allSettled(files.map(loadGraphFromUrl))
 
                 setExampleGraphs(
                     results.flatMap((r, idx) => {
                         if (r.status === 'fulfilled') return [r.value]
-                        console.warn(`Failed to load example graph from ${examples[idx]}: ${r.reason}`)
+                        console.warn(`Failed to load example graph from ${files[idx]}: ${r.reason}`)
                         return []
                     })
                 )
             } catch (err) {
                 console.warn('Unexpected error while loading examples:', err)
+                setExampleGraphs([])
             }
         })()
     }, [])
-
 
     return (
         <main className="container mx-auto p-6 space-y-10 max-w-4xl">
@@ -66,22 +71,7 @@ export default function HomeLanding() {
                 <p className="text-muted-foreground">Pick an example to jump into the simulator already loaded with that
                     graph.</p>
                 <div className="grid gap-4 sm:grid-cols-2">
-                    {exampleGraphs.map((g, i) => {
-                        const meta = g.metadata.weighted ? (g.metadata.directed ? "Weighted • Directed" : "Weighted • Undirected") : (g.metadata.directed ? "Unweighted • Directed" : "Unweighted • Undirected")
-                        const key = g.metadata.name?.trim() || `${g.nodes.length}-${g.edges.length}-${i}`
-
-                        return (
-                            <Link key={key} href={websiteConfigs.menuItems[1].link}
-                                  onClick={() => setCachedGraph(g)}
-                                  className="group block rounded-md border border-border p-4 hover:border-primary transition-colors bg-card/70">
-                                <div className="flex items-start justify-between gap-2">
-                                    <h3 className="font-medium text-foreground group-hover:text-primary">{g.metadata.name}</h3>
-                                    <span className="text-xs text-foreground/60 whitespace-nowrap">{meta}</span>
-                                </div>
-                                <p className="mt-2 text-sm text-muted-foreground">{g.metadata.description}</p>
-                            </Link>
-                        )
-                    })}
+                    {exampleGraphs.map((g, i) => <ExampleGraphCard g={g} key={i} />)}
                 </div>
             </section>
         </main>
