@@ -59,11 +59,11 @@ export default function HomeLanding() {
                     coordinates and edges.
                 </p>
                 <div className="flex flex-wrap gap-3">
-                    <Link href="/simulator"
+                    <Link href={websiteConfigs.menuItems[1].link}
                           className="inline-flex items-center px-4 py-2 rounded-md bg-primary text-primary-foreground hover:opacity-90">
                         Open Simulator
                     </Link>
-                    <Link href="/builder"
+                    <Link href={websiteConfigs.menuItems[2].link}
                           className="inline-flex items-center px-4 py-2 rounded-md border border-border hover:bg-accent">
                         Open Builder
                     </Link>
