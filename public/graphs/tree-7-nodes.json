@@ -1,21 +1,78 @@
 {
-  "metadata": { "directed": true, "weighted": false, "name": "Binary Tree (Directed)", "description": "Simple directed tree structure" },
+  "metadata": {
+    "directed": true,
+    "weighted": false,
+    "name": "Binary Tree",
+    "description": "Simple 7-node binary tree, directed from root to leaves"
+  },
   "nodes": [
-    { "id": "1", "x": 0.5, "y": 0.1 },
-    { "id": "2", "x": 0.3, "y": 0.35 },
-    { "id": "3", "x": 0.7, "y": 0.35 },
-    { "id": "4", "x": 0.2, "y": 0.6 },
-    { "id": "5", "x": 0.4, "y": 0.6 },
-    { "id": "6", "x": 0.6, "y": 0.6 },
-    { "id": "7", "x": 0.8, "y": 0.6 }
+    {
+      "id": "1",
+      "x": 0.5,
+      "y": 0.1
+    },
+    {
+      "id": "2",
+      "x": 0.3,
+      "y": 0.35
+    },
+    {
+      "id": "3",
+      "x": 0.7,
+      "y": 0.35
+    },
+    {
+      "id": "4",
+      "x": 0.2,
+      "y": 0.6
+    },
+    {
+      "id": "5",
+      "x": 0.4,
+      "y": 0.6
+    },
+    {
+      "id": "6",
+      "x": 0.6,
+      "y": 0.6
+    },
+    {
+      "id": "7",
+      "x": 0.8,
+      "y": 0.6
+    }
   ],
   "edges": [
-    { "from": "1", "to": "2", "weight": 1 },
-    { "from": "1", "to": "3", "weight": 1 },
-    { "from": "2", "to": "4", "weight": 1 },
-    { "from": "2", "to": "5", "weight": 1 },
-    { "from": "3", "to": "6", "weight": 1 },
-    { "from": "3", "to": "7", "weight": 1 }
+    {
+      "from": "1",
+      "to": "2",
+      "weight": 1
+    },
+    {
+      "from": "1",
+      "to": "3",
+      "weight": 1
+    },
+    {
+      "from": "2",
+      "to": "4",
+      "weight": 1
+    },
+    {
+      "from": "2",
+      "to": "5",
+      "weight": 1
+    },
+    {
+      "from": "3",
+      "to": "6",
+      "weight": 1
+    },
+    {
+      "from": "3",
+      "to": "7",
+      "weight": 1
+    }
   ]
 }
 

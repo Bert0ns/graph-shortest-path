@@ -63,21 +63,8 @@ export default function GraphSimulator({ importedGraph = null }: GraphSimulatorP
         setState(stepper.state)
     }, [algorithm])
 
-    // Initial load: priority is (1) ?graph URL, (2) importedGraph prop, (3) cached, (4) sample file
+    // Initial load: priority: (1) importedGraph prop, (2) cached, (3) sample file
     React.useEffect(() => {
-        const urlParam = searchParams?.get('graph')
-        if (urlParam) {
-            setLoading(true)
-            loadGraphFromUrl(urlParam)
-                .then((g) => {
-                    initializeFromGraph(g)
-                    setCachedGraph(g)
-                })
-                .catch((e: unknown) => setError(String(e)))
-                .finally(() => setLoading(false))
-            return
-        }
-
         if (importedGraph) {
             initializeFromGraph(importedGraph)
             return

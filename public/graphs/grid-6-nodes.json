@@ -1,21 +1,78 @@
 {
-  "metadata": { "directed": false, "weighted": true, "name": "Grid 2x3 (Weighted)", "description": "Small grid graph with varying weights" },
+  "metadata": {
+    "directed": false,
+    "weighted": true,
+    "name": "Grid 2x3",
+    "description": "Small grid with varying weights"
+  },
   "nodes": [
-    { "id": "A", "x": 0.2, "y": 0.2 },
-    { "id": "B", "x": 0.5, "y": 0.2 },
-    { "id": "C", "x": 0.8, "y": 0.2 },
-    { "id": "D", "x": 0.2, "y": 0.7 },
-    { "id": "E", "x": 0.5, "y": 0.7 },
-    { "id": "F", "x": 0.8, "y": 0.7 }
+    {
+      "id": "A",
+      "x": 0.2,
+      "y": 0.2
+    },
+    {
+      "id": "B",
+      "x": 0.5,
+      "y": 0.2
+    },
+    {
+      "id": "C",
+      "x": 0.8,
+      "y": 0.2
+    },
+    {
+      "id": "D",
+      "x": 0.2,
+      "y": 0.7
+    },
+    {
+      "id": "E",
+      "x": 0.5,
+      "y": 0.7
+    },
+    {
+      "id": "F",
+      "x": 0.8,
+      "y": 0.7
+    }
   ],
   "edges": [
-    { "from": "A", "to": "B", "weight": 1 },
-    { "from": "B", "to": "C", "weight": 2 },
-    { "from": "D", "to": "E", "weight": 3 },
-    { "from": "E", "to": "F", "weight": 1 },
-    { "from": "A", "to": "D", "weight": 2 },
-    { "from": "B", "to": "E", "weight": 2 },
-    { "from": "C", "to": "F", "weight": 2 }
+    {
+      "from": "A",
+      "to": "B",
+      "weight": 1
+    },
+    {
+      "from": "B",
+      "to": "C",
+      "weight": 2
+    },
+    {
+      "from": "D",
+      "to": "E",
+      "weight": 3
+    },
+    {
+      "from": "E",
+      "to": "F",
+      "weight": 1
+    },
+    {
+      "from": "A",
+      "to": "D",
+      "weight": 2
+    },
+    {
+      "from": "B",
+      "to": "E",
+      "weight": 2
+    },
+    {
+      "from": "C",
+      "to": "F",
+      "weight": 2
+    }
   ]
 }
 
