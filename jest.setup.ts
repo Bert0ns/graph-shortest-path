@@ -9,15 +9,28 @@ jest.mock('react-dom/test-utils', () => {
 
     type ActLike = (cb: () => unknown) => unknown
 
+    const shouldSuppressDeprecation = (args: unknown[]): boolean => {
+        const needle = 'ReactDOMTestUtils.act is deprecated'
+        return args.some((arg) => {
+            if (typeof arg === 'string') return arg.includes(needle)
+            if (arg instanceof Error) return arg.message.includes(needle)
+            try {
+                const s = String(arg)
+                if (s && s !== '[object Object]' && s.includes(needle)) return true
+                const j = JSON.stringify(arg)
+                return j.includes(needle)
+            } catch {
+                return false
+            }
+        })
+    }
+
     return {
         ...original,
         act: (callback: () => unknown) => {
             const prevError: (...data: unknown[]) => void = (console.error as unknown as (...data: unknown[]) => void)
             console.error = (...args: unknown[]) => {
-                const first = args[0]
-                if (typeof first === 'string' && first.includes('ReactDOMTestUtils.act is deprecated')) {
-                    return
-                }
+                if (shouldSuppressDeprecation(args)) return
                 prevError(...args)
             }
             try {
