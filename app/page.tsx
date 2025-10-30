@@ -46,12 +46,16 @@ export default function HomeLanding() {
             <section className="space-y-4">
                 <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">{websiteConfigs.title}</h1>
                 <p className="text-muted-foreground max-w-3xl">
-                    {websiteConfigs.description} This app helps you understand shortest‑path algorithms through a
+                    {websiteConfigs.description}
+                    <br/>
+                    This app helps you understand shortest‑path algorithms through a
                     clean, step‑by‑step visualization.
                 </p>
                 <p className="text-muted-foreground max-w-3xl">
                     What you can do here: build or import graphs, pick a start and end node, and watch the
-                    algorithm discover the shortest path. Use the Builder to create your own graphs or tweak
+                    algorithm discover the shortest path.
+                    <br/>
+                    Use the Builder to create your own graphs or tweak
                     coordinates and edges.
                 </p>
                 <div className="flex flex-wrap gap-3">
