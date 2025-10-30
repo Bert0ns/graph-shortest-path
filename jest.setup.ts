@@ -1,15 +1,30 @@
 import '@testing-library/jest-dom'
 
-// To solve act() error in tests where sub-dependencies still import react-dom/test-utils's act (deprecated/throws in React 19)
-// Create a mock for 'react-dom/test-utils' that delegates act to React.act.
+// Work around sub-dependencies using react-dom/test-utils's act in React 19.
+// We keep using the original act from react-dom/test-utils but silence its deprecation warning
+// so that it doesn't fail CI logs. This is more robust than calling React.act directly,
+// which may not be available under certain bundling/interop conditions.
 jest.mock('react-dom/test-utils', () => {
-    // keep all original exports
     const original = jest.requireActual('react-dom/test-utils')
+
+    type ActLike = (cb: () => unknown) => unknown
+
     return {
         ...original,
         act: (callback: () => unknown) => {
-            // eslint-disable-next-line @typescript-eslint/no-require-imports
-            return require('react').act(callback)
+            const prevError: (...data: unknown[]) => void = (console.error as unknown as (...data: unknown[]) => void)
+            console.error = (...args: unknown[]) => {
+                const first = args[0]
+                if (typeof first === 'string' && first.includes('ReactDOMTestUtils.act is deprecated')) {
+                    return
+                }
+                prevError(...args)
+            }
+            try {
+                return (original.act as unknown as ActLike)(callback)
+            } finally {
+                console.error = prevError as unknown as typeof console.error
+            }
         },
     }
 })
