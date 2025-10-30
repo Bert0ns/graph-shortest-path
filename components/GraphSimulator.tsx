@@ -12,6 +12,7 @@ import { dijkstra } from "@/lib/algorithms/core/dijkstra";
 import { traceAlgorithm } from "@/lib/algorithms/visualization/tracer";
 import { TraceStepper, VisualizationState } from "@/lib/algorithms/visualization/TraceStepper";
 import { PathfindingAlgorithm } from "@/lib/algorithms/types";
+import { useSearchParams } from 'next/navigation'
 
 const ALGORITHMS: Record<string, PathfindingAlgorithm> = {
     dijkstra,
@@ -42,6 +43,8 @@ export default function GraphSimulator({ importedGraph = null }: GraphSimulatorP
     const [state, setState] = React.useState<VisualizationState | null>(null)
     const timerRef = React.useRef<number | null>(null)
 
+    const searchParams = useSearchParams()
+
     const initializeFromGraph = React.useCallback((g: Graph) => {
         setGraph(g)
         const s = g.nodes[0]?.id
@@ -60,7 +63,7 @@ export default function GraphSimulator({ importedGraph = null }: GraphSimulatorP
         setState(stepper.state)
     }, [algorithm])
 
-    // Initial load: if no importedGraph, load the sample
+    // Initial load: priority: (1) importedGraph prop, (2) cached, (3) sample file
     React.useEffect(() => {
         if (importedGraph) {
             initializeFromGraph(importedGraph)
@@ -71,7 +74,7 @@ export default function GraphSimulator({ importedGraph = null }: GraphSimulatorP
             initializeFromGraph(g)
             return
         }
-        // Load sample graph if no imported graph
+        // Load sample graph if nothing else is provided
         setLoading(true)
         loadGraphFromUrl(GRAPH_SAMPLE_PATH)
             .then((g) => {
@@ -82,7 +85,7 @@ export default function GraphSimulator({ importedGraph = null }: GraphSimulatorP
             .finally(() => {
                 setLoading(false)
             })
-    }, [importedGraph, initializeFromGraph])
+    }, [importedGraph, initializeFromGraph, searchParams])
 
     // If the parent provides/replaces an imported graph later, re-init from it
     React.useEffect(() => {

@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "directed": false,
+    "weighted": false,
+    "name": "Triangle",
+    "description": "Minimal undirected triangle; weights treated as 1"
+  },
+  "nodes": [
+    {
+      "id": "A",
+      "x": 0.2,
+      "y": 0.2
+    },
+    {
+      "id": "B",
+      "x": 0.8,
+      "y": 0.2
+    },
+    {
+      "id": "C",
+      "x": 0.5,
+      "y": 0.75
+    }
+  ],
+  "edges": [
+    {
+      "from": "A",
+      "to": "B",
+      "weight": 1
+    },
+    {
+      "from": "B",
+      "to": "C",
+      "weight": 1
+    },
+    {
+      "from": "A",
+      "to": "C",
+      "weight": 1
+    }
+  ]
+}
+

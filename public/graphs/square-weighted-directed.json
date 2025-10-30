@@ -1,0 +1,58 @@
+{
+  "metadata": {
+    "directed": true,
+    "weighted": true,
+    "name": "Square",
+    "description": "4-node cycle with a diagonal shortcut and custom weights"
+  },
+  "nodes": [
+    {
+      "id": "1",
+      "x": 0.2,
+      "y": 0.2
+    },
+    {
+      "id": "2",
+      "x": 0.8,
+      "y": 0.2
+    },
+    {
+      "id": "3",
+      "x": 0.8,
+      "y": 0.8
+    },
+    {
+      "id": "4",
+      "x": 0.2,
+      "y": 0.8
+    }
+  ],
+  "edges": [
+    {
+      "from": "1",
+      "to": "2",
+      "weight": 2
+    },
+    {
+      "from": "2",
+      "to": "3",
+      "weight": 3
+    },
+    {
+      "from": "3",
+      "to": "4",
+      "weight": 4
+    },
+    {
+      "from": "4",
+      "to": "1",
+      "weight": 5
+    },
+    {
+      "from": "1",
+      "to": "3",
+      "weight": 1
+    }
+  ]
+}
+

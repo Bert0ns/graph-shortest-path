@@ -1,65 +1,79 @@
-'use client'
-import React from 'react'
-import GraphSimulator from '@/components/GraphSimulator'
+"use client"
 import Link from 'next/link'
-import {Button} from '@/components/ui/button'
-import {importGraphFromFile} from '@/lib/graph/loader'
-import type {Graph} from '@/lib/graph/types'
-import {toast} from 'sonner'
-import {getCachedGraph, setCachedGraph} from '@/lib/graph/cache'
+import {websiteConfigs} from '@/website.configs'
+import {Graph} from "@/lib/graph/types";
+import React, {useEffect} from "react";
+import {loadGraphFromUrl} from "@/lib/graph/loader";
+import ExampleGraphCard from "@/components/exampleGraphCard";
 
 
-export default function Home() {
-    const [importedGraph, setImportedGraph] = React.useState<Graph | null>(null)
-    const fileInputRef = React.useRef<HTMLInputElement | null>(null)
+export default function HomeLanding() {
+    const [exampleGraphs, setExampleGraphs] = React.useState<Graph[]>([])
 
-    // Attempt to restore a cached graph on mount
-    React.useEffect(() => {
-        const g = getCachedGraph()
-        if (g) {
-            setImportedGraph(g)
-            toast.info('Loaded graph from cache', {description: g.metadata.name || 'Current graph'})
-        }
-    }, [])
+    useEffect(() => {
+        // Load all JSON files available in public/graphs/*
+        (async () => {
+            try {
+                const res = await fetch('/api/graphs', { cache: 'no-store' })
+                if (!res.ok) throw new Error(`Failed to list graphs: ${res.status}`)
+                const data = (await res.json()) as { files: string[] }
+                const files = Array.isArray(data.files) ? data.files : []
 
-    const onClickImport = React.useCallback(() => {
-        fileInputRef.current?.click()
-    }, [])
+                if (files.length === 0) {
+                    console.warn('No example graphs found in /public/graphs')
+                    setExampleGraphs([])
+                    return
+                }
 
-    const onFileChange = React.useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0]
-        if (!file) return
-        const {graph, errors} = await importGraphFromFile(file)
-        if (errors.length) {
-            toast.error('Failed to import graph', {description: errors.join('\n')})
-            return
-        }
-        setImportedGraph(graph)
-        setCachedGraph(graph)
-        toast.success('Graph imported', {description: graph.metadata.name || file.name})
-        e.target.value = ''
+                const results = await Promise.allSettled(files.map(loadGraphFromUrl))
+
+                setExampleGraphs(
+                    results.flatMap((r, idx) => {
+                        if (r.status === 'fulfilled') return [r.value]
+                        console.warn(`Failed to load example graph from ${files[idx]}: ${r.reason}`)
+                        return []
+                    })
+                )
+            } catch (err) {
+                console.warn('Unexpected error while loading examples:', err)
+                setExampleGraphs([])
+            }
+        })()
     }, [])
 
     return (
-        <main className="container mx-auto p-4 space-y-4">
-            <h1 className="text-lg sm:text-xl font-semibold text-foreground">Build or Import your graph</h1>
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                <div className="flex flex-wrap items-center gap-2">
-                    <input
-                        ref={fileInputRef}
-                        type="file"
-                        accept="application/json,.json"
-                        className="hidden"
-                        onChange={onFileChange}
-                    />
-                    <Button variant="default" onClick={onClickImport} title="Import a graph JSON file to visualize">Import
-                        graph</Button>
-                    <Link href="/builder" title="Open the graph builder to edit or create a graph">
-                        <Button variant="outline">Open Graph Builder</Button>
+        <main className="container mx-auto p-6 space-y-10 max-w-4xl">
+            <section className="space-y-4">
+                <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">{websiteConfigs.title}</h1>
+                <p className="text-muted-foreground max-w-3xl">
+                    {websiteConfigs.description} This app helps you understand shortest‑path algorithms through a
+                    clean, step‑by‑step visualization.
+                </p>
+                <p className="text-muted-foreground max-w-3xl">
+                    What you can do here: build or import graphs, pick a start and end node, and watch the
+                    algorithm discover the shortest path. Use the Builder to create your own graphs or tweak
+                    coordinates and edges.
+                </p>
+                <div className="flex flex-wrap gap-3">
+                    <Link href="/simulator"
+                          className="inline-flex items-center px-4 py-2 rounded-md bg-primary text-primary-foreground hover:opacity-90">
+                        Open Simulator
+                    </Link>
+                    <Link href="/builder"
+                          className="inline-flex items-center px-4 py-2 rounded-md border border-border hover:bg-accent">
+                        Open Builder
                     </Link>
                 </div>
-            </div>
-            <GraphSimulator importedGraph={importedGraph}/>
+            </section>
+
+            <section className="space-y-4">
+                <h2 className="text-xl font-semibold">Try it with example graphs</h2>
+                <p className="text-muted-foreground">Pick an example to jump into the simulator already loaded with that
+                    graph.</p>
+                <div className="grid gap-4 sm:grid-cols-2">
+                    {exampleGraphs.map((g, i) => <ExampleGraphCard g={g} key={i} />)}
+                </div>
+            </section>
         </main>
     )
 }
