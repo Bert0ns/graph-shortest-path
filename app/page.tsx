@@ -5,6 +5,7 @@ import {Graph} from "@/lib/graph/types";
 import React, {useEffect} from "react";
 import {loadGraphFromUrl} from "@/lib/graph/loader";
 import ExampleGraphCard from "@/components/exampleGraphCard";
+import {Button} from "@/components/ui/button";
 
 
 export default function HomeLanding() {
@@ -59,13 +60,15 @@ export default function HomeLanding() {
                     coordinates and edges.
                 </p>
                 <div className="flex flex-wrap gap-3">
-                    <Link href={websiteConfigs.menuItems[1].link}
-                          className="inline-flex items-center px-4 py-2 rounded-md bg-primary text-primary-foreground hover:opacity-90">
-                        Open Simulator
+                    <Link href={websiteConfigs.menuItems[1].link}>
+                        <Button variant="default" size="lg">
+                            Open Simulator
+                        </Button>
                     </Link>
-                    <Link href={websiteConfigs.menuItems[2].link}
-                          className="inline-flex items-center px-4 py-2 rounded-md border border-border hover:bg-accent">
-                        Open Builder
+                    <Link href={websiteConfigs.menuItems[2].link}>
+                        <Button variant="outline" size="lg">
+                            Open Builder
+                        </Button>
                     </Link>
                 </div>
             </section>
