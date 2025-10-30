@@ -1,21 +1,15 @@
 import '@testing-library/jest-dom'
 
-/*
-
-// To solve act() warning in tests (sub dependencies using react-dom/test-utils act not updated)
-// Create mock module 'react-dom/test-utils'
+// To solve act() error in tests where sub-dependencies still import react-dom/test-utils's act (deprecated/throws in React 19)
+// Create a mock for 'react-dom/test-utils' that delegates act to React.act.
 jest.mock('react-dom/test-utils', () => {
-    // keep all origina exports
-    const original = jest.requireActual('react-dom/test-utils');
-
+    // keep all original exports
+    const original = jest.requireActual('react-dom/test-utils')
     return {
         ...original,
-        // overwrite 'act' function
         act: (callback: () => unknown) => {
             // eslint-disable-next-line @typescript-eslint/no-require-imports
-            return require('react').act(callback);
+            return require('react').act(callback)
         },
-    };
-});
-
- */
+    }
+})
