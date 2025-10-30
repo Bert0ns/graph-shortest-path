@@ -3,7 +3,7 @@ import "./globals.css";
 import React from "react";
 import {Toaster} from "@/components/ui/sonner";
 import ThemeProvider from "@/components/theme-components/themeProvider";
-import WebsiteHeader from "@/components/websiteHeader";
+import WebsiteHeader from "@/components/WebsiteHeader/websiteHeader";
 import {websiteConfigs} from "@/website.configs";
 
 

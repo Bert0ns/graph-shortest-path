@@ -1,58 +1,13 @@
-"use client"
-import {Github, Menu} from "lucide-react"
+import {websiteConfigs} from "@/website.configs";
 import Link from "next/link";
 import Image from "next/image";
 import React from "react";
-import {cn} from "@/lib/utils";
-import {websiteConfigs} from "@/website.configs";
-import {usePathname} from "next/navigation";
-import {useMobile} from "@/lib/hooks/use-mobile";
-import { Button } from "./ui/button";
+import {WebsiteHeaderProps} from "@/components/WebsiteHeader/websiteHeader";
 import {Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger} from "@/components/ui/sheet";
+import {Button} from "@/components/ui/button";
+import {Github, Menu} from "lucide-react";
+import {cn} from "@/lib/utils";
 import ThemeSelectorButton from "@/components/theme-components/themeSelectorButton";
-
-
-export interface WebsiteRoute {
-    href: string
-    label: string
-    active: boolean
-}
-
-export interface WebsiteHeaderProps {
-    routes: WebsiteRoute[];
-}
-
-const DesktopNav: React.FC<WebsiteHeaderProps> = ({routes}) => {
-    return (
-        <>
-            <nav className="flex items-center space-x-6 text-sm font-medium">
-                {routes.map((route) => (
-                    <Link
-                        key={route.href}
-                        href={route.href}
-                        className={cn(
-                            "transition-colors hover:text-primary",
-                            route.active ? "text-primary" : "text-foreground/70",
-                        )}
-                    >
-                        {route.label}
-                    </Link>
-                ))}
-                <Link href={websiteConfigs.gitHubRepo}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-foreground/70 hover:text-primary transition-colors"
-                >
-                    <Github size={20} aria-hidden="true" focusable="false" />
-                    <span className="hidden sm:inline">Source</span>
-                </Link>
-            </nav>
-            <div className="flex items-center space-x-2">
-                <ThemeSelectorButton/>
-            </div>
-        </>
-    )
-}
 
 const MobileNav: React.FC<WebsiteHeaderProps> = ({routes}) => {
     const [open, setOpen] = React.useState<boolean>(false);
@@ -67,7 +22,7 @@ const MobileNav: React.FC<WebsiteHeaderProps> = ({routes}) => {
             <SheetContent side="right" className="w-[85%] sm:w-[350px] pr-0 bg-background">
                 <SheetHeader className="pb-4 border-b border-border">
                     <SheetTitle className="text-foreground">
-                        <Link href="/" className="flex items-center gap-2">
+                        <Link href={websiteConfigs.menuItems[0].link} className="flex items-center gap-2">
                             <Image
                                 src={websiteConfigs.logo_img}
                                 alt="Logo"
@@ -120,34 +75,4 @@ const MobileNav: React.FC<WebsiteHeaderProps> = ({routes}) => {
     )
 }
 
-export default function WebsiteHeader() {
-    const pathname: string = usePathname();
-    const isMobile: boolean = useMobile();
-
-    const routes: WebsiteRoute[] = websiteConfigs.menuItems.map((item) => ({
-        href: item.link,
-        label: item.label,
-        active: pathname === item.link,
-    }));
-
-    return (
-        <header className="sticky top-0 z-40 w-full border-b border-border bg-background">
-            <div className="container mx-auto h-16 px-4 py-6 flex justify-between items-center max-w-4xl">
-                <Link href="/" className="flex items-center space-x-2">
-                    <Image
-                        src={websiteConfigs.logo_img}
-                        alt="Logo"
-                        width={100}
-                        height={100}
-                        className="w-24 h-auto"
-                    />
-                </Link>
-                { isMobile ?
-                    <MobileNav routes={routes}/>
-                    :
-                    <DesktopNav routes={routes}/>
-                }
-            </div>
-        </header>
-    )
-}
+export default MobileNav
