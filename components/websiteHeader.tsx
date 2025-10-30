@@ -67,7 +67,7 @@ const MobileNav: React.FC<WebsiteHeaderProps> = ({routes}) => {
             <SheetContent side="right" className="w-[85%] sm:w-[350px] pr-0 bg-background">
                 <SheetHeader className="pb-4 border-b border-border">
                     <SheetTitle className="text-foreground">
-                        <Link href="/public" className="flex items-center gap-2">
+                        <Link href="/" className="flex items-center gap-2">
                             <Image
                                 src={websiteConfigs.logo_img}
                                 alt="Logo"
