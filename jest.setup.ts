@@ -1,5 +1,7 @@
 import '@testing-library/jest-dom'
 
+/*
+
 // To solve act() warning in tests (sub dependencies using react-dom/test-utils act not updated)
 // Create mock module 'react-dom/test-utils'
 jest.mock('react-dom/test-utils', () => {
@@ -15,3 +17,5 @@ jest.mock('react-dom/test-utils', () => {
         },
     };
 });
+
+ */
