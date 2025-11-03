@@ -75,7 +75,7 @@ const ExampleGraphCards = ({className = " "}: ExampleGraphCardsProps) => {
             {exampleGraphs.map((g, i) => (
                 <ExampleGraphCard
                     g={g}
-                    key={g.metadata.name || (g.nodes?.map(n => n.id).join('|')) || i}
+                    key={i}
                 />
             ))}
         </div>
