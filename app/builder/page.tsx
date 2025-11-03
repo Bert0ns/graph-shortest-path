@@ -11,6 +11,7 @@ import {downloadGraphAsJSON, importGraphFromFile} from '@/lib/graph/loader'
 import { toast } from 'sonner'
 import Link from 'next/link'
 import { clearCachedGraph, getCachedGraph, setCachedGraph } from '@/lib/graph/cache'
+import {websiteConfigs} from "@/website.configs";
 
 export default function GraphBuilderPage() {
     const [graph, setGraph] = React.useState<Graph>({
@@ -113,10 +114,14 @@ export default function GraphBuilderPage() {
                         className="hidden"
                         onChange={handleImportFile}
                     />
-                    <Button variant="ghost" onClick={handleClear} title="Clear the current graph and cache">Clear graph</Button>
+                    <Button variant="destructive" onClick={handleClear} title="Clear the current graph and cache">Clear graph</Button>
                     <Button variant="outline" onClick={handleImportClick} title="Import a graph JSON file to edit">Import JSON</Button>
                     <Button onClick={handleExport} title="Export the current graph as JSON">Export JSON</Button>
-                    <Link href="/"><Button variant="outline" title="Back to the main visualizer">Back to Home</Button></Link>
+                    <Link href={websiteConfigs.menuItems[1].link}>
+                        <Button variant="secondary" title="Back to the simulator">
+                            To Simulator
+                        </Button>
+                    </Link>
                 </div>
             </header>
 

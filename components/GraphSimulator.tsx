@@ -185,8 +185,6 @@ export default function GraphSimulator({ importedGraph = null }: GraphSimulatorP
 
     return (
         <main className="container mx-auto mt-4 space-y-4">
-            <h1 className="text-lg sm:text-xl font-semibold text-foreground">Simulator</h1>
-
             <Controls
                 algorithm={algorithm}
                 onAlgorithmChange={(a) => setAlgorithm(a)}
