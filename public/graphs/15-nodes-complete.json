@@ -1,0 +1,1137 @@
+{
+  "metadata": {
+    "directed": true,
+    "weighted": true,
+    "name": "Complete - 15 nodes",
+    "description": "15 node completely connected graph"
+  },
+  "nodes": [
+    {
+      "id": "N1",
+      "x": 0.88,
+      "y": 0.5
+    },
+    {
+      "id": "N2",
+      "x": 0.8471472739041883,
+      "y": 0.6545599243688041
+    },
+    {
+      "id": "N3",
+      "x": 0.7542696304163661,
+      "y": 0.7823950336814098
+    },
+    {
+      "id": "N4",
+      "x": 0.6174264578624801,
+      "y": 0.8614014761921583
+    },
+    {
+      "id": "N5",
+      "x": 0.4602791839582917,
+      "y": 0.8779183202399439
+    },
+    {
+      "id": "N6",
+      "x": 0.31000000000000005,
+      "y": 0.8290896534380867
+    },
+    {
+      "id": "N7",
+      "x": 0.19257354213751998,
+      "y": 0.7233583958711398
+    },
+    {
+      "id": "N8",
+      "x": 0.12830391172115385,
+      "y": 0.5790064425107485
+    },
+    {
+      "id": "N9",
+      "x": 0.12830391172115385,
+      "y": 0.42099355748925155
+    },
+    {
+      "id": "N10",
+      "x": 0.19257354213751998,
+      "y": 0.27664160412886024
+    },
+    {
+      "id": "N11",
+      "x": 0.30999999999999983,
+      "y": 0.1709103465619134
+    },
+    {
+      "id": "N12",
+      "x": 0.46027918395829137,
+      "y": 0.12208167976005613
+    },
+    {
+      "id": "N13",
+      "x": 0.61742645786248,
+      "y": 0.1385985238078416
+    },
+    {
+      "id": "N14",
+      "x": 0.7542696304163663,
+      "y": 0.21760496631859028
+    },
+    {
+      "id": "N15",
+      "x": 0.8471472739041883,
+      "y": 0.34544007563119594
+    }
+  ],
+  "edges": [
+    {
+      "from": "N1",
+      "to": "N2",
+      "weight": 3.83
+    },
+    {
+      "from": "N2",
+      "to": "N1",
+      "weight": 3.83
+    },
+    {
+      "from": "N1",
+      "to": "N3",
+      "weight": 3.77
+    },
+    {
+      "from": "N3",
+      "to": "N1",
+      "weight": 3.77
+    },
+    {
+      "from": "N1",
+      "to": "N4",
+      "weight": 3.64
+    },
+    {
+      "from": "N4",
+      "to": "N1",
+      "weight": 3.64
+    },
+    {
+      "from": "N1",
+      "to": "N5",
+      "weight": 4.37
+    },
+    {
+      "from": "N5",
+      "to": "N1",
+      "weight": 4.37
+    },
+    {
+      "from": "N1",
+      "to": "N6",
+      "weight": 2.66
+    },
+    {
+      "from": "N6",
+      "to": "N1",
+      "weight": 2.66
+    },
+    {
+      "from": "N1",
+      "to": "N7",
+      "weight": 2.55
+    },
+    {
+      "from": "N7",
+      "to": "N1",
+      "weight": 2.55
+    },
+    {
+      "from": "N1",
+      "to": "N8",
+      "weight": 3.51
+    },
+    {
+      "from": "N8",
+      "to": "N1",
+      "weight": 3.51
+    },
+    {
+      "from": "N1",
+      "to": "N9",
+      "weight": 3.01
+    },
+    {
+      "from": "N9",
+      "to": "N1",
+      "weight": 3.01
+    },
+    {
+      "from": "N1",
+      "to": "N10",
+      "weight": 1.6
+    },
+    {
+      "from": "N10",
+      "to": "N1",
+      "weight": 1.6
+    },
+    {
+      "from": "N1",
+      "to": "N11",
+      "weight": 3.01
+    },
+    {
+      "from": "N11",
+      "to": "N1",
+      "weight": 3.01
+    },
+    {
+      "from": "N1",
+      "to": "N12",
+      "weight": 4.48
+    },
+    {
+      "from": "N12",
+      "to": "N1",
+      "weight": 4.48
+    },
+    {
+      "from": "N1",
+      "to": "N13",
+      "weight": 2.6
+    },
+    {
+      "from": "N13",
+      "to": "N1",
+      "weight": 2.6
+    },
+    {
+      "from": "N1",
+      "to": "N14",
+      "weight": 3.23
+    },
+    {
+      "from": "N14",
+      "to": "N1",
+      "weight": 3.23
+    },
+    {
+      "from": "N1",
+      "to": "N15",
+      "weight": 2.76
+    },
+    {
+      "from": "N15",
+      "to": "N1",
+      "weight": 2.76
+    },
+    {
+      "from": "N2",
+      "to": "N3",
+      "weight": 3.57
+    },
+    {
+      "from": "N3",
+      "to": "N2",
+      "weight": 3.57
+    },
+    {
+      "from": "N2",
+      "to": "N4",
+      "weight": 3.78
+    },
+    {
+      "from": "N4",
+      "to": "N2",
+      "weight": 3.78
+    },
+    {
+      "from": "N2",
+      "to": "N5",
+      "weight": 1.55
+    },
+    {
+      "from": "N5",
+      "to": "N2",
+      "weight": 1.55
+    },
+    {
+      "from": "N2",
+      "to": "N6",
+      "weight": 3.43
+    },
+    {
+      "from": "N6",
+      "to": "N2",
+      "weight": 3.43
+    },
+    {
+      "from": "N2",
+      "to": "N7",
+      "weight": 2.86
+    },
+    {
+      "from": "N7",
+      "to": "N2",
+      "weight": 2.86
+    },
+    {
+      "from": "N2",
+      "to": "N8",
+      "weight": 2.53
+    },
+    {
+      "from": "N8",
+      "to": "N2",
+      "weight": 2.53
+    },
+    {
+      "from": "N2",
+      "to": "N9",
+      "weight": 3.15
+    },
+    {
+      "from": "N9",
+      "to": "N2",
+      "weight": 3.15
+    },
+    {
+      "from": "N2",
+      "to": "N10",
+      "weight": 1.42
+    },
+    {
+      "from": "N10",
+      "to": "N2",
+      "weight": 1.42
+    },
+    {
+      "from": "N2",
+      "to": "N11",
+      "weight": 4.37
+    },
+    {
+      "from": "N11",
+      "to": "N2",
+      "weight": 4.37
+    },
+    {
+      "from": "N2",
+      "to": "N12",
+      "weight": 1.87
+    },
+    {
+      "from": "N12",
+      "to": "N2",
+      "weight": 1.87
+    },
+    {
+      "from": "N2",
+      "to": "N13",
+      "weight": 3.19
+    },
+    {
+      "from": "N13",
+      "to": "N2",
+      "weight": 3.19
+    },
+    {
+      "from": "N2",
+      "to": "N14",
+      "weight": 3.23
+    },
+    {
+      "from": "N14",
+      "to": "N2",
+      "weight": 3.23
+    },
+    {
+      "from": "N2",
+      "to": "N15",
+      "weight": 2.92
+    },
+    {
+      "from": "N15",
+      "to": "N2",
+      "weight": 2.92
+    },
+    {
+      "from": "N3",
+      "to": "N4",
+      "weight": 4.26
+    },
+    {
+      "from": "N4",
+      "to": "N3",
+      "weight": 4.26
+    },
+    {
+      "from": "N3",
+      "to": "N5",
+      "weight": 4.08
+    },
+    {
+      "from": "N5",
+      "to": "N3",
+      "weight": 4.08
+    },
+    {
+      "from": "N3",
+      "to": "N6",
+      "weight": 1.93
+    },
+    {
+      "from": "N6",
+      "to": "N3",
+      "weight": 1.93
+    },
+    {
+      "from": "N3",
+      "to": "N7",
+      "weight": 4.31
+    },
+    {
+      "from": "N7",
+      "to": "N3",
+      "weight": 4.31
+    },
+    {
+      "from": "N3",
+      "to": "N8",
+      "weight": 2.3
+    },
+    {
+      "from": "N8",
+      "to": "N3",
+      "weight": 2.3
+    },
+    {
+      "from": "N3",
+      "to": "N9",
+      "weight": 2.31
+    },
+    {
+      "from": "N9",
+      "to": "N3",
+      "weight": 2.31
+    },
+    {
+      "from": "N3",
+      "to": "N10",
+      "weight": 3.75
+    },
+    {
+      "from": "N10",
+      "to": "N3",
+      "weight": 3.75
+    },
+    {
+      "from": "N3",
+      "to": "N11",
+      "weight": 1.38
+    },
+    {
+      "from": "N11",
+      "to": "N3",
+      "weight": 1.38
+    },
+    {
+      "from": "N3",
+      "to": "N12",
+      "weight": 4.84
+    },
+    {
+      "from": "N12",
+      "to": "N3",
+      "weight": 4.84
+    },
+    {
+      "from": "N3",
+      "to": "N13",
+      "weight": 1.81
+    },
+    {
+      "from": "N13",
+      "to": "N3",
+      "weight": 1.81
+    },
+    {
+      "from": "N3",
+      "to": "N14",
+      "weight": 1.27
+    },
+    {
+      "from": "N14",
+      "to": "N3",
+      "weight": 1.27
+    },
+    {
+      "from": "N3",
+      "to": "N15",
+      "weight": 1.44
+    },
+    {
+      "from": "N15",
+      "to": "N3",
+      "weight": 1.44
+    },
+    {
+      "from": "N4",
+      "to": "N5",
+      "weight": 1.84
+    },
+    {
+      "from": "N5",
+      "to": "N4",
+      "weight": 1.84
+    },
+    {
+      "from": "N4",
+      "to": "N6",
+      "weight": 2.7
+    },
+    {
+      "from": "N6",
+      "to": "N4",
+      "weight": 2.7
+    },
+    {
+      "from": "N4",
+      "to": "N7",
+      "weight": 3.34
+    },
+    {
+      "from": "N7",
+      "to": "N4",
+      "weight": 3.34
+    },
+    {
+      "from": "N4",
+      "to": "N8",
+      "weight": 2.76
+    },
+    {
+      "from": "N8",
+      "to": "N4",
+      "weight": 2.76
+    },
+    {
+      "from": "N4",
+      "to": "N9",
+      "weight": 2.79
+    },
+    {
+      "from": "N9",
+      "to": "N4",
+      "weight": 2.79
+    },
+    {
+      "from": "N4",
+      "to": "N10",
+      "weight": 2.5
+    },
+    {
+      "from": "N10",
+      "to": "N4",
+      "weight": 2.5
+    },
+    {
+      "from": "N4",
+      "to": "N11",
+      "weight": 3.78
+    },
+    {
+      "from": "N11",
+      "to": "N4",
+      "weight": 3.78
+    },
+    {
+      "from": "N4",
+      "to": "N12",
+      "weight": 1.41
+    },
+    {
+      "from": "N12",
+      "to": "N4",
+      "weight": 1.41
+    },
+    {
+      "from": "N4",
+      "to": "N13",
+      "weight": 2.58
+    },
+    {
+      "from": "N13",
+      "to": "N4",
+      "weight": 2.58
+    },
+    {
+      "from": "N4",
+      "to": "N14",
+      "weight": 3.33
+    },
+    {
+      "from": "N14",
+      "to": "N4",
+      "weight": 3.33
+    },
+    {
+      "from": "N4",
+      "to": "N15",
+      "weight": 3.02
+    },
+    {
+      "from": "N15",
+      "to": "N4",
+      "weight": 3.02
+    },
+    {
+      "from": "N5",
+      "to": "N6",
+      "weight": 1.1
+    },
+    {
+      "from": "N6",
+      "to": "N5",
+      "weight": 1.1
+    },
+    {
+      "from": "N5",
+      "to": "N7",
+      "weight": 1.67
+    },
+    {
+      "from": "N7",
+      "to": "N5",
+      "weight": 1.67
+    },
+    {
+      "from": "N5",
+      "to": "N8",
+      "weight": 3.36
+    },
+    {
+      "from": "N8",
+      "to": "N5",
+      "weight": 3.36
+    },
+    {
+      "from": "N5",
+      "to": "N9",
+      "weight": 2.53
+    },
+    {
+      "from": "N9",
+      "to": "N5",
+      "weight": 2.53
+    },
+    {
+      "from": "N5",
+      "to": "N10",
+      "weight": 3.71
+    },
+    {
+      "from": "N10",
+      "to": "N5",
+      "weight": 3.71
+    },
+    {
+      "from": "N5",
+      "to": "N11",
+      "weight": 4.31
+    },
+    {
+      "from": "N11",
+      "to": "N5",
+      "weight": 4.31
+    },
+    {
+      "from": "N5",
+      "to": "N12",
+      "weight": 4.05
+    },
+    {
+      "from": "N12",
+      "to": "N5",
+      "weight": 4.05
+    },
+    {
+      "from": "N5",
+      "to": "N13",
+      "weight": 2.63
+    },
+    {
+      "from": "N13",
+      "to": "N5",
+      "weight": 2.63
+    },
+    {
+      "from": "N5",
+      "to": "N14",
+      "weight": 4.68
+    },
+    {
+      "from": "N14",
+      "to": "N5",
+      "weight": 4.68
+    },
+    {
+      "from": "N5",
+      "to": "N15",
+      "weight": 4.42
+    },
+    {
+      "from": "N15",
+      "to": "N5",
+      "weight": 4.42
+    },
+    {
+      "from": "N6",
+      "to": "N7",
+      "weight": 2.93
+    },
+    {
+      "from": "N7",
+      "to": "N6",
+      "weight": 2.93
+    },
+    {
+      "from": "N6",
+      "to": "N8",
+      "weight": 3.69
+    },
+    {
+      "from": "N8",
+      "to": "N6",
+      "weight": 3.69
+    },
+    {
+      "from": "N6",
+      "to": "N9",
+      "weight": 4.21
+    },
+    {
+      "from": "N9",
+      "to": "N6",
+      "weight": 4.21
+    },
+    {
+      "from": "N6",
+      "to": "N10",
+      "weight": 4.68
+    },
+    {
+      "from": "N10",
+      "to": "N6",
+      "weight": 4.68
+    },
+    {
+      "from": "N6",
+      "to": "N11",
+      "weight": 2.98
+    },
+    {
+      "from": "N11",
+      "to": "N6",
+      "weight": 2.98
+    },
+    {
+      "from": "N6",
+      "to": "N12",
+      "weight": 4.67
+    },
+    {
+      "from": "N12",
+      "to": "N6",
+      "weight": 4.67
+    },
+    {
+      "from": "N6",
+      "to": "N13",
+      "weight": 1.05
+    },
+    {
+      "from": "N13",
+      "to": "N6",
+      "weight": 1.05
+    },
+    {
+      "from": "N6",
+      "to": "N14",
+      "weight": 3.74
+    },
+    {
+      "from": "N14",
+      "to": "N6",
+      "weight": 3.74
+    },
+    {
+      "from": "N6",
+      "to": "N15",
+      "weight": 3.8
+    },
+    {
+      "from": "N15",
+      "to": "N6",
+      "weight": 3.8
+    },
+    {
+      "from": "N7",
+      "to": "N8",
+      "weight": 1.48
+    },
+    {
+      "from": "N8",
+      "to": "N7",
+      "weight": 1.48
+    },
+    {
+      "from": "N7",
+      "to": "N9",
+      "weight": 2.43
+    },
+    {
+      "from": "N9",
+      "to": "N7",
+      "weight": 2.43
+    },
+    {
+      "from": "N7",
+      "to": "N10",
+      "weight": 3.88
+    },
+    {
+      "from": "N10",
+      "to": "N7",
+      "weight": 3.88
+    },
+    {
+      "from": "N7",
+      "to": "N11",
+      "weight": 3.85
+    },
+    {
+      "from": "N11",
+      "to": "N7",
+      "weight": 3.85
+    },
+    {
+      "from": "N7",
+      "to": "N12",
+      "weight": 4.08
+    },
+    {
+      "from": "N12",
+      "to": "N7",
+      "weight": 4.08
+    },
+    {
+      "from": "N7",
+      "to": "N13",
+      "weight": 3.02
+    },
+    {
+      "from": "N13",
+      "to": "N7",
+      "weight": 3.02
+    },
+    {
+      "from": "N7",
+      "to": "N14",
+      "weight": 3.07
+    },
+    {
+      "from": "N14",
+      "to": "N7",
+      "weight": 3.07
+    },
+    {
+      "from": "N7",
+      "to": "N15",
+      "weight": 3.76
+    },
+    {
+      "from": "N15",
+      "to": "N7",
+      "weight": 3.76
+    },
+    {
+      "from": "N8",
+      "to": "N9",
+      "weight": 2.86
+    },
+    {
+      "from": "N9",
+      "to": "N8",
+      "weight": 2.86
+    },
+    {
+      "from": "N8",
+      "to": "N10",
+      "weight": 2.25
+    },
+    {
+      "from": "N10",
+      "to": "N8",
+      "weight": 2.25
+    },
+    {
+      "from": "N8",
+      "to": "N11",
+      "weight": 3.35
+    },
+    {
+      "from": "N11",
+      "to": "N8",
+      "weight": 3.35
+    },
+    {
+      "from": "N8",
+      "to": "N12",
+      "weight": 2.96
+    },
+    {
+      "from": "N12",
+      "to": "N8",
+      "weight": 2.96
+    },
+    {
+      "from": "N8",
+      "to": "N13",
+      "weight": 1.03
+    },
+    {
+      "from": "N13",
+      "to": "N8",
+      "weight": 1.03
+    },
+    {
+      "from": "N8",
+      "to": "N14",
+      "weight": 3.38
+    },
+    {
+      "from": "N14",
+      "to": "N8",
+      "weight": 3.38
+    },
+    {
+      "from": "N8",
+      "to": "N15",
+      "weight": 1.94
+    },
+    {
+      "from": "N15",
+      "to": "N8",
+      "weight": 1.94
+    },
+    {
+      "from": "N9",
+      "to": "N10",
+      "weight": 2.66
+    },
+    {
+      "from": "N10",
+      "to": "N9",
+      "weight": 2.66
+    },
+    {
+      "from": "N9",
+      "to": "N11",
+      "weight": 1.38
+    },
+    {
+      "from": "N11",
+      "to": "N9",
+      "weight": 1.38
+    },
+    {
+      "from": "N9",
+      "to": "N12",
+      "weight": 3.25
+    },
+    {
+      "from": "N12",
+      "to": "N9",
+      "weight": 3.25
+    },
+    {
+      "from": "N9",
+      "to": "N13",
+      "weight": 3.07
+    },
+    {
+      "from": "N13",
+      "to": "N9",
+      "weight": 3.07
+    },
+    {
+      "from": "N9",
+      "to": "N14",
+      "weight": 3.1
+    },
+    {
+      "from": "N14",
+      "to": "N9",
+      "weight": 3.1
+    },
+    {
+      "from": "N9",
+      "to": "N15",
+      "weight": 4.64
+    },
+    {
+      "from": "N15",
+      "to": "N9",
+      "weight": 4.64
+    },
+    {
+      "from": "N10",
+      "to": "N11",
+      "weight": 3.18
+    },
+    {
+      "from": "N11",
+      "to": "N10",
+      "weight": 3.18
+    },
+    {
+      "from": "N10",
+      "to": "N12",
+      "weight": 4.44
+    },
+    {
+      "from": "N12",
+      "to": "N10",
+      "weight": 4.44
+    },
+    {
+      "from": "N10",
+      "to": "N13",
+      "weight": 4.15
+    },
+    {
+      "from": "N13",
+      "to": "N10",
+      "weight": 4.15
+    },
+    {
+      "from": "N10",
+      "to": "N14",
+      "weight": 3.57
+    },
+    {
+      "from": "N14",
+      "to": "N10",
+      "weight": 3.57
+    },
+    {
+      "from": "N10",
+      "to": "N15",
+      "weight": 3.09
+    },
+    {
+      "from": "N15",
+      "to": "N10",
+      "weight": 3.09
+    },
+    {
+      "from": "N11",
+      "to": "N12",
+      "weight": 3.06
+    },
+    {
+      "from": "N12",
+      "to": "N11",
+      "weight": 3.06
+    },
+    {
+      "from": "N11",
+      "to": "N13",
+      "weight": 4.57
+    },
+    {
+      "from": "N13",
+      "to": "N11",
+      "weight": 4.57
+    },
+    {
+      "from": "N11",
+      "to": "N14",
+      "weight": 3.98
+    },
+    {
+      "from": "N14",
+      "to": "N11",
+      "weight": 3.98
+    },
+    {
+      "from": "N11",
+      "to": "N15",
+      "weight": 2.86
+    },
+    {
+      "from": "N15",
+      "to": "N11",
+      "weight": 2.86
+    },
+    {
+      "from": "N12",
+      "to": "N13",
+      "weight": 1.73
+    },
+    {
+      "from": "N13",
+      "to": "N12",
+      "weight": 1.73
+    },
+    {
+      "from": "N12",
+      "to": "N14",
+      "weight": 3.32
+    },
+    {
+      "from": "N14",
+      "to": "N12",
+      "weight": 3.32
+    },
+    {
+      "from": "N12",
+      "to": "N15",
+      "weight": 1.44
+    },
+    {
+      "from": "N15",
+      "to": "N12",
+      "weight": 1.44
+    },
+    {
+      "from": "N13",
+      "to": "N14",
+      "weight": 1.96
+    },
+    {
+      "from": "N14",
+      "to": "N13",
+      "weight": 1.96
+    },
+    {
+      "from": "N13",
+      "to": "N15",
+      "weight": 1.86
+    },
+    {
+      "from": "N15",
+      "to": "N13",
+      "weight": 1.86
+    },
+    {
+      "from": "N14",
+      "to": "N15",
+      "weight": 3.55
+    },
+    {
+      "from": "N15",
+      "to": "N14",
+      "weight": 3.55
+    }
+  ]
+}
