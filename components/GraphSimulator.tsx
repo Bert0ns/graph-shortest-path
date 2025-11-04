@@ -170,6 +170,13 @@ export default function GraphSimulator({ importedGraph = null }: GraphSimulatorP
         setIsPlaying(false)
     }, [])
 
+    const onGoToEndingState = React.useCallback(() => {
+        if (!stepperRef.current) return;
+        const endingState = stepperRef.current.goToEndingState();
+        setState({ ...endingState })
+        setIsPlaying(false)
+    }, [])
+
     const handleNodeClick = React.useCallback((id: string) => {
         // Selection logic: pick start then end; clicking a third time resets start
         if (!startId || startId === id) {
@@ -196,6 +203,7 @@ export default function GraphSimulator({ importedGraph = null }: GraphSimulatorP
                 onReset={onReset}
                 speed={speed}
                 onSpeedChange={setSpeed}
+                onGoToEndingState={onGoToEndingState}
             />
 
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
