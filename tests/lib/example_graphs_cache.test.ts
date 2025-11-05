@@ -171,4 +171,43 @@ describe('lib/example_graphs_cache.getListExampleGraphUrls', () => {
     expect(setItemSpy).toHaveBeenCalled();
     setItemSpy.mockRestore();
   });
+
+  it('getGraphByUrlOnce returns stale cached graph and refreshes in background', async () => {
+    jest.resetModules();
+    window.localStorage.clear();
+
+    const url = '/graphs/stale.json';
+
+    // Seed stale graph in localStorage using the storage key format
+    const staleGraph = { metadata: { directed: true, weighted: false, name: 'old' }, nodes: [], edges: [] };
+    const key = `exampleGraphs:v1:graph:${encodeURIComponent(url)}`;
+    window.localStorage.setItem(key, JSON.stringify({ data: staleGraph, ts: 0 }));
+
+    // Network (loader) will return a new updated graph
+    const freshGraph = { metadata: { directed: false, weighted: true, name: 'new' }, nodes: [], edges: [] };
+    mockGraph = freshGraph;
+
+    const setItemSpy = jest.spyOn(Storage.prototype, 'setItem');
+
+    const { getGraphByUrlOnce } = await import('@/lib/example_graphs_cache');
+    const { loadGraphFromUrl } = await import('../../lib/graph/loader');
+
+    // First call returns stale graph immediately and triggers background refresh
+    const first = await getGraphByUrlOnce(url);
+    expect(first).toEqual(staleGraph);
+
+    // Allow background refresh to settle
+    await Promise.resolve();
+    await Promise.resolve();
+
+    // Subsequent call should return the fresh graph from in-memory cache
+    const second = await getGraphByUrlOnce(url);
+    expect(second).toEqual(freshGraph);
+
+    expect((loadGraphFromUrl as unknown as jest.Mock)).toHaveBeenCalledTimes(1);
+    expect((loadGraphFromUrl as unknown as jest.Mock)).toHaveBeenCalledWith(url);
+
+    expect(setItemSpy).toHaveBeenCalled();
+    setItemSpy.mockRestore();
+  });
 });
