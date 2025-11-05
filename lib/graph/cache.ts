@@ -1,5 +1,6 @@
 import {validateGraphFile} from './loader'
 import type {Graph} from './types'
+import {isBrowser} from "@/lib/utils";
 
 export const GRAPH_CACHE_SCHEMA_VERSION = 1 as const
 export const GRAPH_CACHE_KEY = `graph.current.v${GRAPH_CACHE_SCHEMA_VERSION}`
@@ -10,7 +11,6 @@ interface CachedPayloadV1 {
     graph: Graph
 }
 
-const isBrowser = () => typeof window !== 'undefined' && typeof window.localStorage !== 'undefined'
 
 export function getCachedGraph(): Graph | null {
     if (!isBrowser()) return null

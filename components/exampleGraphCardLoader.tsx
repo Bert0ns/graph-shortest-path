@@ -5,36 +5,19 @@ import {getGraphByUrlOnce, GRAPH_CACHE} from "@/lib/example_graphs_cache";
 
 // Renders a single card that resolves independently
 function ExampleGraphCardLoader({ url }: { url: string }) {
-    const [graph, setGraph] = React.useState<Graph | null>(null);
+    const [graph, setGraph] = React.useState<Graph | null>(() => GRAPH_CACHE.get(url) ?? null);
     const [error, setError] = React.useState<string | null>(null);
 
     useEffect(() => {
         let cancelled = false;
-        const t = window.setTimeout(() => setError(null), 0);
-        // If already cached synchronously, set immediately to avoid flicker
-        const cached = GRAPH_CACHE.get(url);
-        let t2: number;
-        let t3: number;
-        if (cached) {
-            t2 = window.setTimeout(() => setGraph(cached), 0);
-        }
-        else {
-            t3 = window.setTimeout(() => setGraph(null), 0);
-            getGraphByUrlOnce(url)
-                .then((g) => {
-                    if (!cancelled) setGraph(g);
-                })
-                .catch((e) => {
-                    if (!cancelled) setError(e?.message ?? "Failed to load graph");
-                });
-        }
-
-        return () => {
-            cancelled = true;
-            window.clearTimeout(t);
-            window.clearTimeout(t2);
-            window.clearTimeout(t3);
-        };
+        getGraphByUrlOnce(url)
+            .then((g) => {
+                if (!cancelled) setGraph(g);
+            })
+            .catch((e) => {
+                if (!cancelled) setError(e?.message ?? "Failed to load graph");
+            });
+        return () => { cancelled = true; };
     }, [url]);
 
     if (graph) {
