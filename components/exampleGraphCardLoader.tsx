@@ -2,6 +2,7 @@ import React, {useEffect} from "react";
 import {Graph} from "@/lib/graph/types";
 import ExampleGraphCard from "@/components/exampleGraphCard";
 import {getGraphByUrlOnce, GRAPH_CACHE} from "@/lib/example_graphs_cache";
+import ExampleGraphCardSkeleton from "@/components/ExampleGraphCardSkeleton";
 
 // Renders a single card that resolves independently
 function ExampleGraphCardLoader({ url }: { url: string }) {
@@ -33,14 +34,8 @@ function ExampleGraphCardLoader({ url }: { url: string }) {
         );
     }
 
-    // Lightweight placeholder while the individual card is loading
-    return (
-        <div className="animate-pulse rounded-md border border-gray-200 bg-gray-50 p-6">
-            <div className="h-4 w-24 rounded bg-gray-200" />
-            <div className="mt-3 h-3 w-32 rounded bg-gray-200" />
-            <div className="mt-6 h-24 w-full rounded bg-gray-200" />
-        </div>
-    );
+    // Render a skeleton that matches the card layout exactly
+    return <ExampleGraphCardSkeleton />;
 }
 
 export default ExampleGraphCardLoader;
