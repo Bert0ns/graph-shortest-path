@@ -240,4 +240,33 @@ describe('lib/example_graphs_cache.getListExampleGraphUrls', () => {
     expect((loadGraphFromUrl as unknown as jest.Mock)).toHaveBeenNthCalledWith(1, url);
     expect((loadGraphFromUrl as unknown as jest.Mock)).toHaveBeenNthCalledWith(2, url);
   });
+
+  it('getExampleUrlsOnce rejects on first failure and retries successfully on next call', async () => {
+    jest.resetModules();
+    window.localStorage.clear();
+
+    const mockFetch = jest
+      .fn<Promise<Response>, Parameters<typeof fetch>>()
+      .mockResolvedValueOnce({ ok: false, status: 500 } as unknown as Response)
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ files: ['/graphs/z.json', '/graphs/z.json'] }) } as unknown as Response);
+
+    global.fetch = mockFetch as unknown as typeof fetch;
+
+    const setItemSpy = jest.spyOn(Storage.prototype, 'setItem');
+
+    const { getExampleUrlsOnce } = await import('@/lib/example_graphs_cache');
+
+    await expect(getExampleUrlsOnce()).rejects.toThrow('Failed to list graphs: 500');
+
+    // Next call should perform a new fetch and succeed
+    const res = await getExampleUrlsOnce();
+    expect(res).toEqual(['/graphs/z.json']);
+
+    expect(mockFetch).toHaveBeenCalledTimes(2);
+    expect(mockFetch).toHaveBeenNthCalledWith(1, '/api/graphs', { cache: 'no-store' });
+    expect(mockFetch).toHaveBeenNthCalledWith(2, '/api/graphs', { cache: 'no-store' });
+
+    expect(setItemSpy).toHaveBeenCalled();
+    setItemSpy.mockRestore();
+  });
 });
