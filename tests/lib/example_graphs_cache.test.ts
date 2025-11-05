@@ -1,5 +1,11 @@
 // We import inside the test after stubbing fetch to ensure the function uses our mock
 
+let mockGraph: unknown;
+jest.mock('../../lib/graph/loader', () => ({
+  __esModule: true,
+  loadGraphFromUrl: jest.fn(() => Promise.resolve(mockGraph)),
+}));
+
 describe('lib/example_graphs_cache.getListExampleGraphUrls', () => {
   const originalFetch = global.fetch as typeof fetch;
 
@@ -81,6 +87,88 @@ describe('lib/example_graphs_cache.getListExampleGraphUrls', () => {
     expect(r3).toEqual(r1);
     expect(mockFetch).toHaveBeenCalledTimes(before);
 
+    setItemSpy.mockRestore();
+  });
+
+  it('getExampleUrlsOnce returns stale cache immediately and refreshes in background', async () => {
+    // Fresh state and clean storage
+    jest.resetModules();
+    window.localStorage.clear();
+
+    // Seed stale cache in localStorage (very old timestamp)
+    const stale = { data: ['/graphs/old.json'], ts: 0 };
+    window.localStorage.setItem('exampleGraphs:v1:list', JSON.stringify(stale));
+
+    // Prepare network to return a new list
+    const files = ['/graphs/new.json', '/graphs/old.json'];
+    const mockFetch = jest
+      .fn<Promise<Response>, Parameters<typeof fetch>>()
+      .mockResolvedValue({
+        ok: true,
+        json: async () => ({ files }),
+      } as unknown as Response);
+    global.fetch = mockFetch as unknown as typeof fetch;
+
+    const setItemSpy = jest.spyOn(Storage.prototype, 'setItem');
+
+    const { getExampleUrlsOnce } = await import('@/lib/example_graphs_cache');
+
+    // First call should return stale cache immediately
+    const first = await getExampleUrlsOnce();
+    expect(first).toEqual(['/graphs/old.json']);
+
+    // Allow background refresh to complete
+    await Promise.resolve();
+    await Promise.resolve();
+
+    // Subsequent call should return updated list (deduped)
+    const second = await getExampleUrlsOnce();
+    expect(second).toEqual(['/graphs/new.json', '/graphs/old.json']);
+
+    // Network called exactly once for the background refresh
+    expect(mockFetch).toHaveBeenCalledTimes(1);
+
+    // Verify persistence happened
+    expect(setItemSpy).toHaveBeenCalled();
+
+    setItemSpy.mockRestore();
+  });
+
+  it('getGraphByUrlOnce dedupes concurrent loads and caches in-memory', async () => {
+    jest.resetModules();
+    window.localStorage.clear();
+
+    const graph = {
+      metadata: { directed: false, weighted: false, name: 'g' },
+      nodes: [],
+      edges: [],
+    };
+
+    mockGraph = graph;
+
+    const setItemSpy = jest.spyOn(Storage.prototype, 'setItem');
+
+    const { getGraphByUrlOnce } = await import('@/lib/example_graphs_cache');
+    const { loadGraphFromUrl } = await import('../../lib/graph/loader');
+
+    const url = '/graphs/a.json';
+
+    const [g1, g2] = await Promise.all([
+      getGraphByUrlOnce(url),
+      getGraphByUrlOnce(url),
+    ]);
+
+    expect(g1).toEqual(graph);
+    expect(g2).toEqual(graph);
+
+    expect((loadGraphFromUrl as unknown as jest.Mock)).toHaveBeenCalledTimes(1);
+    expect((loadGraphFromUrl as unknown as jest.Mock)).toHaveBeenCalledWith(url);
+
+    // Subsequent call should use in-memory cache and not call loader again
+    await getGraphByUrlOnce(url);
+    expect((loadGraphFromUrl as unknown as jest.Mock)).toHaveBeenCalledTimes(1);
+
+    expect(setItemSpy).toHaveBeenCalled();
     setItemSpy.mockRestore();
   });
 });
