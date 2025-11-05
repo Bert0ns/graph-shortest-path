@@ -1,85 +1,50 @@
 "use client"
-import ExampleGraphCard from "@/components/exampleGraphCard";
 import React, {useEffect} from "react";
-import {Graph} from "@/lib/graph/types";
-import {loadGraphFromUrl} from "@/lib/graph/loader";
+import ExampleGraphCardLoader from "@/components/exampleGraphCardLoader";
+import {getExampleUrlsOnce} from "@/lib/example_graphs_cache";
 
 export interface ExampleGraphCardsProps {
     className: string;
 }
 
-// Memoized, module-scoped cache to avoid duplicate loads under React StrictMode (dev)
-let EXAMPLE_GRAPHS_CACHE: Graph[] | null = null;
-let EXAMPLE_GRAPHS_LOADING: Promise<Graph[]> | null = null;
-
-async function loadAllExampleGraphs(): Promise<Graph[]> {
-    const res = await fetch('/api/graphs', { cache: 'no-store' });
-    if (!res.ok) throw new Error(`Failed to list graphs: ${res.status}`);
-    const data = (await res.json()) as { files: string[] };
-    const files = Array.isArray(data.files) ? data.files : [];
-    const uniqueFiles = Array.from(new Set(files));
-    if (uniqueFiles.length === 0) return [];
-
-    const results = await Promise.allSettled(
-        uniqueFiles.map(async (url) => ({ url, g: await loadGraphFromUrl(url) }))
-    );
-
-    const graphs: Graph[] = [];
-    const seen = new Set<string>();
-    for (const r of results) {
-        if (r.status === 'fulfilled') {
-            const { url, g } = r.value;
-            if (!seen.has(url)) {
-                seen.add(url);
-                graphs.push(g);
-            }
-        }
-    }
-    return graphs;
-}
-
-function getExampleGraphsOnce(): Promise<Graph[]> {
-    if (EXAMPLE_GRAPHS_CACHE) return Promise.resolve(EXAMPLE_GRAPHS_CACHE);
-    if (EXAMPLE_GRAPHS_LOADING) return EXAMPLE_GRAPHS_LOADING;
-
-    EXAMPLE_GRAPHS_LOADING = loadAllExampleGraphs()
-        .then((gs) => {
-            EXAMPLE_GRAPHS_CACHE = gs;
-            EXAMPLE_GRAPHS_LOADING = null;
-            return gs;
-        })
-        .catch((err) => {
-            EXAMPLE_GRAPHS_LOADING = null;
-            throw err;
-        });
-
-    return EXAMPLE_GRAPHS_LOADING;
-}
-
-const ExampleGraphCards = ({className = " "}: ExampleGraphCardsProps) => {
-    const [exampleGraphs, setExampleGraphs] = React.useState<Graph[]>([])
+const ExampleGraphCards = ({ className = " " }: ExampleGraphCardsProps) => {
+    const [urls, setUrls] = React.useState<string[]>([]);
+    const [listError, setListError] = React.useState<string | null>(null);
 
     useEffect(() => {
         let cancelled = false;
-        getExampleGraphsOnce()
-            .then((gs) => { if (!cancelled) setExampleGraphs(gs); })
-            .catch((err) => {
-                console.warn('Unexpected error while loading examples:', err);
-                if (!cancelled) setExampleGraphs([]);
+        getExampleUrlsOnce()
+            .then((u) => {
+                if (!cancelled) setUrls(u);
+            })
+            .catch((e) => {
+                if (!cancelled) {
+                    setListError(e?.message ?? "Impossibile ottenere l'elenco dei grafi");
+                    setUrls([]);
+                }
             });
-        return () => { cancelled = true; };
-    }, [])
+        return () => {
+            cancelled = true;
+        };
+    }, []);
+
+    if (listError) {
+        return (
+            <div className={className}>
+                <div className="rounded-md border border-red-200 bg-red-50 p-4 text-sm text-destructive">
+                    {listError}
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className={className}>
-            {exampleGraphs.map((g, i) => (
-                <ExampleGraphCard
-                    g={g}
-                    key={i}
-                />
+            {urls.map((url) => (
+                <ExampleGraphCardLoader key={url} url={url} />
             ))}
         </div>
-    )
-}
+    );
+};
 
 export default ExampleGraphCards;
