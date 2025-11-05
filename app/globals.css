@@ -42,6 +42,21 @@
     --radius-md: calc(var(--radius) - 2px);
     --radius-lg: var(--radius);
     --radius-xl: calc(var(--radius) + 4px);
+
+    /* Custom keyframes names used with [animation:...] */
+    @keyframes dash {
+        0% { stroke-dashoffset: 360; }
+        100% { stroke-dashoffset: 0; }
+    }
+    @keyframes pulseNode {
+        0%, 100% { transform: scale(1); opacity: 0.9; }
+        50% { transform: scale(1.12); opacity: 1; }
+    }
+    @keyframes shimmer {
+        0% { transform: translateX(-120%); }
+        100% { transform: translateX(300%); }
+    }
+    /* Reuse Tailwind's native spin for rotation speeds via [animation:spin_...] */
 }
 
 :root, .light {
