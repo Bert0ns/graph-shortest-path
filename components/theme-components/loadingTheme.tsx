@@ -1,11 +1,21 @@
 "use client"
 
-const LoadingTheme = () => {
+type LoadingThemeProps = {
+    exiting?: boolean
+}
+
+const LoadingTheme = ({ exiting = false }: LoadingThemeProps) => {
     return (
         <div
             role="status"
             aria-live="polite"
-            className="fixed inset-0 grid place-items-center bg-white text-neutral-700 dark:bg-neutral-950 dark:text-neutral-200"
+            className={
+                [
+                    "fixed inset-0 z-[9999] grid place-items-center bg-white text-neutral-700 dark:bg-neutral-950 dark:text-neutral-200",
+                    "transition-opacity duration-300 ease-out will-change-[opacity]",
+                    exiting ? "opacity-0 pointer-events-none" : "opacity-100"
+                ].join(" ")
+            }
         >
             <div className="flex flex-col items-center gap-6">
                 {/* Animated Graph Loader */}

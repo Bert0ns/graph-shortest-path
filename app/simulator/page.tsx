@@ -1,5 +1,5 @@
 "use client"
-import React from 'react'
+import React, { Suspense } from 'react'
 import GraphSimulator from '@/components/GraphSimulator'
 import Link from "next/link";
 import {Button} from "@/components/ui/button";
@@ -14,8 +14,9 @@ export default function SimulatorPage() {
                     Open Builder
                 </Button>
             </Link>
-            <GraphSimulator/>
+            <Suspense fallback={<div className="p-6 text-muted-foreground">Loading…</div>}>
+                <GraphSimulator/>
+            </Suspense>
         </div>
     )
 }
-
