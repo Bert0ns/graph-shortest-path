@@ -27,29 +27,22 @@ const LoadingTheme = () => {
                         </defs>
 
                         {/* Outer subtle ring */}
-                        <circle cx="60" cy="60" r="46" fill="none" stroke="#e5e7eb" className="dark:stroke-neutral-800"
-                                strokeWidth="2"/>
+                        <circle cx="60" cy="60" r="46" fill="none" stroke="#e5e7eb" className="dark:stroke-neutral-800" strokeWidth="2"/>
 
                         {/* Rotating dashed ring */}
-                        <g className="spin-slow origin-center" style={{transformOrigin: '60px 60px'}}>
-                            <circle cx="60" cy="60" r="38" fill="none" stroke="url(#ring)" strokeWidth="4"
-                                    strokeLinecap="round" strokeDasharray="6 10"/>
+                        <g className="[transform-origin:60px_60px] [animation:spin_8s_linear_infinite] motion-reduce:[animation:none]">
+                            <circle cx="60" cy="60" r="38" fill="none" stroke="url(#ring)" strokeWidth="4" strokeLinecap="round" strokeDasharray="6 10"/>
                         </g>
 
                         {/* Graph nodes */}
-                        <circle cx="32" cy="38" r="6" className="fill-sky-400/90 dark:fill-sky-300/90 node-pulse"/>
-                        <circle cx="88" cy="42" r="6" className="fill-violet-400/90 dark:fill-violet-300/90 node-pulse"
-                                style={{animationDelay: '120ms'}}/>
-                        <circle cx="54" cy="86" r="6" className="fill-cyan-400/90 dark:fill-cyan-300/90 node-pulse"
-                                style={{animationDelay: '240ms'}}/>
+                        <circle cx="32" cy="38" r="6" className="fill-sky-400/90 dark:fill-sky-300/90 origin-center [animation:pulseNode_1.6s_ease-in-out_infinite] motion-reduce:[animation:none]"/>
+                        <circle cx="88" cy="42" r="6" className="fill-violet-400/90 dark:fill-violet-300/90 origin-center [animation:pulseNode_1.6s_ease-in-out_infinite] [animation-delay:120ms] motion-reduce:[animation:none]"/>
+                        <circle cx="54" cy="86" r="6" className="fill-cyan-400/90 dark:fill-cyan-300/90 origin-center [animation:pulseNode_1.6s_ease-in-out_infinite] [animation-delay:240ms] motion-reduce:[animation:none]"/>
 
                         {/* Edges */}
-                        <path d="M32 38 L88 42" fill="none" stroke="#d1d5db" className="dark:stroke-neutral-700"
-                              strokeWidth="2"/>
-                        <path d="M32 38 L54 86" fill="none" stroke="#d1d5db" className="dark:stroke-neutral-700"
-                              strokeWidth="2"/>
-                        <path d="M88 42 L54 86" fill="none" stroke="#d1d5db" className="dark:stroke-neutral-700"
-                              strokeWidth="2"/>
+                        <path d="M32 38 L88 42" fill="none" stroke="#d1d5db" className="dark:stroke-neutral-700" strokeWidth="2"/>
+                        <path d="M32 38 L54 86" fill="none" stroke="#d1d5db" className="dark:stroke-neutral-700" strokeWidth="2"/>
+                        <path d="M88 42 L54 86" fill="none" stroke="#d1d5db" className="dark:stroke-neutral-700" strokeWidth="2"/>
 
                         {/* Animated traversal (edge highlight) */}
                         <path
@@ -59,11 +52,11 @@ const LoadingTheme = () => {
                             strokeWidth="3"
                             strokeLinecap="round"
                             strokeDasharray="160 200"
-                            className="dash-flow"
+                            className="[animation:dash_2.8s_ease-in-out_infinite] motion-reduce:[animation:none]"
                         />
 
                         {/* Orbiting dot */}
-                        <g className="spin-slower origin-center" style={{transformOrigin: '60px 60px'}}>
+                        <g className="[transform-origin:60px_60px] [animation:spin_12s_linear_infinite] motion-reduce:[animation:none]">
                             <circle cx="60" cy="14" r="3" className="fill-emerald-400 dark:fill-emerald-300 shadow"/>
                         </g>
                     </svg>
@@ -72,95 +65,16 @@ const LoadingTheme = () => {
                 {/* Title and subtle helper text */}
                 <div className="flex flex-col items-center">
                     <span className="text-sm font-medium tracking-wide text-neutral-600 dark:text-neutral-300">Preparing theme…</span>
-                    <span
-                        className="mt-1 text-xs text-neutral-400 dark:text-neutral-500">Optimizing colors and contrast</span>
+                    <span className="mt-1 text-xs text-neutral-400 dark:text-neutral-500">Optimizing colors and contrast</span>
                 </div>
 
                 {/* Optional progress bar shimmer */}
                 <div className="h-1.5 w-48 overflow-hidden rounded-full bg-neutral-200/70 dark:bg-neutral-800">
-                    <div
-                        className="h-full w-1/3 rounded-full bg-gradient-to-r from-sky-400 via-cyan-400 to-emerald-400 dark:from-sky-300 dark:via-cyan-300 dark:to-emerald-300 shimmer"/>
+                    <div className="h-full w-1/3 rounded-full bg-gradient-to-r from-sky-400 via-cyan-400 to-emerald-400 dark:from-sky-300 dark:via-cyan-300 dark:to-emerald-300 [animation:shimmer_0.7s_ease-in-out_infinite] motion-reduce:[animation:none]"/>
                 </div>
             </div>
 
             <span className="sr-only">Caricamento tema in corso</span>
-
-            {/* Component-scoped animations with graceful reduce-motion fallback */}
-            <style jsx>{`
-                @keyframes dash {
-                    0% {
-                        stroke-dashoffset: 360;
-                    }
-                    100% {
-                        stroke-dashoffset: 0;
-                    }
-                }
-
-                @keyframes pulseNode {
-                    0%, 100% {
-                        transform: scale(1);
-                        opacity: 0.9;
-                    }
-                    50% {
-                        transform: scale(1.12);
-                        opacity: 1;
-                    }
-                }
-
-                @keyframes spinSlow {
-                    from {
-                        transform: rotate(0deg);
-                    }
-                    to {
-                        transform: rotate(360deg);
-                    }
-                }
-
-                @keyframes spinSlower {
-                    from {
-                        transform: rotate(0deg);
-                    }
-                    to {
-                        transform: rotate(360deg);
-                    }
-                }
-
-                @keyframes shimmer {
-                    0% {
-                        transform: translateX(-120%);
-                    }
-                    100% {
-                        transform: translateX(300%);
-                    }
-                }
-
-                .dash-flow {
-                    animation: dash 2.8s ease-in-out infinite;
-                }
-
-                .node-pulse {
-                    transform-origin: center;
-                    animation: pulseNode 1.6s ease-in-out infinite;
-                }
-
-                .spin-slow {
-                    animation: spinSlow 8s linear infinite;
-                }
-
-                .spin-slower {
-                    animation: spinSlower 12s linear infinite;
-                }
-
-                .shimmer {
-                    animation: shimmer 1.8s ease-in-out infinite;
-                }
-
-                @media (prefers-reduced-motion: reduce) {
-                    .dash-flow, .node-pulse, .spin-slow, .spin-slower, .shimmer {
-                        animation: none !important;
-                    }
-                }
-            `}</style>
         </div>
     )
 }

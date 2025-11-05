@@ -14,7 +14,7 @@ export default function ThemeProvider({
         // Schedule state update asynchronously to avoid cascading renders warning.
         const id = window.setTimeout(() => {
             setIsMounted(true);
-        }, 0);
+        }, 200);
         return () => window.clearTimeout(id);
     }, [])
 
