@@ -210,4 +210,34 @@ describe('lib/example_graphs_cache.getListExampleGraphUrls', () => {
     expect(setItemSpy).toHaveBeenCalled();
     setItemSpy.mockRestore();
   });
+
+  it('getGraphByUrlOnce removes failed inflight and allows retry to succeed', async () => {
+    jest.resetModules();
+    window.localStorage.clear();
+
+    const url = '/graphs/error-then-success.json';
+
+    const { getGraphByUrlOnce, GRAPH_PROMISES } = await import('@/lib/example_graphs_cache');
+    const { loadGraphFromUrl } = await import('../../lib/graph/loader');
+
+    // First call: force the loader to reject
+    (loadGraphFromUrl as unknown as jest.Mock).mockImplementationOnce(() => Promise.reject(new Error('network fail')));
+
+    await expect(getGraphByUrlOnce(url)).rejects.toThrow('network fail');
+
+    // After rejection, no inflight promise should remain
+    expect(GRAPH_PROMISES.size).toBe(0);
+
+    // Next, set the loader to resolve with a fresh graph
+    const freshGraph = { metadata: { directed: false, weighted: true, name: 'ok' }, nodes: [], edges: [] };
+    mockGraph = freshGraph;
+
+    const res = await getGraphByUrlOnce(url);
+    expect(res).toEqual(freshGraph);
+
+    // Loader should have been called twice total (first fail, then success)
+    expect((loadGraphFromUrl as unknown as jest.Mock).mock.calls.length).toBe(2);
+    expect((loadGraphFromUrl as unknown as jest.Mock)).toHaveBeenNthCalledWith(1, url);
+    expect((loadGraphFromUrl as unknown as jest.Mock)).toHaveBeenNthCalledWith(2, url);
+  });
 });
