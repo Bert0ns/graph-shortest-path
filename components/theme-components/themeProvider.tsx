@@ -1,14 +1,7 @@
 "use client"
 import {ThemeProvider as NextThemesProvider} from "next-themes"
 import React, {useEffect} from "react";
-
-const LoadingTheme = () => {
-    return (
-        <div>
-            Loading...
-        </div>
-    )
-}
+import LoadingTheme from "@/components/theme-components/loadingTheme";
 
 export default function ThemeProvider({
                                           children,
