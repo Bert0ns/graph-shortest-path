@@ -269,4 +269,91 @@ describe('lib/example_graphs_cache.getListExampleGraphUrls', () => {
     expect(setItemSpy).toHaveBeenCalled();
     setItemSpy.mockRestore();
   });
+
+  it('getExampleUrlsOnce ignores corrupted localStorage cache and fetches fresh list', async () => {
+    jest.resetModules();
+    window.localStorage.clear();
+
+    // Corrupt the list cache value with non-JSON
+    window.localStorage.setItem('exampleGraphs:v1:list', 'not-json');
+
+    const files = ['/graphs/a.json', '/graphs/a.json', '/graphs/b.json'];
+    const mockFetch = jest
+      .fn<Promise<Response>, Parameters<typeof fetch>>()
+      .mockResolvedValue({ ok: true, json: async () => ({ files }) } as unknown as Response);
+
+    global.fetch = mockFetch as unknown as typeof fetch;
+
+    const setItemSpy = jest.spyOn(Storage.prototype, 'setItem');
+
+    const { getExampleUrlsOnce } = await import('@/lib/example_graphs_cache');
+
+    const res = await getExampleUrlsOnce();
+    expect(res).toEqual(['/graphs/a.json', '/graphs/b.json']);
+    expect(mockFetch).toHaveBeenCalledTimes(1);
+    expect(mockFetch).toHaveBeenCalledWith('/api/graphs', { cache: 'no-store' });
+    // Should persist the fresh list
+    expect(setItemSpy).toHaveBeenCalled();
+
+    setItemSpy.mockRestore();
+  });
+
+  it('getGraphByUrlOnce ignores corrupted localStorage cache and loads fresh graph', async () => {
+    jest.resetModules();
+    window.localStorage.clear();
+
+    const url = '/graphs/corrupted.json';
+
+    // Corrupt the graph cache value with non-JSON
+    const key = `exampleGraphs:v1:graph:${encodeURIComponent(url)}`;
+    window.localStorage.setItem(key, 'corrupted-value');
+
+    const freshGraph = { metadata: { directed: true, weighted: true, name: 'fixed' }, nodes: [], edges: [] };
+    mockGraph = freshGraph;
+
+    const setItemSpy = jest.spyOn(Storage.prototype, 'setItem');
+
+    const { getGraphByUrlOnce } = await import('@/lib/example_graphs_cache');
+    const { loadGraphFromUrl } = await import('../../lib/graph/loader');
+
+    // Should ignore corrupted cache and load via loader
+    const res1 = await getGraphByUrlOnce(url);
+    expect(res1).toEqual(freshGraph);
+    expect((loadGraphFromUrl as unknown as jest.Mock)).toHaveBeenCalledTimes(1);
+    expect((loadGraphFromUrl as unknown as jest.Mock)).toHaveBeenCalledWith(url);
+    expect(setItemSpy).toHaveBeenCalled();
+
+    // Subsequent call should hit in-memory cache and not call loader again
+    const res2 = await getGraphByUrlOnce(url);
+    expect(res2).toEqual(freshGraph);
+    expect((loadGraphFromUrl as unknown as jest.Mock)).toHaveBeenCalledTimes(1);
+
+    setItemSpy.mockRestore();
+  });
+
+  it('getExampleUrlsOnce uses fresh localStorage cache without network or re-persist', async () => {
+    jest.resetModules();
+    window.localStorage.clear();
+
+    const fresh = { data: ['/graphs/x.json', '/graphs/y.json'], ts: Date.now() };
+    window.localStorage.setItem('exampleGraphs:v1:list', JSON.stringify(fresh));
+
+    const mockFetch = jest.fn<Promise<Response>, Parameters<typeof fetch>>();
+    global.fetch = mockFetch as unknown as typeof fetch;
+
+    const setItemSpy = jest.spyOn(Storage.prototype, 'setItem');
+
+    const { getExampleUrlsOnce } = await import('@/lib/example_graphs_cache');
+
+    const r1 = await getExampleUrlsOnce();
+    expect(r1).toEqual(['/graphs/x.json', '/graphs/y.json']);
+
+    const r2 = await getExampleUrlsOnce();
+    expect(r2).toEqual(r1);
+
+    expect(mockFetch).not.toHaveBeenCalled();
+    expect(setItemSpy).not.toHaveBeenCalled();
+
+    setItemSpy.mockRestore();
+  });
 });
