@@ -7,7 +7,6 @@ import ExampleGraphCards from "@/components/exampleGraphCards";
 
 export default function HomeLanding() {
 
-
     return (
         <main className="container mx-auto p-6 space-y-10 max-w-4xl">
             <section className="space-y-4">
