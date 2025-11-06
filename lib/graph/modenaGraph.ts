@@ -6,15 +6,12 @@ type OSMElement = OSMNode | OSMWay
 type OverpassResponse = { elements: OSMElement[] }
 
 const OVERPASS_URL = 'https://overpass-api.de/api/interpreter'
-const OVERPASS_QUERY = `
-[out:json][timeout:25];
-area[name="Modena"][boundary=administrative][admin_level~"^(7|8)$"]->.a;
-(
-  way["highway"](area.a);
-);
-(._;>;);
-out body;
-`
+// Query for the full Modena administrative area (previous version) has been replaced.
+// We now build a dynamic query focusing on the city centre using an "around" clause.
+// Defaults approximate Piazza Grande (Modena) and a radius.
+function buildOverpassQuery(lat: number, lon: number, radiusMeters: number) {
+    return `\n[out:json][timeout:25];\n(\n  way["highway"](around:${radiusMeters},${lat},${lon});\n);\n(._;>;);\nout body;\n`
+}
 
 function parseOverpass(resp: OverpassResponse) {
     const nodes = new Map<number, OSMNode>()
@@ -76,10 +73,15 @@ export type BuildOptions = {
     allowedHighways?: string[]
     // Limit number of ways to reduce graph dimension
     maxWays?: number
+    // Centre coordinates (lat, lon) for the extraction; defaults to approximate Piazza Grande
+    centerLat?: number
+    centerLon?: number
+    // Radius in meters for the city centre area
+    radiusMeters?: number
 }
 
 /**
- * Builds an OSM graph of Modena matching the required schema.
+ * Builds an OSM graph of Modena city centre matching the required schema.
  * Returns nodes with x, y normalized to [0,1] and weighted edges (meters).
  */
 export default async function buildModenaGraph(options: BuildOptions = {}): Promise<Graph> {
@@ -89,8 +91,28 @@ export default async function buildModenaGraph(options: BuildOptions = {}): Prom
     ]
     const allowed = new Set(options.allowedHighways ?? defaultAllowed)
 
-    const data = await fetchOverpass(OVERPASS_QUERY)
+    // Defaults for Modena centre (Piazza Grande approx) and a modest radius (~1500 m)
+    const centerLat = options.centerLat ?? 44.6471
+    const centerLon = options.centerLon ?? 10.9252
+    const radius = options.radiusMeters ?? 1500
+
+    const query = buildOverpassQuery(centerLat, centerLon, radius)
+    const data = await fetchOverpass(query)
     const { nodes: osmNodes, ways } = parseOverpass(data)
+
+    if (osmNodes.size === 0 || ways.length === 0) {
+        return {
+            metadata: {
+                directed: false,
+                weighted: true,
+                name: 'Modena OSM (city centre)',
+                description: 'No data returned for the specified centre/radius.',
+            },
+            nodes: [],
+            edges: [],
+        }
+    }
+
     const bbox = computeBBox(osmNodes)
 
     // Map OSM node id -> GraphNode
@@ -146,8 +168,8 @@ export default async function buildModenaGraph(options: BuildOptions = {}): Prom
         metadata: {
             directed: false,
             weighted: true,
-            name: 'Modena OSM (highways)',
-            description: 'Road graph extracted from OpenStreetMap for the Modena area; normalized coordinates.',
+            name: 'Modena OSM (city centre highways)',
+            description: 'Road graph extracted from OpenStreetMap for Modena city centre; normalized coordinates.',
         },
         nodes,
         edges,

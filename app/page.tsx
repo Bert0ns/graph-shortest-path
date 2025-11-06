@@ -1,11 +1,30 @@
+"use client"
 import Link from 'next/link'
 import {websiteConfigs} from '@/website.configs'
 import React from "react";
 import {Button} from "@/components/ui/button";
 import ExampleGraphCards from "@/components/exampleGraphCards";
+import buildModenaGraph from "@/lib/graph/modenaGraph";
+import {BuildOptions} from "@/lib/graph/modenaGraph";
 
 
 export default function HomeLanding() {
+
+    const butnClick = async () => {
+        const buildOptions: BuildOptions = {
+            radiusMeters: 800,          // più stretto centro storico
+            allowedHighways: ["primary", "secondary"], //""secondary",tertiary","residential"
+        }
+        const graph = await buildModenaGraph(buildOptions);
+        //download graph in json format
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(graph));
+        const downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute("href", dataStr);
+        downloadAnchorNode.setAttribute("download", "modena-graph.json");
+        document.body.appendChild(downloadAnchorNode); // required for firefox
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
+    }
 
     return (
         <main className="container mx-auto p-6 space-y-10 max-w-4xl">
@@ -44,6 +63,7 @@ export default function HomeLanding() {
                     Pick an example to jump into the simulator already loaded with that
                     graph.
                 </p>
+                <Button onClick={() => butnClick()}>Download modena graph</Button>
                 <ExampleGraphCards className="grid gap-4 sm:grid-cols-2"/>
             </section>
         </main>
