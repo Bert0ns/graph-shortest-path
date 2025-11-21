@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import {websiteConfigs} from '@/website.configs'
-import React from "react";
 import {Button} from "@/components/ui/button";
 import ExampleGraphCards from "@/components/exampleGraphCards";
 
@@ -15,8 +14,8 @@ export default function HomeLanding() {
                 <p className="text-muted-foreground max-w-3xl">
                     {websiteConfigs.description}
                     <br/>
-                    This app helps you understand shortest‑path algorithms through a
-                    clean, step‑by‑step visualization.
+                    This app helps you understand shortest-path algorithms through a
+                    clean, step-by-step visualization.
                 </p>
                 <p className="text-muted-foreground max-w-3xl">
                     What you can do here: build or import graphs, pick a start and end node, and watch the
